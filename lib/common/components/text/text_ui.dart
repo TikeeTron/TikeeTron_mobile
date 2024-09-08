@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../config/font_config.dart';
+import '../../config/font_config.dart';
 
 enum FontFamilySource {
   googleFonts,

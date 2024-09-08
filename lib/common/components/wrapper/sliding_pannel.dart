@@ -200,8 +200,7 @@ class UISlidingPanel extends StatefulWidget {
   _UISlidingPanelState createState() => _UISlidingPanelState();
 }
 
-class _UISlidingPanelState extends State<UISlidingPanel>
-    with SingleTickerProviderStateMixin {
+class _UISlidingPanelState extends State<UISlidingPanel> with SingleTickerProviderStateMixin {
   late AnimationController _ac;
   late ScrollController _sc;
 
@@ -217,18 +216,14 @@ class _UISlidingPanelState extends State<UISlidingPanel>
     _ac = new AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 300),
-        value: widget.defaultPanelState == UISlidingPanelState.CLOSED
-            ? 0.0
-            : 1.0 //set the default panel state (i.e. set initial value of _ac)
+        value: widget.defaultPanelState == UISlidingPanelState.CLOSED ? 0.0 : 1.0 //set the default panel state (i.e. set initial value of _ac)
         )
       ..addListener(() {
         if (widget.onPanelSlide != null) widget.onPanelSlide!(_ac.value);
 
-        if (widget.onPanelOpened != null && _ac.value == 1.0)
-          widget.onPanelOpened!();
+        if (widget.onPanelOpened != null && _ac.value == 1.0) widget.onPanelOpened!();
 
-        if (widget.onPanelClosed != null && _ac.value == 0.0)
-          widget.onPanelClosed!();
+        if (widget.onPanelClosed != null && _ac.value == 0.0) widget.onPanelClosed!();
       });
 
     // prevent the panel content from being scrolled only if the widget is
@@ -244,9 +239,7 @@ class _UISlidingPanelState extends State<UISlidingPanel>
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: widget.slideDirection == UISlidingPanelDirection.UP
-          ? Alignment.bottomCenter
-          : Alignment.topCenter,
+      alignment: widget.slideDirection == UISlidingPanelDirection.UP ? Alignment.bottomCenter : Alignment.topCenter,
       children: <Widget>[
         //make the back widget take up the entire back side
         widget.body != null
@@ -255,7 +248,7 @@ class _UISlidingPanelState extends State<UISlidingPanel>
                 builder: (context, child) {
                   return Positioned(
                     top: widget.parallaxEnabled ? _getParallax() : 0.0,
-                    child: child ?? SizedBox(),
+                    child: child ?? const SizedBox(),
                   );
                 },
                 child: Container(
@@ -273,11 +266,7 @@ class _UISlidingPanelState extends State<UISlidingPanel>
                 onVerticalDragEnd: widget.backdropTapClosesPanel
                     ? (DragEndDetails dets) {
                         // only trigger a close if the drag is towards panel close position
-                        if ((widget.slideDirection == UISlidingPanelDirection.UP
-                                    ? 1
-                                    : -1) *
-                                dets.velocity.pixelsPerSecond.dy >
-                            0) _close();
+                        if ((widget.slideDirection == UISlidingPanelDirection.UP ? 1 : -1) * dets.velocity.pixelsPerSecond.dy > 0) _close();
                       }
                     : null,
                 onTap: widget.backdropTapClosesPanel ? () => _close() : null,
@@ -291,10 +280,7 @@ class _UISlidingPanelState extends State<UISlidingPanel>
                         //set color to null so that touch events pass through
                         //to the body when the panel is closed, otherwise,
                         //if a color exists, then touch events won't go through
-                        color: _ac.value == 0.0
-                            ? null
-                            : widget.backdropColor.withOpacity(
-                                widget.backdropOpacity * _ac.value),
+                        color: _ac.value == 0.0 ? null : widget.backdropColor.withOpacity(widget.backdropOpacity * _ac.value),
                       );
                     }),
               ),
@@ -307,9 +293,7 @@ class _UISlidingPanelState extends State<UISlidingPanel>
                   animation: _ac,
                   builder: (context, child) {
                     return Container(
-                      height:
-                          _ac.value * (widget.maxHeight - widget.minHeight) +
-                              widget.minHeight,
+                      height: _ac.value * (widget.maxHeight - widget.minHeight) + widget.minHeight,
                       margin: widget.margin,
                       padding: widget.padding,
                       decoration: widget.renderPanelSheet
@@ -327,86 +311,49 @@ class _UISlidingPanelState extends State<UISlidingPanel>
                     children: <Widget>[
                       //open panel
                       Positioned(
-                          top: widget.slideDirection ==
-                                  UISlidingPanelDirection.UP
-                              ? 0.0
-                              : null,
-                          bottom: widget.slideDirection ==
-                                  UISlidingPanelDirection.DOWN
-                              ? 0.0
-                              : null,
+                          top: widget.slideDirection == UISlidingPanelDirection.UP ? 0.0 : null,
+                          bottom: widget.slideDirection == UISlidingPanelDirection.DOWN ? 0.0 : null,
                           width: MediaQuery.of(context).size.width -
-                              (widget.margin != null
-                                  ? widget.margin!.horizontal
-                                  : 0) -
-                              (widget.padding != null
-                                  ? widget.padding!.horizontal
-                                  : 0),
+                              (widget.margin != null ? widget.margin!.horizontal : 0) -
+                              (widget.padding != null ? widget.padding!.horizontal : 0),
                           child: Container(
                             height: widget.maxHeight,
-                            child: widget.panel != null
-                                ? widget.panel
-                                : widget.panelBuilder!(_sc),
+                            child: widget.panel != null ? widget.panel : widget.panelBuilder!(_sc),
                           )),
 
                       // header
                       widget.header != null
                           ? Positioned(
-                              top: widget.slideDirection ==
-                                      UISlidingPanelDirection.UP
-                                  ? 0.0
-                                  : null,
-                              bottom: widget.slideDirection ==
-                                      UISlidingPanelDirection.DOWN
-                                  ? 0.0
-                                  : null,
-                              child: widget.header ?? SizedBox(),
+                              top: widget.slideDirection == UISlidingPanelDirection.UP ? 0.0 : null,
+                              bottom: widget.slideDirection == UISlidingPanelDirection.DOWN ? 0.0 : null,
+                              child: widget.header ?? const SizedBox(),
                             )
                           : Container(),
 
                       // footer
                       widget.footer != null
                           ? Positioned(
-                              top: widget.slideDirection ==
-                                      UISlidingPanelDirection.UP
-                                  ? null
-                                  : 0.0,
-                              bottom: widget.slideDirection ==
-                                      UISlidingPanelDirection.DOWN
-                                  ? null
-                                  : 0.0,
-                              child: widget.footer ?? SizedBox())
+                              top: widget.slideDirection == UISlidingPanelDirection.UP ? null : 0.0,
+                              bottom: widget.slideDirection == UISlidingPanelDirection.DOWN ? null : 0.0,
+                              child: widget.footer ?? const SizedBox())
                           : Container(),
 
                       // collapsed panel
                       Positioned(
-                        top: widget.slideDirection == UISlidingPanelDirection.UP
-                            ? 0.0
-                            : null,
-                        bottom: widget.slideDirection ==
-                                UISlidingPanelDirection.DOWN
-                            ? 0.0
-                            : null,
-                        width: MediaQuery.of(context).size.width -
-                            (widget.margin != null
-                                ? widget.margin!.horizontal
-                                : 0) -
-                            (widget.padding != null
-                                ? widget.padding!.horizontal
-                                : 0),
+                        top: widget.slideDirection == UISlidingPanelDirection.UP ? 0.0 : null,
+                        bottom: widget.slideDirection == UISlidingPanelDirection.DOWN ? 0.0 : null,
+                        width:
+                            MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
                         child: Container(
                           height: widget.minHeight,
                           child: widget.collapsed == null
                               ? Container()
                               : FadeTransition(
-                                  opacity:
-                                      Tween(begin: 1.0, end: 0.0).animate(_ac),
+                                  opacity: Tween(begin: 1.0, end: 0.0).animate(_ac),
 
                                   // if the panel is open ignore pointers (touch events) on the collapsed
                                   // child so that way touch events go through to whatever is underneath
-                                  child: IgnorePointer(
-                                      ignoring: _isPanelOpen,
-                                      child: widget.collapsed),
+                                  child: IgnorePointer(ignoring: _isPanelOpen, child: widget.collapsed),
                                 ),
                         ),
                       ),
@@ -426,13 +373,9 @@ class _UISlidingPanelState extends State<UISlidingPanel>
 
   double _getParallax() {
     if (widget.slideDirection == UISlidingPanelDirection.UP)
-      return -_ac.value *
-          (widget.maxHeight - widget.minHeight) *
-          widget.parallaxOffset;
+      return -_ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
     else
-      return _ac.value *
-          (widget.maxHeight - widget.minHeight) *
-          widget.parallaxOffset;
+      return _ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
   }
 
   // returns a gesture detector if panel is used
@@ -444,20 +387,16 @@ class _UISlidingPanelState extends State<UISlidingPanel>
 
     if (widget.panel != null) {
       return GestureDetector(
-        onVerticalDragUpdate: (DragUpdateDetails dets) =>
-            _onGestureSlide(dets.delta.dy),
-        onVerticalDragEnd: (DragEndDetails dets) =>
-            _onGestureEnd(dets.velocity),
+        onVerticalDragUpdate: (DragUpdateDetails dets) => _onGestureSlide(dets.delta.dy),
+        onVerticalDragEnd: (DragEndDetails dets) => _onGestureEnd(dets.velocity),
         child: child,
       );
     }
 
     return Listener(
-      onPointerDown: (PointerDownEvent p) =>
-          _vt.addPosition(p.timeStamp, p.position),
+      onPointerDown: (PointerDownEvent p) => _vt.addPosition(p.timeStamp, p.position),
       onPointerMove: (PointerMoveEvent p) {
-        _vt.addPosition(p.timeStamp,
-            p.position); // add current position for velocity tracking
+        _vt.addPosition(p.timeStamp, p.position); // add current position for velocity tracking
         _onGestureSlide(p.delta.dy);
       },
       onPointerUp: (PointerUpEvent p) => _onGestureEnd(_vt.getVelocity()),
@@ -510,26 +449,22 @@ class _UISlidingPanelState extends State<UISlidingPanel>
     if (_isPanelOpen && _scrollingEnabled) return;
 
     //check if the velocity is sufficient to constitute fling to end
-    double visualVelocity =
-        -v.pixelsPerSecond.dy / (widget.maxHeight - widget.minHeight);
+    double visualVelocity = -v.pixelsPerSecond.dy / (widget.maxHeight - widget.minHeight);
 
     // reverse visual velocity to account for slide direction
-    if (widget.slideDirection == UISlidingPanelDirection.DOWN)
-      visualVelocity = -visualVelocity;
+    if (widget.slideDirection == UISlidingPanelDirection.DOWN) visualVelocity = -visualVelocity;
 
     // get minimum distances to figure out where the panel is at
     double d2Close = _ac.value;
     double d2Open = 1 - _ac.value;
-    double d2Snap = ((widget.snapPoint ?? 3) - _ac.value)
-        .abs(); // large value if null results in not every being the min
+    double d2Snap = ((widget.snapPoint ?? 3) - _ac.value).abs(); // large value if null results in not every being the min
     double minDistance = min(d2Close, min(d2Snap, d2Open));
 
     // check if velocity is sufficient for a fling
     if (v.pixelsPerSecond.dy.abs() >= minFlingVelocity) {
       // snapPoint exists
       if (widget.panelSnapping && widget.snapPoint != null) {
-        if (v.pixelsPerSecond.dy.abs() >= kSnap * minFlingVelocity ||
-            minDistance == d2Snap)
+        if (v.pixelsPerSecond.dy.abs() >= kSnap * minFlingVelocity || minDistance == d2Snap)
           _ac.fling(velocity: visualVelocity);
         else
           _flingPanelToPosition(widget.snapPoint!, visualVelocity);
@@ -542,7 +477,7 @@ class _UISlidingPanelState extends State<UISlidingPanel>
       } else {
         _ac.animateTo(
           _ac.value + visualVelocity * 0.16,
-          duration: Duration(milliseconds: 410),
+          duration: const Duration(milliseconds: 410),
           curve: Curves.bounceIn,
         );
       }
@@ -610,16 +545,14 @@ class _UISlidingPanelState extends State<UISlidingPanel>
 
   //animate the panel position to value - must
   //be between 0.0 and 1.0
-  Future<void> _animatePanelToPosition(double value,
-      {Duration? duration, Curve curve = Curves.bounceIn}) {
+  Future<void> _animatePanelToPosition(double value, {Duration? duration, Curve curve = Curves.bounceIn}) {
     assert(0.0 <= value && value <= 1.0);
     return _ac.animateTo(value, duration: duration, curve: curve);
   }
 
   //animate the panel position to the snap point
   //REQUIRES that widget.snapPoint != null
-  Future<void> _animatePanelToSnapPoint(
-      {Duration? duration, Curve curve = Curves.bounceIn}) {
+  Future<void> _animatePanelToSnapPoint({Duration? duration, Curve curve = Curves.bounceIn}) {
     assert(widget.snapPoint != null);
     return _ac.animateTo(widget.snapPoint!, duration: duration, curve: curve);
   }
@@ -714,13 +647,10 @@ class PanelController {
   /// Requires that the SlidingUpPanel snapPoint property is not null
   /// (optional) duration specifies the time for the animation to complete
   /// (optional) curve specifies the easing behavior of the animation.
-  Future<void> animatePanelToSnapPoint(
-      {Duration? duration, Curve curve = Curves.bounceIn}) {
+  Future<void> animatePanelToSnapPoint({Duration? duration, Curve curve = Curves.bounceIn}) {
     assert(isAttached, "PanelController must be attached to a SlidingUpPanel");
-    assert(_panelState!.widget.snapPoint != null,
-        "SlidingUpPanel snapPoint property must not be null");
-    return _panelState!
-        ._animatePanelToSnapPoint(duration: duration, curve: curve);
+    assert(_panelState!.widget.snapPoint != null, "SlidingUpPanel snapPoint property must not be null");
+    return _panelState!._animatePanelToSnapPoint(duration: duration, curve: curve);
   }
 
   /// Sets the panel position (without animation).

@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 
+import '../../../../common/common.dart';
+import '../../../../common/config/padding_config.dart';
 import '../../../../common/utils/extensions/list_string_parsing.dart';
 import '../../../../common/utils/extensions/size_extension.dart';
 import '../../../../common/utils/helpers/logger_helper.dart';
-import '../../../../core/config/padding_config.dart';
-import '../../../../core/utils/extension/theme_extension.dart';
-import '../../../../core/utils/text_ui.dart';
+import '../../../../common/components/text/text_ui.dart';
 import '../../data/model/wallet_model.dart';
 import 'seed_phrase_item_widget.dart';
 

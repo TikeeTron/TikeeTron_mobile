@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/utils/extension/theme_extension.dart';
+
+import '../../utils/extensions/theme_extension.dart';
 import 'button_rounded_ui.dart';
 
 class SliverButtonBottomWidget extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../common/common.dart';
 import '../../../../common/components/container/rounded_container.dart';
 import '../../../../common/components/text/auto_size_text_widget.dart';
-import '../../../../core/utils/extension/theme_extension.dart';
 
 class SeedPhraseItemWidget extends StatelessWidget {
   final String text;

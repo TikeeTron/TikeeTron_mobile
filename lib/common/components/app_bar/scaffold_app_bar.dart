@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../core/utils/text_ui.dart';
+import '../text/text_ui.dart';
 import '../../utils/extensions/size_extension.dart';
 import '../../utils/extensions/theme_extension.dart';
 import '../button/bounce_tap.dart';

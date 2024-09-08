@@ -2,8 +2,8 @@ import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/config/padding_config.dart';
-import '../../../core/utils/text_ui.dart';
+import '../../config/padding_config.dart';
+import '../text/text_ui.dart';
 import '../../utils/extensions/theme_extension.dart';
 import '../../utils/object_util.dart';
 import '../cliprrect/smooth_cliprrect.dart';
