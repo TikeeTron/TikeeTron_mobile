@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
 
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path_provider/path_provider.dart';
 import 'core/adapters/blockchain_network_adapter.dart';
 import 'core/adapters/token_type_adapter.dart';
 
 @LazySingleton()
 class HiveInitialization {
   Future<void> initHive() async {
-    await Hive.initFlutter();
+    final directory = await getApplicationDocumentsDirectory();
+    Hive.init(directory.path);
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(BlockchainNetworkAdapter());
     }
@@ -20,7 +22,6 @@ class HiveInitialization {
     }
 
     const secureStorage = FlutterSecureStorage();
-    FlutterSecureStorage.setMockInitialValues({});
 
     // if key not exists return null
     final encryptionKeyString = await secureStorage.read(key: 'key');
