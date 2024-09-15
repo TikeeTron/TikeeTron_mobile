@@ -1,15 +1,14 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:show_up_animation/show_up_animation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/common.dart';
+import '../../../../common/components/text/text_ui.dart';
 import '../../../../common/config/padding_config.dart';
 import '../../../../common/utils/extensions/list_string_parsing.dart';
-import '../../../../common/utils/extensions/size_extension.dart';
 import '../../../../common/utils/helpers/logger_helper.dart';
-import '../../../../common/components/text/text_ui.dart';
+import '../../../../core/core.dart';
 import '../../data/model/wallet_model.dart';
+import '../success_create_wallet_page.dart';
 import 'seed_phrase_item_widget.dart';
 
 class ConfirmStepPageView extends StatefulWidget {
@@ -30,11 +29,9 @@ class _ConfirmStepPageViewState extends State<ConfirmStepPageView> {
   List<String> mnemonicWords = [];
   List<String> shuffledMnenomicWords = [];
   List<int> confirmedMnemonicIndex = [];
-
+  Map<String, int> originalIndices = {};
   int _currentIndex = 0;
   String _currentWord = '';
-
-  String? _errorText;
 
   @override
   void initState() {
@@ -45,7 +42,9 @@ class _ConfirmStepPageViewState extends State<ConfirmStepPageView> {
 
   void _init() {
     mnemonicWords = widget.mnemonicWords;
-
+    for (int i = 0; i < mnemonicWords.length; i++) {
+      originalIndices[mnemonicWords[i]] = i;
+    }
     // shuffle mnemonic words
     _shuffleMnemonic();
   }
@@ -70,89 +69,35 @@ class _ConfirmStepPageViewState extends State<ConfirmStepPageView> {
             const SizedBox(
               height: 24,
             ),
-            TextUI(
-              'Confirm seed phrase',
-              overwriteStyle: context.theme.textTheme.bodyLarge,
+            Text(
+              'Verify Your Seed Phrase',
+              style: UITypographies.h4(context, fontSize: 28.sp),
             ),
             const SizedBox(
               height: 8,
             ),
-            TextUI(
+            Text(
               'Select each word in the order as presented to you previously',
-              overwriteStyle: context.theme.textTheme.bodyMedium,
+              style: UITypographies.bodyLarge(
+                context,
+                color: UIColors.grey500,
+                fontSize: 15.sp,
+              ),
             ),
             const SizedBox(
               height: 24,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-                horizontal: 12,
-              ),
-              width: context.width,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: const Color(0xFF34373E),
-                ),
-                borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFF1F2025),
-              ),
-              child: Row(
-                children: [
-                  ShowUpAnimation(
-                    delayStart: Duration.zero,
-                    animationDuration: const Duration(milliseconds: 300),
-                    curve: Curves.bounceIn,
-                    direction: Direction.vertical,
-                    key: ValueKey(Random()),
-                    offset: 0.5,
-                    child: TextUI(
-                      "${_currentIndex + 1}.",
-                      overwriteStyle: context.theme.textTheme.labelMedium,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  ShowUpAnimation(
-                    delayStart: Duration.zero,
-                    animationDuration: const Duration(milliseconds: 300),
-                    curve: Curves.bounceIn,
-                    direction: Direction.vertical,
-                    key: ValueKey(Random()),
-                    offset: 0.5,
-                    child: TextUI(
-                      _currentWord,
-                      overwriteStyle: context.theme.textTheme.bodySmall,
-                    ),
-                  ),
-                ],
-              ),
             ),
             if (mnemonicWords.isContainSameElement) ...[
               const SizedBox(
                 height: 8,
               ),
-              TextUI(
+              Text(
                 'You might see the same words appeared within the seed phrase generated',
-                overwriteStyle: context.theme.textTheme.labelMedium,
-              ),
-            ],
-            if (_errorText != null && _errorText!.isNotEmpty) ...[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: Paddings.l12,
-                    child: TextUI(
-                      _errorText!,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
+                style: UITypographies.bodyLarge(
+                  context,
+                  color: UIColors.grey500,
+                  fontSize: 15.sp,
+                ),
               ),
             ],
             const SizedBox(
@@ -176,7 +121,9 @@ class _ConfirmStepPageViewState extends State<ConfirmStepPageView> {
 
                   return SeedPhraseItemWidget(
                     text: word,
+                    index: originalIndices[word],
                     isConfirmed: isConfirmed,
+                    textAlignment: CrossAxisAlignment.center,
                     onTap: (isConfirmed)
                         ? null
                         : () => _onSelectWord(
@@ -208,31 +155,28 @@ class _ConfirmStepPageViewState extends State<ConfirmStepPageView> {
 
     if (!isValid) {
       setState(() {
-        _errorText = 'Invalid word';
         _currentWord = '';
       });
-
+      toastHelper.showError('The seed phrase you entered is incorrect. Please try again.');
       return;
     }
 
     // next step
     if ((_currentIndex + 1) == mnemonicWords.length) {
       // go to success create wallet page
-      // locator<NavigationService>().pushReplacementNamed(
-      //   AppRoute.successCreateWallet.path,
-      //   arguments: SuccessCreateWalletPageParams(
-      //     wallet: widget.wallet!,
-      //     walletType: WalletType.hot,
-      //   ),
-      // );
+      navigationService.pushAndPopUntil(
+        SuccessCreateWalletRoute(
+          params: SuccessCreateWalletPageParams(
+            wallet: widget.wallet!,
+          ),
+        ),
+        predicate: (route) => false,
+      );
     } else {
       // next mnemonic word
       setState(() {
         // set next seed phrase index
         _currentIndex += 1;
-
-        // clear error text
-        _errorText = null;
 
         // add confirmed index
         confirmedMnemonicIndex.add(index);

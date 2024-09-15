@@ -2,28 +2,40 @@ import 'dart:ui';
 
 abstract class UIColors {
   // --- Primary --- //
-  static const primary900 = Color(0xFF3F6B19);
-  static const primary800 = Color(0xFF538C21);
-  static const primary700 = Color(0xFF6BB52B);
-  static const primary600 = Color(0xFF89E837);
-  static const primary500 = Color(0xFF96FF3C);
-  static const primary400 = Color(0xFFABFF63);
-  static const primary300 = Color(0xFFB9FF7C);
-  static const primary200 = Color(0xFFCFFFA5);
-  static const primary100 = Color(0xFFDEFFC3);
-  static const primary50 = Color(0xFFF5FFEC);
+  static const primary900 = Color(0xFF001833);
+  static const primary800 = Color(0xFF003166);
+  static const primary700 = Color(0xFF004999);
+  static const primary600 = Color(0xFF0062CC);
+  static const primary500 = Color(0xFF0A84FF);
+  static const primary400 = Color(0xFF3395FF);
+  static const primary300 = Color(0xFF66AFFF);
+  static const primary200 = Color(0xFF99CAFF);
+  static const primary100 = Color(0xFFCCE4FF);
+  static const primary50 = Color(0xFFE5F1FF);
 
   // --- Black --- //
   static const black900 = Color(0xFF0F0F10);
   static const black800 = Color(0xFF141415);
   static const black700 = Color(0xFF1A1A1C);
   static const black600 = Color(0xFF212123);
-  static const black500 = Color(0xFF242427);
-  static const black400 = Color(0xFF505052);
-  static const black300 = Color(0xFF6C6C6E);
+  static const black500 = Color(0xFF000000);
+  static const black400 = Color(0xFF1C1C1E);
+  static const black300 = Color(0xFF2C2C2E);
   static const black200 = Color(0xFF9A9A9C);
   static const black100 = Color(0xFFBBBBBC);
   static const black50 = Color(0xFFE9E9E9);
+
+  // --- Grey --- //
+  static const grey900 = Color(0xFF0F0F10);
+  static const grey800 = Color(0xFF141415);
+  static const grey700 = Color(0xFF252525);
+  static const grey600 = Color(0xFF9C9C9C);
+  static const grey500 = Color(0xFF8E8E93);
+  static const grey400 = Color(0xFF505052);
+  static const grey300 = Color(0xFF6C6C6E);
+  static const grey200 = Color(0xFFEBEBF5);
+  static const grey100 = Color(0xFFBBBBBC);
+  static const grey50 = Color(0xFFE9E9E9);
 
   // --- White --- //
   static const white900 = Color(0xFF5D5D5D);
@@ -38,28 +50,30 @@ abstract class UIColors {
   static const white50 = Color(0xFFFFFFFF);
 
   // --- Red --- //
-  static const red900 = Color(0xFF6B1002);
-  static const red800 = Color(0xFF8C1503);
-  static const red700 = Color(0xFFB51C04);
-  static const red600 = Color(0xFFE82305);
-  static const red500 = Color(0xFFFF2705);
-  static const red400 = Color(0xFFFF5237);
-  static const red300 = Color(0xFFFF6E58);
-  static const red200 = Color(0xFFFF9C8C);
-  static const red100 = Color(0xFFFFBCB2);
-  static const red50 = Color(0xFFFFE9E6);
+  static const red950 = Color(0xFF1A0706);
+  static const red900 = Color(0xFF330E0C);
+  static const red800 = Color(0xFF661C17);
+  static const red700 = Color(0xFF992923);
+  static const red600 = Color(0xFFCC372E);
+  static const red500 = Color(0xFFFF453A);
+  static const red400 = Color(0xFFFF6A61);
+  static const red300 = Color(0xFFFF8F89);
+  static const red200 = Color(0xFFFFB5B0);
+  static const red100 = Color(0xFFFFDAD8);
+  static const red50 = Color(0xFFFFEDEB);
 
   // --- Green --- //
-  static const green900 = Color(0xFF00421E);
-  static const green800 = Color(0xFF005627);
-  static const green700 = Color(0xFF006F32);
-  static const green600 = Color(0xFF008E41);
-  static const green500 = Color(0xFF009C47);
-  static const green400 = Color(0xFF33B06C);
-  static const green300 = Color(0xFF54BD84);
-  static const green200 = Color(0xFF8AD1AA);
-  static const green100 = Color(0xFFB0E0C6);
-  static const green50 = Color(0xFFE6F5ED);
+  static const green950 = Color(0xFF051509);
+  static const green900 = Color(0xFF0A2A12);
+  static const green800 = Color(0xFF135423);
+  static const green700 = Color(0xFF1D7D35);
+  static const green600 = Color(0xFF26A746);
+  static const green500 = Color(0xFF30D158);
+  static const green400 = Color(0xFF59DA79);
+  static const green300 = Color(0xFF83E39B);
+  static const green200 = Color(0xFFACEDBC);
+  static const green100 = Color(0xFFD6F6DE);
+  static const green50 = Color(0xFFEBFBEF);
 
   // --- Orange --- //
   static const orange900 = Color(0xFF563400);

@@ -46,3 +46,50 @@ class OnBoardingRoute extends PageRouteInfo<void> {
     },
   );
 }
+
+/// generated route for
+/// [SuccessCreateWalletPage]
+class SuccessCreateWalletRoute
+    extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
+  SuccessCreateWalletRoute({
+    Key? key,
+    required SuccessCreateWalletPageParams params,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SuccessCreateWalletRoute.name,
+          args: SuccessCreateWalletRouteArgs(
+            key: key,
+            params: params,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SuccessCreateWalletRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SuccessCreateWalletRouteArgs>();
+      return SuccessCreateWalletPage(
+        key: args.key,
+        params: args.params,
+      );
+    },
+  );
+}
+
+class SuccessCreateWalletRouteArgs {
+  const SuccessCreateWalletRouteArgs({
+    this.key,
+    required this.params,
+  });
+
+  final Key? key;
+
+  final SuccessCreateWalletPageParams params;
+
+  @override
+  String toString() {
+    return 'SuccessCreateWalletRouteArgs{key: $key, params: $params}';
+  }
+}

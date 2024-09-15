@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../text/text_ui.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/routes/app_route.dart';
+import '../../themes/colors.dart';
 import '../../utils/extensions/size_extension.dart';
 import '../../utils/extensions/theme_extension.dart';
 import '../button/bounce_tap.dart';
+import '../text/text_ui.dart';
 
 enum ScaffoldTitleAlignment { left, right, center }
 
@@ -105,13 +108,13 @@ class _LeadingWidget extends StatelessWidget {
       return leading!;
     }
 
-    if (context.isFirstRoute == false) {
+    if (navigationService.canPop || context.isFirstRoute == false) {
       return BounceTap(
         onTap: () => Navigator.pop(context),
         child: Icon(
-          Icons.arrow_back,
-          color: context.theme.primaryColorDark,
-          size: 18,
+          CupertinoIcons.back,
+          color: UIColors.white50,
+          size: 24.w,
         ),
       );
     }

@@ -73,9 +73,9 @@ class IconsConst {
 }
 
 class IllustrationsConst {
-  static const String onBoarding1 = 'assets/illustrations/ill_on_boarding_1.svg';
-  static const String onBoarding2 = 'assets/illustrations/ill_on_boarding_2.svg';
-  static const String onBoarding3 = 'assets/illustrations/ill_on_boarding_3.svg';
+  static const String onBoarding1 = 'assets/images/ob_1.png';
+  static const String onBoarding2 = 'assets/images/ob_2.png';
+  static const String onBoarding3 = 'assets/images/ob_3.png';
 }
 
 class ImagesConst {
@@ -102,4 +102,6 @@ class SvgConst {
   static const arrowLeft = 'assets/svg/arrow.left.svg';
   static const icEye = 'assets/svg/ic_eye.svg';
   static const icEyeClose = 'assets/svg/ic_eye_close.svg';
+  static const wallet = 'assets/svg/wallet.svg';
+  static const import = 'assets/svg/import.svg';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../config/font_config.dart';
+import '../../themes/typographies.dart';
 
 enum FontFamilySource {
   googleFonts,
@@ -45,16 +46,7 @@ class TextUI extends StatelessWidget {
     if (selectAble) {
       return SelectableText(
         text,
-        style: overwriteStyle ??
-            TextStyle(
-              fontSize: fontSize ?? 16,
-              fontFamily: fontFamily,
-              color: color,
-              overflow: overflow,
-              height: height ?? 1.2,
-              fontWeight: weight,
-              letterSpacing: letterSpacing,
-            ),
+        style: overwriteStyle ?? UITypographies.bodyMedium(context),
         textAlign: textAlign ?? TextAlign.left,
         maxLines: maxLines,
       );

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/components/container/rounded_container.dart';
@@ -9,12 +10,16 @@ class SeedPhraseItemWidget extends StatelessWidget {
   final String text;
   final bool? isConfirmed;
   final Function()? onTap;
+  final int? index;
+  final CrossAxisAlignment? textAlignment;
 
   const SeedPhraseItemWidget({
     super.key,
     required this.text,
     this.isConfirmed,
     this.onTap,
+    this.index,
+    this.textAlignment,
   });
 
   @override
@@ -27,21 +32,46 @@ class SeedPhraseItemWidget extends StatelessWidget {
       },
       child: RoundedContainer(
         borderRadius: BorderRadius.circular(10),
-        padding: const EdgeInsets.all(12),
         border: Border.all(
           color: const Color(0xFF34373E),
         ),
         useBorder: true,
-        color: (isConfirmed == true) ? const Color(0xFF1F2025).withOpacity(0.3) : const Color(0xFF1F2025),
+        color: (isConfirmed == true) ? UIColors.black300 : UIColors.black400,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: textAlignment ?? CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            AutoSizeTextWidget(
-              text,
-              color: (isConfirmed == true) ? context.theme.hintColor.withOpacity(0.3) : context.theme.primaryColor,
-              fontSize: 14,
-              maxLines: 1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (index != null && isConfirmed == true) ...[
+                  Container(
+                    padding: EdgeInsets.all(4.r),
+                    decoration: const BoxDecoration(
+                      color: UIColors.primary500,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${(index ?? 0) + 1}',
+                        style: UITypographies.bodySmall(
+                          context,
+                          color: UIColors.white50,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 6.r),
+                ],
+                AutoSizeTextWidget(
+                  text,
+                  color: UIColors.white50,
+                  fontSize: 14,
+                  maxLines: 1,
+                ),
+              ],
             ),
           ],
         ),

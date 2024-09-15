@@ -89,19 +89,23 @@ class ToastHelper {
     String message,
   ) {
     late Color backgroundColor;
+    late Color textColor;
     late IconData iconData;
 
     switch (type) {
       case ToastType.info:
         backgroundColor = UIColors.blue500;
+        textColor = UIColors.white50;
         iconData = Icons.info;
         break;
       case ToastType.success:
-        backgroundColor = UIColors.green500;
+        backgroundColor = UIColors.green950;
+        textColor = UIColors.green500;
         iconData = Icons.check;
         break;
       case ToastType.error:
-        backgroundColor = UIColors.red500;
+        backgroundColor = UIColors.red950;
+        textColor = UIColors.red500;
         iconData = Icons.error;
         break;
     }
@@ -113,25 +117,13 @@ class ToastHelper {
           borderRadius: BorderRadius.circular(25.0),
           color: backgroundColor,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              iconData,
-              color: UIColors.white50,
-            ),
-            UIGap.w12,
-            Expanded(
-              child: Text(
-                message,
-                softWrap: true,
-                style: UITypographies.bodyMedium(context).copyWith(
-                  color: UIColors.white50,
-                ),
-              ),
-            ),
-          ],
+        child: Text(
+          message,
+          softWrap: true,
+          textAlign: TextAlign.center,
+          style: UITypographies.bodyMedium(context).copyWith(
+            color: textColor,
+          ),
         ),
       );
     });

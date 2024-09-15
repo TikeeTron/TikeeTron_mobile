@@ -36,8 +36,7 @@ class UIButtonStyle {
         ),
       );
 
-  static ButtonStyle secondary(BuildContext context) =>
-      OutlinedButton.styleFrom(
+  static ButtonStyle secondary(BuildContext context) => OutlinedButton.styleFrom(
         minimumSize: const Size(0, 0),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         side: BorderSide(

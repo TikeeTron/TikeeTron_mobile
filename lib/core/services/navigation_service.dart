@@ -11,52 +11,7 @@ class NavigationService {
 
   GlobalKey<NavigatorState> get navigationKey => _router.navigatorKey;
   BuildContext? get currentContext => navigationKey.currentState!.context;
-
-  // void pop({Object? argument}) {
-  //   return navigationKey.currentState?.pop(argument);
-  // }
-
-  // void popUntil() {
-  //   int count = 0;
-  //   return navigationKey.currentState?.popUntil((_) => count++ >= 2);
-  // }
-
-  // Future<dynamic> popAndPushNamed(String routeName, {Object? arguments}) {
-  //   return navigationKey.currentState!.popAndPushNamed(
-  //     routeName,
-  //     arguments: arguments,
-  //   );
-  // }
-
-  // Future<dynamic> pushNamed(String routeName, {Object? arguments}) {
-  //   return navigationKey.currentState!.pushNamed(
-  //     routeName,
-  //     arguments: arguments,
-  //   );
-  // }
-
-  // Future<dynamic> pushReplacementNamed(
-  //   String routeName, {
-  //   Object? arguments,
-  //   Object? result,
-  // }) {
-  //   return navigationKey.currentState!.pushReplacementNamed(
-  //     routeName,
-  //     arguments: arguments,
-  //     result: result,
-  //   );
-  // }
-
-  // Future<dynamic> pushNamedAndRemoveUntil(
-  //   String routeName, {
-  //   Object? arguments,
-  // }) {
-  //   return navigationKey.currentState!.pushNamedAndRemoveUntil(
-  //     routeName,
-  //     (route) => false,
-  //     arguments: arguments,
-  //   );
-  // }
+  bool get canPop => navigationKey.currentState!.canPop();
   Future<T?> push<T extends Object?>(PageRouteInfo<dynamic> route, {void Function(NavigationFailure)? onFailure}) => _router.push(
         route,
         onFailure: onFailure,

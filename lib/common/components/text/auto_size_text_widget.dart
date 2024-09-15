@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+import '../../themes/typographies.dart';
+
 class AutoSizeTextWidget extends StatelessWidget {
   const AutoSizeTextWidget(
     this.text, {
@@ -36,32 +38,14 @@ class AutoSizeTextWidget extends StatelessWidget {
     if (selectAble) {
       return SelectableText(
         text,
-        style: overwriteStyle ??
-            TextStyle(
-              fontSize: fontSize,
-              fontFamily: fontFamily,
-              color: color,
-              overflow: overflow,
-              height: height ?? 1.2,
-              fontWeight: weight,
-              letterSpacing: letterSpacing,
-            ),
+        style: overwriteStyle ?? UITypographies.bodyMedium(context),
         textAlign: textAlign ?? TextAlign.left,
         maxLines: maxLines,
       );
     }
     return AutoSizeText(
       text,
-      style: overwriteStyle ??
-          TextStyle(
-            fontSize: fontSize,
-            fontFamily: fontFamily,
-            color: color,
-            overflow: overflow,
-            height: height ?? 1.2,
-            fontWeight: weight,
-            letterSpacing: letterSpacing,
-          ),
+      style: overwriteStyle ?? UITypographies.bodyMedium(context),
       overflow: overflow,
       textAlign: textAlign ?? TextAlign.left,
       maxLines: maxLines,

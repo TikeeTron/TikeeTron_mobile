@@ -11,7 +11,6 @@ import '../data/model/wallet_model.dart';
 import 'cubit/create_wallet_cubit.dart';
 import 'widget/back_up_step_page_view.dart';
 import 'widget/confirm_step_page_view.dart';
-import 'widget/initial_step_page_view.dart';
 
 @RoutePage()
 class CreateWalletPage extends StatefulWidget {
@@ -46,6 +45,7 @@ class __MainWidgetState extends State<_MainWidget> {
 
   @override
   void initState() {
+    _onCreateWallet();
     _pageController = PageController(
       keepPage: true,
       initialPage: _currentPage,
@@ -64,6 +64,7 @@ class __MainWidgetState extends State<_MainWidget> {
     return CupertinoPageScaffold(
       navigationBar: ScaffoldAppBar.cupertino(
         context,
+        title: '',
       ),
       child: SafeArea(
         child: Stack(
@@ -78,7 +79,6 @@ class __MainWidgetState extends State<_MainWidget> {
                 });
               },
               children: [
-                const InitialStepPageView(),
                 BackUpStepPageView(
                   mnemonicWords: _mnemonicWords,
                 ),
@@ -88,14 +88,15 @@ class __MainWidgetState extends State<_MainWidget> {
                 ),
               ],
             ),
-            _BottomButtonWidget(
-              currentPage: _currentPage,
-              isLoading: isLoading,
-              wallet: _wallet,
-              onChangePage: (page) {
-                _onChangeToPage(page);
-              },
-            ),
+            if (_currentPage != 1)
+              _BottomButtonWidget(
+                currentPage: _currentPage,
+                isLoading: isLoading,
+                wallet: _wallet,
+                onChangePage: (page) {
+                  _onChangeToPage(page);
+                },
+              ),
           ],
         ),
       ),
@@ -104,12 +105,6 @@ class __MainWidgetState extends State<_MainWidget> {
 
   Future<void> _onChangeToPage(int page) async {
     try {
-      // check current page is 0 and next page is 1
-      if (_currentPage == 0 && page == 1) {
-        // create wallet
-        await _onCreateWallet();
-      }
-
       // change page
       _pageController.animateToPage(
         page,
@@ -172,13 +167,13 @@ class _BottomButtonWidgetState extends State<_BottomButtonWidget> {
     String? title;
     Function()? onTap;
     if (widget.currentPage == 0) {
-      title = 'Create a Wallet';
+      title = 'Continue';
       onTap = () {
         // callback change page
         widget.onChangePage(1);
       };
     } else if (widget.currentPage == 1) {
-      title = 'Next';
+      title = 'Continue';
       onTap = () {
         // callback change page
         widget.onChangePage(2);

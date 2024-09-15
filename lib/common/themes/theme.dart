@@ -48,7 +48,7 @@ class _UIThemeMaterial {
     backgroundPrimary: UIColors.white50,
     backgroundSecondary: UIColors.white100,
     backgroundTertiary: UIColors.white200,
-    textPrimary: UIColors.black900,
+    textPrimary: UIColors.white50,
     textOnPrimary: UIColors.white50,
     textSecondary: UIColors.black700,
     textTertiary: UIColors.black500,
@@ -62,15 +62,14 @@ class _UIThemeMaterial {
     backgroundSecondary: UIColors.black800,
     backgroundTertiary: UIColors.black700,
     textPrimary: UIColors.white50,
-    textOnPrimary: UIColors.black900,
-    textSecondary: UIColors.black200,
+    textOnPrimary: UIColors.white50,
+    textSecondary: UIColors.grey500,
     textTertiary: UIColors.black400,
     borderBold: UIColors.black400,
     borderSoft: UIColors.black600,
   );
 
-  static _inputDecorationTheme(ThemeData theme) =>
-      theme.inputDecorationTheme.copyWith(
+  static _inputDecorationTheme(ThemeData theme) => theme.inputDecorationTheme.copyWith(
         filled: false,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -110,9 +109,7 @@ class _UIThemeMaterial {
 
   static _radioTheme(ThemeData theme) => theme.radioTheme.copyWith(
         fillColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected)
-              ? UIColors.primary500
-              : UIColors.white50,
+          (states) => states.contains(WidgetState.selected) ? UIColors.primary500 : UIColors.white50,
         ),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: const VisualDensity(

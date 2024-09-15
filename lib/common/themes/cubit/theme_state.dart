@@ -9,10 +9,8 @@ class ThemeState extends Equatable {
 
   bool get isDarkMode => brightness == Brightness.dark;
 
-  ThemeData get materialThemeData =>
-      isDarkMode ? UITheme.material.dark : UITheme.material.light;
-  CupertinoThemeData get cupertinoThemeData =>
-      isDarkMode ? UITheme.cupertino.dark : UITheme.cupertino.light;
+  ThemeData get materialThemeData => UITheme.material.dark;
+  CupertinoThemeData get cupertinoThemeData => UITheme.cupertino.dark;
 
   @override
   List<Object> get props => [

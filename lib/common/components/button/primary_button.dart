@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../styles/button_style.dart';
 import '../indicator/loading_indicator.dart';
@@ -95,10 +96,13 @@ class UIPrimaryButton extends StatelessWidget {
       ],
       if (text != null)
         Flexible(
-          child: Text(
-            text!,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: Text(
+              text!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
       if (rightIcon != null) ...[

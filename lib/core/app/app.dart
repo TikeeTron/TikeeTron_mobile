@@ -82,6 +82,11 @@ class __AppViewState extends State<_AppView> {
                 builder: FToastBuilder(),
                 debugShowCheckedModeBanner: false,
                 title: 'TikeeTron',
+                localizationsDelegates: const [
+                  DefaultMaterialLocalizations.delegate,
+                  DefaultWidgetsLocalizations.delegate,
+                  DefaultCupertinoLocalizations.delegate,
+                ],
                 theme: state.cupertinoThemeData,
                 routerConfig: _appRouter.config(),
               ),

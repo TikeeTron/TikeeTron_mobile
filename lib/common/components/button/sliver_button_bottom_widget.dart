@@ -41,7 +41,7 @@ class SliverButtonBottomWidget extends StatelessWidget {
               text: title,
               useInkWell: true,
               useHeavyHaptic: true,
-              color: context.theme.secondaryHeaderColor,
+              color: context.theme.colors.primary,
               isLoading: isLoading,
               disabled: isDisabled,
               onPress: onTap,

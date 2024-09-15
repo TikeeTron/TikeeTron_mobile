@@ -26,10 +26,10 @@ class ModalHelper {
       bounce: true,
       duration: DurationConst.iosDefault,
       backgroundColor: Colors.transparent,
-      barrierColor: UIColors.black400.withOpacity(.32),
+      barrierColor: UIColors.black500.withOpacity(0.5),
       builder: (context) {
         return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
           child: SafeArea(
             bottom: false,
             child: _bottomSheetWrapper(
@@ -60,7 +60,7 @@ class ModalHelper {
       bounce: true,
       duration: DurationConst.iosDefault,
       backgroundColor: Colors.transparent,
-      barrierColor: UIColors.black400.withOpacity(.32),
+      barrierColor: Colors.transparent,
       shadow: const BoxShadow(
         color: UIColors.transparent,
       ),
@@ -93,14 +93,9 @@ class ModalHelper {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SvgPicture.asset(
-          ImagesConst.notchBottomSheet,
-          fit: BoxFit.fitWidth,
-        ),
         Flexible(
           child: Container(
             width: double.infinity,
-            color: context.theme.colors.backgroundPrimary,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
