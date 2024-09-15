@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/common.dart';
-import '../../../../common/components/text/text_ui.dart';
 import '../../../../common/config/padding_config.dart';
-import '../../../../common/utils/extensions/list_string_parsing.dart';
 import '../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../core/core.dart';
 import '../../data/model/wallet_model.dart';
-import '../success_create_wallet_page.dart';
+import '../create_wallet/success_create_wallet_page.dart';
 import 'seed_phrase_item_widget.dart';
 
 class ConfirmStepPageView extends StatefulWidget {
@@ -84,24 +82,8 @@ class _ConfirmStepPageViewState extends State<ConfirmStepPageView> {
                 fontSize: 15.sp,
               ),
             ),
-            const SizedBox(
-              height: 24,
-            ),
-            if (mnemonicWords.isContainSameElement) ...[
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                'You might see the same words appeared within the seed phrase generated',
-                style: UITypographies.bodyLarge(
-                  context,
-                  color: UIColors.grey500,
-                  fontSize: 15.sp,
-                ),
-              ),
-            ],
-            const SizedBox(
-              height: 15,
+            SizedBox(
+              height: 38.h,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),

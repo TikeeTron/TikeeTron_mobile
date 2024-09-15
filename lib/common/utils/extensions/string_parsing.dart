@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../core/adapters/blockchain_network_adapter.dart';
-import '../../../features/wallet/data/models/network_model.dart';
+import '../../../features/blockchain/data/models/network_model.dart';
 import '../currency_util.dart';
 import '../encrypter/encrypter.dart';
 import '../helpers/logger_helper.dart';

@@ -2,15 +2,15 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/components/app_bar/scaffold_app_bar.dart';
-import '../../../common/components/button/sliver_button_bottom_widget.dart';
-import '../../../common/constants/duration_constant.dart';
-import '../../../common/utils/encrypter/encrypter.dart';
-import '../../../common/utils/helpers/logger_helper.dart';
-import '../data/model/wallet_model.dart';
-import 'cubit/create_wallet_cubit.dart';
-import 'widget/back_up_step_page_view.dart';
-import 'widget/confirm_step_page_view.dart';
+import '../../../../common/components/app_bar/scaffold_app_bar.dart';
+import '../../../../common/components/button/sliver_button_bottom_widget.dart';
+import '../../../../common/constants/duration_constant.dart';
+import '../../../../common/utils/encrypter/encrypter.dart';
+import '../../../../common/utils/helpers/logger_helper.dart';
+import '../../data/model/wallet_model.dart';
+import '../cubit/create_wallet_cubit.dart';
+import '../widget/back_up_step_page_view.dart';
+import '../widget/confirm_step_page_view.dart';
 
 @RoutePage()
 class CreateWalletPage extends StatefulWidget {

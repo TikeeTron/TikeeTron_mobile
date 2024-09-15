@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../common/themes/cubit/theme_cubit.dart';
-import '../../features/create_wallet/presentation/cubit/create_wallet_cubit.dart';
+import '../../features/wallet/presentation/cubit/create_wallet_cubit.dart';
 import '../injector/locator.dart';
 import '../routes/app_route.dart';
 

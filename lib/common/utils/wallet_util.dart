@@ -12,8 +12,8 @@ import 'package:injectable/injectable.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../core/adapters/blockchain_network_adapter.dart';
-import '../../features/create_wallet/data/model/wallet_model.dart';
-import '../../features/wallet/data/models/private_key_model.dart';
+import '../../features/wallet/data/model/wallet_model.dart';
+import '../../features/blockchain/data/models/private_key_model.dart';
 import 'extensions/string_parsing.dart';
 import 'helpers/logger_helper.dart';
 import 'network_list.dart';

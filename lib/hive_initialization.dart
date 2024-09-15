@@ -38,11 +38,11 @@ class HiveInitialization {
     // if old db exist without aes encryption, running migration function
 
     await Hive.openBox(
-      'walletV2',
+      'wallet',
       encryptionCipher: HiveAesCipher(encryptionKeyUint8List),
     );
     await Hive.openBox(
-      'accountV2',
+      'account',
       encryptionCipher: HiveAesCipher(encryptionKeyUint8List),
     );
   }

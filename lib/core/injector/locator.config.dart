@@ -15,18 +15,18 @@ import 'package:tikeetron_app/common/utils/helpers/toast_helper.dart' as _i139;
 import 'package:tikeetron_app/common/utils/wallet_util.dart' as _i810;
 import 'package:tikeetron_app/core/routes/app_route.dart' as _i344;
 import 'package:tikeetron_app/core/services/navigation_service.dart' as _i488;
-import 'package:tikeetron_app/features/create_wallet/data/repositories/implementation/walllet_core_repository_impl.dart'
-    as _i223;
-import 'package:tikeetron_app/features/create_wallet/data/repositories/source/local/wallet_local_repository.dart'
-    as _i968;
-import 'package:tikeetron_app/features/create_wallet/domain/repository/wallet_core_repository.dart'
-    as _i808;
-import 'package:tikeetron_app/features/create_wallet/presentation/cubit/create_wallet_cubit.dart'
-    as _i772;
-import 'package:tikeetron_app/features/wallet/data/repositories/implementation/tron_core_repository_impl.dart'
-    as _i359;
-import 'package:tikeetron_app/features/wallet/domain/repository/tron_core_repository.dart'
-    as _i700;
+import 'package:tikeetron_app/features/blockchain/data/repositories/implementation/tron_core_repository_impl.dart'
+    as _i111;
+import 'package:tikeetron_app/features/blockchain/domain/repository/tron_core_repository.dart'
+    as _i1041;
+import 'package:tikeetron_app/features/wallet/data/repositories/implementation/walllet_core_repository_impl.dart'
+    as _i678;
+import 'package:tikeetron_app/features/wallet/data/repositories/source/local/wallet_local_repository.dart'
+    as _i593;
+import 'package:tikeetron_app/features/wallet/domain/repository/wallet_core_repository.dart'
+    as _i183;
+import 'package:tikeetron_app/features/wallet/presentation/cubit/create_wallet_cubit.dart'
+    as _i1025;
 import 'package:tikeetron_app/hive_initialization.dart' as _i1057;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -43,21 +43,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i344.AppRouter>(() => _i344.AppRouter());
     gh.singleton<_i488.NavigationService>(() => _i488.NavigationService());
     gh.singleton<_i622.ThemeCubit>(() => _i622.ThemeCubit());
-    gh.lazySingleton<_i968.WalletLocalRepository>(
-        () => _i968.WalletLocalRepository());
     gh.lazySingleton<_i1057.HiveInitialization>(
         () => _i1057.HiveInitialization());
     gh.lazySingleton<_i810.WalletUtils>(() => _i810.WalletUtils());
     gh.lazySingleton<_i139.ToastHelper>(() => _i139.ToastHelper());
-    gh.lazySingleton<_i700.TronCoreRepository>(
-        () => _i359.TronCoreRepositoryImpl());
-    gh.lazySingleton<_i808.WalletCoreRepository>(
-        () => _i223.WallletCoreRepositoryImpl(
-              gh<_i700.TronCoreRepository>(),
-              gh<_i968.WalletLocalRepository>(),
+    gh.lazySingleton<_i593.WalletLocalRepository>(
+        () => _i593.WalletLocalRepository());
+    gh.lazySingleton<_i1041.TronCoreRepository>(
+        () => _i111.TronCoreRepositoryImpl());
+    gh.lazySingleton<_i183.WalletCoreRepository>(
+        () => _i678.WallletCoreRepositoryImpl(
+              gh<_i1041.TronCoreRepository>(),
+              gh<_i593.WalletLocalRepository>(),
             ));
-    gh.lazySingleton<_i772.CreateWalletCubit>(() =>
-        _i772.CreateWalletCubit(walletCore: gh<_i808.WalletCoreRepository>()));
+    gh.lazySingleton<_i1025.CreateWalletCubit>(() =>
+        _i1025.CreateWalletCubit(walletCore: gh<_i183.WalletCoreRepository>()));
     return this;
   }
 }

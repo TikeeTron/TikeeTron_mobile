@@ -42,11 +42,6 @@ abstract class WalletCoreRepository {
     required BlockchainNetwork blockchain,
   });
   double getAllWalletsBalance();
-  bool isMustMigrateWallet();
-  Future<Map<dynamic, dynamic>> migrateHotWallet({
-    required Map<dynamic, dynamic> wallet,
-    required int walletIndex,
-  });
 
   Future<void> deleteWallet({
     required int walletIndex,

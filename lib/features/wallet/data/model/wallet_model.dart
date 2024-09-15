@@ -35,7 +35,7 @@ class WalletModel extends Equatable {
   final String? userEmail;
   final String? userProfilePictureUrl;
   final String? appVersion;
-  final String? xellarUsername;
+  final String? tikeetronUsername;
   final List<WalletAddressModel>? addresses;
   final int? mpcVersion;
 
@@ -61,7 +61,7 @@ class WalletModel extends Equatable {
       this.userProfilePictureUrl,
       this.nonVisibleNFT,
       this.appVersion,
-      this.xellarUsername,
+      this.tikeetronUsername,
       this.addresses,
       this.tagData,
       this.mpcVersion});
@@ -90,7 +90,7 @@ class WalletModel extends Equatable {
         userProfilePictureUrl: json['userProfilePictureUrl'],
         nonVisibleNFT: json['nonVisibleNFT'],
         appVersion: json['app_version'],
-        xellarUsername: json['xellarUsername'],
+        tikeetronUsername: json['tikeetronUsername'],
         addresses: (json['addresses'] as List<dynamic>?)?.map((e) => WalletAddressModel.fromJson(e)).toList(),
         mpcVersion: json['mpcVersion']);
   }
@@ -118,7 +118,7 @@ class WalletModel extends Equatable {
     String? userProfilePictureUrl,
     List<dynamic>? nonVisibleNFT,
     String? appVersion,
-    String? xellarUsername,
+    String? tikeetronUsername,
     List<WalletAddressModel>? addresses,
     TagDataModel? tagData,
     int? mpcVersion,
@@ -142,7 +142,7 @@ class WalletModel extends Equatable {
       userProfilePictureUrl: userProfilePictureUrl ?? this.userProfilePictureUrl,
       nonVisibleNFT: nonVisibleNFT ?? this.nonVisibleNFT,
       appVersion: appVersion ?? this.appVersion,
-      xellarUsername: xellarUsername ?? this.xellarUsername,
+      tikeetronUsername: tikeetronUsername ?? this.tikeetronUsername,
       addresses: addresses ?? this.addresses,
       tagData: tagData ?? this.tagData,
       mpcVersion: mpcVersion ?? this.mpcVersion,
@@ -170,7 +170,7 @@ class WalletModel extends Equatable {
       "nonVisibleNFT": nonVisibleNFT,
       "app_version": appVersion,
       "tagData": tagData?.toJson(),
-      "xellarUsername": xellarUsername,
+      "tikeetronUsername": tikeetronUsername,
       "addresses": addresses?.map((e) => e.toJson()).toList(),
       "mpcVersion": mpcVersion
     };
@@ -204,7 +204,7 @@ class WalletModel extends Equatable {
         userProfilePictureUrl,
         nonVisibleNFT,
         appVersion,
-        xellarUsername,
+        tikeetronUsername,
         addresses,
         tagData,
         mpcVersion

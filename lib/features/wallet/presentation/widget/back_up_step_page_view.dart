@@ -8,6 +8,7 @@ import '../../../../common/components/button/button_rounded_ui.dart';
 import '../../../../common/components/container/rounded_container.dart';
 import '../../../../common/components/text/text_ui.dart';
 import '../../../../common/config/padding_config.dart';
+import '../../../../common/utils/extensions/list_string_parsing.dart';
 import 'seed_phrase_item_widget.dart';
 
 class BackUpStepPageView extends StatefulWidget {
@@ -129,6 +130,29 @@ class _BackUpStepPageViewState extends State<BackUpStepPageView> {
                     ),
                   ),
                 ),
+          if (widget.mnemonicWords.isContainSameElement && widget.mnemonicWords.isNotEmpty && isShowSeedPhrase) ...[
+            SizedBox(
+              height: 8.h,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: UIColors.black400,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                'You might see the same words appeared within the seed phrase generated',
+                style: UITypographies.bodyLarge(
+                  context,
+                  color: UIColors.white50,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
           const SizedBox(
             height: 120,
           ),

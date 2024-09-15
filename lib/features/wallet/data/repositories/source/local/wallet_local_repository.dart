@@ -13,10 +13,10 @@ class WalletLocalRepository {
     return _singleton!;
   }
 
-  static const String walletKey = 'walletV2';
+  static const String walletKey = 'wallet';
 
   WalletLocalRepository._internal() {
-    _appRepository = AppRepository('walletV2');
+    _appRepository = AppRepository('wallet');
   }
 
   get<E>(E key) {

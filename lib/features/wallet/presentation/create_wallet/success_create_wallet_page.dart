@@ -3,21 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/common.dart';
-import '../../../common/components/button/button_rounded_ui.dart';
-import '../../../common/config/padding_config.dart';
-import '../../../common/constants/constants.dart';
-import '../../../common/constants/duration_constant.dart';
-import '../../../common/themes/colors.dart';
-import '../../../common/themes/typographies.dart';
-import '../../../common/utils/extensions/object_parsing.dart';
-import '../../../common/utils/extensions/size_extension.dart';
-import '../../../common/utils/helpers/logger_helper.dart';
-import '../../../common/utils/utils.dart';
-import '../../../core/injector/locator.dart';
-import '../../../core/services/navigation_service.dart';
-import '../data/model/wallet_model.dart';
-import '../domain/repository/wallet_core_repository.dart';
+import '../../../../common/common.dart';
+import '../../../../common/config/padding_config.dart';
+import '../../../../common/constants/duration_constant.dart';
+import '../../../../common/utils/extensions/object_parsing.dart';
+
+import '../../../../common/utils/helpers/logger_helper.dart';
+import '../../../../core/injector/locator.dart';
+import '../../data/model/wallet_model.dart';
+import '../../domain/repository/wallet_core_repository.dart';
+import '../cubit/active_wallet/active_wallet_cubit.dart';
+import '../cubit/wallets/wallets_cubit.dart';
 
 class SuccessCreateWalletPageParams {
   final WalletModel wallet;
@@ -127,14 +123,15 @@ class _SuccessCreateWalletPageState extends State<SuccessCreateWalletPage> {
       // if wallet type not cold, save wallet to local
       await _onSaveWallets();
 
+      if (!mounted) return;
       // get wallets
-      // BlocProvider.of<WalletsCubit>(context).getWallets();
+      BlocProvider.of<WalletsCubit>(context).getWallets();
 
       // // set active wallet
-      // await BlocProvider.of<ActiveWalletCubit>(context).setActiveWallet(
-      //   wallet: widget.params.wallet,
-      // );
-      // final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context).state;
+      await BlocProvider.of<ActiveWalletCubit>(context).setActiveWallet(
+        wallet: widget.params.wallet,
+      );
+      final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context).state;
       // final watchlistBloc = BlocProvider.of<WatchlistBloc>(context);
       // if (activeWalletCubit.walletIndex != null) {
       //   List<dynamic> tokenList = watchlistBloc.state.watchlists ?? [];
