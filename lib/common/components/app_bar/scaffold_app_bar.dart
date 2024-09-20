@@ -15,6 +15,7 @@ class ScaffoldAppBar {
     BuildContext context, {
     String? title,
     Widget? trailing,
+    Widget? middle,
     Widget? leading,
     ScaffoldTitleAlignment titleAlignment = ScaffoldTitleAlignment.left,
   }) {
@@ -47,7 +48,7 @@ class ScaffoldAppBar {
                 ),
               ],
             )
-          : null,
+          : middle,
       trailing: trailing,
     );
   }

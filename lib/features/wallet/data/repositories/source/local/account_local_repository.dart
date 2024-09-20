@@ -1,5 +1,8 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../../../../core/app/app_repository.dart';
 
+@LazySingleton()
 class AccountLocalRepository {
   static AccountLocalRepository? _singleton;
   AppRepository? _appRepository;

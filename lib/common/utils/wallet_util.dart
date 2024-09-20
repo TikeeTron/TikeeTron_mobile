@@ -1,19 +1,17 @@
 import 'dart:convert';
 
-import 'package:bdk_flutter/bdk_flutter.dart';
-import 'package:bip32/bip32.dart' as bip32;
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip39/bip39.dart';
-import 'package:convert/convert.dart';
+import 'package:blockchain_utils/blockchain_utils.dart' as block;
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
+import 'package:on_chain/on_chain.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../core/adapters/blockchain_network_adapter.dart';
-import '../../features/wallet/data/model/wallet_model.dart';
 import '../../features/blockchain/data/models/private_key_model.dart';
+import '../../features/wallet/data/model/wallet_model.dart';
 import 'extensions/string_parsing.dart';
 import 'helpers/logger_helper.dart';
 import 'network_list.dart';
@@ -24,36 +22,33 @@ class WalletUtils {
     return mnemonicToSeed(map['mne'].toString(), passphrase: map['phrase'].toString());
   }
 
-  Future<PrivateKeyModel> extractPrivateKeyFromSeed(
-    String mne,
-    String? phrase, {
+  Future<PrivateKeyModel> extractPrivateKeyFromSeed({
+    required block.Mnemonic mnemonic,
     required BlockchainNetwork blockchain,
   }) async {
     try {
-      Logger.info('extractPrivateKeyFromSeed params: mne $mne, phrase $phrase, blockchain $blockchain');
+      Logger.info('extractPrivateKeyFromSeed params: mne $mnemonic, blockchain $blockchain');
 
-      EthPrivateKey? ethPrivateKey;
+      TronPrivateKey? tronPrivateKey;
       String? privateKey;
-      DescriptorSecretKey? descriptorSecretKey;
-
+      final seed = block.Bip39SeedGenerator(mnemonic).generate();
       switch (blockchain) {
         case BlockchainNetwork.tron:
         case BlockchainNetwork.btt:
-          Map<Object, String> datas = {"mne": mne, "phrase": phrase ?? ''};
+          final bip44 = block.Bip44.fromSeed(seed, block.Bip44Coins.tron);
+          final childKey = bip44.deriveDefaultPath;
+          final tronPrivKey = TronPrivateKey.fromBytes(childKey.privateKey.raw);
 
-          final root = bip32.BIP32.fromSeed(await foundation.compute(mnemonicWithPhrase, datas));
-          final key1 = root.derivePath("m/44'/60'/0'/0/0");
-
-          privateKey = hex.encode(key1.privateKey!.cast());
-          ethPrivateKey = EthPrivateKey.fromHex(privateKey);
+// block.Bip44.fromSeed(seed, block.Bip44Coins.tron);
+          tronPrivateKey = tronPrivKey;
+          privateKey = tronPrivKey.toHex();
           break;
       }
-      Logger.success('extractPrivateKeyFromSeed success: ethPrivateKey $ethPrivateKey, privateKey $privateKey, descriptorSecretKey $descriptorSecretKey');
+      Logger.success('extractPrivateKeyFromSeed success: ethPrivateKey $tronPrivateKey, privateKey $privateKey,');
 
       return PrivateKeyModel(
-        ethPrivateKey: ethPrivateKey,
+        tronPrivateKey: tronPrivateKey,
         privateKey: privateKey,
-        descriptorSecretKey: descriptorSecretKey,
       );
     } catch (error) {
       Logger.error('extractPrivateKeyFromSeed error: $error');

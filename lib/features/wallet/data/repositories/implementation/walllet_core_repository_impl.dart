@@ -1,4 +1,4 @@
-import 'package:bdk_flutter/bdk_flutter.dart';
+import 'package:blockchain_utils/blockchain_utils.dart' as block;
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -79,13 +79,14 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
 
       // encrypt mnemonic
       final ecnryptedSeedPhrase = EncryptEngine.encryptData(
-        mnemonic.toString(),
+        mnemonic.toStr(),
       );
 
       // set mnemonic to wallet
       WalletModel wallet = WalletModel(
         seed: ecnryptedSeedPhrase,
       );
+      final seed = block.Bip39SeedGenerator(mnemonic).generate();
 
       // default blockchains
       const blockchains = BlockchainConstant.defaultBlockchains;
@@ -95,7 +96,8 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
           case BlockchainNetwork.tron:
             // create wallet
             final result = await _tronCoreRepository.createWallet(
-              mnemonic: mnemonic.toString(),
+              mnemonic: mnemonic,
+              seed: seed.toString(),
             );
 
             // get addresses
@@ -145,17 +147,17 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
   }
 
   @override
-  Future<Mnemonic> generateMnemonic({required int length}) async {
+  Future<block.Mnemonic> generateMnemonic({required int length}) async {
     try {
       Logger.info('generateMnemonic: $length');
 
-      late WordCount wordCount;
+      late block.Bip39WordsNum wordCount;
       if (length == 12) {
-        wordCount = WordCount.Words12;
+        wordCount = block.Bip39WordsNum.wordsNum12;
       } else if (length == 18) {
-        wordCount = WordCount.Words18;
+        wordCount = block.Bip39WordsNum.wordsNum18;
       } else if (length == 24) {
-        wordCount = WordCount.Words24;
+        wordCount = block.Bip39WordsNum.wordsNum24;
       }
 
       final result = await _mnemonicCreator(
@@ -171,11 +173,15 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
     }
   }
 
-  Future<Mnemonic> _mnemonicCreator({
-    required WordCount wordCount,
+  Future<block.Mnemonic> _mnemonicCreator({
+    required block.Bip39WordsNum wordCount,
   }) async {
     try {
-      final mnemonic = await Mnemonic.create(wordCount);
+      Logger.success('mnemonic cretor params: ${wordCount.value}');
+
+      final mnemonic = await block.Bip39MnemonicGenerator().fromWordsNumber(wordCount);
+
+      Logger.success('mnemonic cretor success: ${mnemonic.toList()}');
 
       return mnemonic;
     } catch (e) {
@@ -243,7 +249,7 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
   }
 
   @override
-  Future<String> getWalletAddressFromSeed({required String seed, required BlockchainNetwork blockchain}) async {
+  Future<String> getWalletAddressFromSeed({required block.Mnemonic seed, required BlockchainNetwork blockchain}) async {
     try {
       Logger.info('getWalletAddressFromSeed params: seed $seed, blockchain $blockchain');
 
@@ -251,15 +257,15 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
 
       // extract credential from seed
       final extracted = await locator<WalletUtils>().extractPrivateKeyFromSeed(
-        seed,
-        null,
         blockchain: blockchain,
+        mnemonic: seed,
       );
 
       switch (blockchain) {
         case BlockchainNetwork.btt:
         case BlockchainNetwork.tron:
-          final address = extracted.ethPrivateKey?.address.hexEip55;
+          final publicKey = extracted.tronPrivateKey?.publicKey();
+          final address = publicKey?.toAddress().toAddress();
           if (address == null) {
             throw 'Failed to get EVM address from seed';
           }
@@ -393,17 +399,17 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
   }
 
   @override
-  Future<WalletModel> importWallet({String? seed}) async {
+  Future<WalletModel> importWallet({block.Mnemonic? mnemonic}) async {
     try {
       final walletLength = getWallets().length;
       WalletModel wallet = const WalletModel();
       late String walletName;
-      if (seed == null) {
+      if (mnemonic == null) {
         throw Exception('Seed phrase empty');
       }
 
       wallet = await _importNonCustodialWallet(
-        seed: seed,
+        mnemonic: mnemonic,
       );
       final walletAddress = getWalletAddress(
         wallet: wallet,
@@ -443,12 +449,12 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
   }
 
   Future<WalletModel> _importNonCustodialWallet({
-    required String seed,
+    required block.Mnemonic mnemonic,
   }) async {
     try {
       // encrypt mnemonic
       final ecnryptedSeedPhrase = EncryptEngine.encryptData(
-        seed.toString(),
+        mnemonic.toStr(),
       );
       WalletModel wallet = WalletModel(
         seed: ecnryptedSeedPhrase,
@@ -461,12 +467,12 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
           case BlockchainNetwork.tron:
           case BlockchainNetwork.btt:
             final extracted = await locator<WalletUtils>().extractPrivateKeyFromSeed(
-              seed,
-              null,
+              mnemonic: mnemonic,
               blockchain: blockchain,
             );
-            final fromHex = extracted.ethPrivateKey;
-            final address = fromHex?.address.hexEip55;
+
+            final publicKey = extracted.tronPrivateKey?.publicKey();
+            final address = publicKey?.toAddress().toAddress();
 
             Logger.info('ADDRESS & BLOCKCHAIN TO BE IMPORTED -> $address + $blockchain');
             // validate wallet already exist
@@ -583,9 +589,10 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
 
       for (final walletAddress in walletAddressList) {
         // post wallet to backend
-        await saveAddressToBackend(
-          walletAddress: walletAddress,
-        );
+        //TODO: Waiting for backend
+        // await saveAddressToBackend(
+        //   walletAddress: walletAddress,
+        // );
       }
 
       // add to wallet repository

@@ -36,6 +36,8 @@ class UITextField extends StatefulWidget {
     this.validator,
     this.inputFormatters,
     this.fillColor,
+    this.borderColor,
+    this.radius,
   });
 
   final TextEditingController? textController;
@@ -45,9 +47,11 @@ class UITextField extends StatefulWidget {
   final String? initialValue;
   final bool isEnabled;
   final bool isReadOnly;
+  final Color? borderColor;
   final int? maxLength;
   final int? maxLines;
   final int? minLines;
+  final double? radius;
   final bool expands;
   final Widget? suffixIcon;
   final Color? iconColor;
@@ -118,14 +122,35 @@ class _UITextFieldState extends State<UITextField> {
               textAlignVertical: TextAlignVertical.center,
               style: UITypographies.bodyLarge(context).copyWith(
                 color: context.theme.colors.textPrimary,
+                inherit: true,
               ),
               cursorColor: context.theme.colors.textPrimary,
               cursorErrorColor: UIColors.red500,
               decoration: InputDecoration(
                 hintText: widget.hint,
                 errorText: _error,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(widget.radius ?? 10.r),
+                  borderSide: BorderSide(
+                    color: widget.borderColor ?? context.theme.colors.borderSoft,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(widget.radius ?? 10.r),
+                  borderSide: BorderSide(
+                    color: widget.borderColor ?? context.theme.colors.borderSoft,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(widget.radius ?? 10.r),
+                  borderSide: BorderSide(
+                    color: widget.borderColor ?? context.theme.colors.primary,
+                  ),
+                ),
+                filled: true,
+                fillColor: widget.fillColor,
                 hintStyle: UITypographies.bodyLarge(context).copyWith(
-                  color: context.theme.colors.textTertiary,
+                  inherit: true,
                 ),
                 suffixIcon: widget.isPassword
                     ? GestureDetector(
@@ -139,9 +164,7 @@ class _UITextFieldState extends State<UITextField> {
                           width: 20.r,
                           child: Center(
                             child: SvgPicture.asset(
-                              _isObscureText
-                                  ? IconsConst.visible
-                                  : IconsConst.invisible,
+                              _isObscureText ? IconsConst.visible : IconsConst.invisible,
                               colorFilter: ColorFilter.mode(
                                 context.theme.colors.textPrimary,
                                 BlendMode.srcIn,
@@ -187,8 +210,7 @@ class _UITextFieldState extends State<UITextField> {
                 ...?widget.inputFormatters,
               ],
             ),
-            if (_error != null || widget.information != null)
-              ..._information(context),
+            if (_error != null || widget.information != null) ..._information(context),
           ],
         );
       },
@@ -222,9 +244,7 @@ class _UITextFieldState extends State<UITextField> {
           Text(
             _error ?? widget.information ?? '',
             style: UITypographies.captionMedium(context).copyWith(
-              color: _error != null
-                  ? UIColors.red500
-                  : context.theme.colors.textSecondary,
+              color: _error != null ? UIColors.red500 : context.theme.colors.textSecondary,
             ),
           ),
         ],

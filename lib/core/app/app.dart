@@ -7,7 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../common/themes/cubit/theme_cubit.dart';
+import '../../common/utils/extensions/object_parsing.dart';
+import '../../common/utils/helpers/logger_helper.dart';
+import '../../features/shared/presentation/cubit/dashboard_cubit.dart';
+import '../../features/wallet/data/repositories/source/local/wallet_local_repository.dart';
+import '../../features/wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import '../../features/wallet/presentation/cubit/create_wallet_cubit.dart';
+import '../../features/wallet/presentation/cubit/token_list/token_list_cubit.dart';
+import '../../features/wallet/presentation/cubit/wallets/wallets_cubit.dart';
 import '../injector/locator.dart';
 import '../routes/app_route.dart';
 
@@ -29,6 +36,18 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => locator<CreateWalletCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<ActiveWalletCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<WalletsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<TokenListCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<DashboardCubit>(),
         ),
       ],
       child: _AppView(
@@ -61,10 +80,63 @@ class __AppViewState extends State<_AppView> {
 
       context.read<ThemeCubit>().setBrightness(brightness);
     };
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        await _init();
+      },
+    );
+  }
 
-    Future.delayed(const Duration(seconds: 2), () {
-      FlutterNativeSplash.remove();
-    });
+  Future<void> _onGoToPage({
+    required dynamic route,
+  }) async {
+    // go to [pagePath] page
+    navigationService.pushAndPopUntil(
+      route,
+      predicate: (route) => false,
+    );
+  }
+
+  Future<void> _init() async {
+    try {
+      await Future.delayed(const Duration(seconds: 2), () {
+        FlutterNativeSplash.remove();
+      });
+      // check wallets is empty
+      final wallets = locator<WalletLocalRepository>().getAll();
+      if (wallets == null || wallets.isEmpty) {
+        // go to onboarding page
+        await _onGoToPage(
+          route: const OnBoardingRoute(),
+        );
+
+        return;
+      }
+
+      // set & get active wallet
+      BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
+      final walletIndex = BlocProvider.of<ActiveWalletCubit>(context).state.walletIndex;
+      if (walletIndex == null) {
+        // go to onboarding page
+        await _onGoToPage(
+          route: const OnBoardingRoute(),
+        );
+
+        return;
+      }
+
+      // get tokens price
+      // BlocProvider.of<TokenListCubit>(context).getTokenBalances(
+      //   walletIndex: walletIndex,
+      // );
+
+      // go to main page
+      _onGoToPage(
+        route: const DashboardRoute(),
+      );
+    } catch (error) {
+      Logger.error(error.errorMessage);
+    }
   }
 
   @override

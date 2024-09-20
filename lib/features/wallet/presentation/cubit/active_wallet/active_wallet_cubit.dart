@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../../common/utils/helpers/safe_emit_helper.dart';
 import '../../../../../core/core.dart';
@@ -14,6 +15,7 @@ import '../token_list/token_list_cubit.dart';
 
 part 'active_wallet_state.dart';
 
+@LazySingleton()
 class ActiveWalletCubit extends Cubit<ActiveWalletState> {
   final AccountLocalRepository accountLocalRepository;
   final WalletCoreRepository walletCore;

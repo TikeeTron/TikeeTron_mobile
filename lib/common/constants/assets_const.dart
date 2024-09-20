@@ -104,4 +104,7 @@ class SvgConst {
   static const icEyeClose = 'assets/svg/ic_eye_close.svg';
   static const wallet = 'assets/svg/wallet.svg';
   static const import = 'assets/svg/import.svg';
+  static const scanQr = 'assets/svg/scan_qr.svg';
+  static const drawer = 'assets/svg/ic_drawer.svg';
+  static const icAiHome = 'assets/svg/ic_ai_home.svg';
 }

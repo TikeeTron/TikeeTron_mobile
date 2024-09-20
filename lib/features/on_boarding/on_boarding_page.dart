@@ -156,7 +156,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       const CreateWalletRoute(),
                     );
                   },
-                  onImportWallet: () {},
+                  onImportWallet: () {
+                    navigationService.push(
+                      const ImportWalletRoute(),
+                    );
+                  },
                 ),
                 isHasCloseButton: false,
                 padding: EdgeInsets.zero,

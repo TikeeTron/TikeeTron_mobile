@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../../common/utils/extensions/object_parsing.dart';
 import '../../../data/model/wallet_model.dart';
@@ -7,6 +8,7 @@ import '../../../domain/repository/wallet_core_repository.dart';
 
 part 'wallets_state.dart';
 
+@LazySingleton()
 class WalletsCubit extends Cubit<WalletsState> {
   final WalletCoreRepository walletCore;
 

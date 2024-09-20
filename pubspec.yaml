@@ -17,6 +17,8 @@ dependencies:
   bdk_flutter: ^0.30.0
   bip32: ^2.0.0
   bip39: ^1.0.6
+  bip32_bip44: ^1.0.0
+  on_chain: ^4.2.0
 
    # UI
   badges: ^3.1.2

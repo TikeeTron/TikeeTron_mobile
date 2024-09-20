@@ -10,6 +10,7 @@ import '../../../../common/utils/extensions/object_parsing.dart';
 
 import '../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../core/injector/locator.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../data/model/wallet_model.dart';
 import '../../domain/repository/wallet_core_repository.dart';
 import '../cubit/active_wallet/active_wallet_cubit.dart';
@@ -154,9 +155,15 @@ class _SuccessCreateWalletPageState extends State<SuccessCreateWalletPage> {
 
       await Future.delayed(DurationConstant.d500);
       // go to main page
-      // locator<NavigationService>().pushNamedAndRemoveUntil(
-      //   AppRoute.main.path,
-      // );
+      navigationService.pushAndPopUntil(
+        const DashboardRoute(children: [
+          HomeRoute(),
+          HomeRoute(),
+          HomeRoute(),
+          HomeRoute(),
+        ]),
+        predicate: (route) => false,
+      );
     } catch (error) {
       Logger.error(error.errorMessage);
     } finally {}

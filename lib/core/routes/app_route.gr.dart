@@ -29,6 +29,63 @@ class CreateWalletRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [DashboardPage]
+class DashboardRoute extends PageRouteInfo<void> {
+  const DashboardRoute({List<PageRouteInfo>? children})
+      : super(
+          DashboardRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DashboardRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DashboardPage();
+    },
+  );
+}
+
+/// generated route for
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const HomePage();
+    },
+  );
+}
+
+/// generated route for
+/// [ImportWalletPage]
+class ImportWalletRoute extends PageRouteInfo<void> {
+  const ImportWalletRoute({List<PageRouteInfo>? children})
+      : super(
+          ImportWalletRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ImportWalletRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ImportWalletPage();
+    },
+  );
+}
+
+/// generated route for
 /// [OnBoardingPage]
 class OnBoardingRoute extends PageRouteInfo<void> {
   const OnBoardingRoute({List<PageRouteInfo>? children})

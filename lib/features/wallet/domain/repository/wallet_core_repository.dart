@@ -1,15 +1,14 @@
-import 'package:bdk_flutter/bdk_flutter.dart';
-
+import 'package:blockchain_utils/blockchain_utils.dart' as block;
 import '../../../../core/adapters/blockchain_network_adapter.dart';
 import '../../data/model/wallet_model.dart';
 
 abstract class WalletCoreRepository {
-  Future<Mnemonic> generateMnemonic({
+  Future<block.Mnemonic> generateMnemonic({
     required int length,
   });
   Future<WalletModel> createWallet();
   Future<WalletModel> importWallet({
-    String? seed,
+    block.Mnemonic? mnemonic,
   });
   Future<void> saveWallet({
     required WalletModel? wallet,
@@ -48,7 +47,7 @@ abstract class WalletCoreRepository {
     required String walletAddress,
   });
   Future<String> getWalletAddressFromSeed({
-    required String seed,
+    required block.Mnemonic seed,
     required BlockchainNetwork blockchain,
   });
 }

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../../common/utils/extensions/object_parsing.dart';
 import '../../../../../core/core.dart';
@@ -9,13 +10,12 @@ import '../wallets/wallets_cubit.dart';
 
 part 'token_list_state.dart';
 
+@LazySingleton()
 class TokenListCubit extends Cubit<TokenListState> {
   final TokenCoreRepository tokenCore;
-  final bool? forceUpdate;
 
   TokenListCubit({
     required this.tokenCore,
-    this.forceUpdate,
   }) : super(TokenListInitial());
 
   Future<void> getTokenBalances({required int walletIndex, bool? forceUpdate}) async {

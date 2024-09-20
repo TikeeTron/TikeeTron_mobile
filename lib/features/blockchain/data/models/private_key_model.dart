@@ -1,22 +1,18 @@
-import 'package:bdk_flutter/bdk_flutter.dart';
 import 'package:equatable/equatable.dart';
-import 'package:web3dart/credentials.dart';
+import 'package:on_chain/on_chain.dart';
 
 class PrivateKeyModel extends Equatable {
-  final EthPrivateKey? ethPrivateKey;
+  final TronPrivateKey? tronPrivateKey;
   final String? privateKey;
-  final DescriptorSecretKey? descriptorSecretKey;
 
   const PrivateKeyModel({
-    this.ethPrivateKey,
+    this.tronPrivateKey,
     this.privateKey,
-    this.descriptorSecretKey,
   });
 
   @override
   List<Object?> get props => [
-        ethPrivateKey,
+        tronPrivateKey,
         privateKey,
-        descriptorSecretKey,
       ];
 }

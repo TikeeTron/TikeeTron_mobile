@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../../../../core/adapters/blockchain_network_adapter.dart';
@@ -11,6 +12,7 @@ import '../../model/token_price_model.dart';
 import '../../model/wallet_model.dart';
 import '../source/local/account_local_repository.dart';
 
+@LazySingleton(as: TokenCoreRepository)
 class TokenCoreRepositoryImpl implements TokenCoreRepository {
   final TronCoreRepository tronCore;
   final WalletCoreRepository walletCore;

@@ -11,6 +11,17 @@ class UIButtonStyle {
         overlayColor: UIColors.primary400,
         splashFactory: InkSplash.splashFactory,
       ).copyWith(
+        textStyle: WidgetStateProperty.resolveWith(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return TextStyle(
+                color: UIColors.grey200.withOpacity(0.3),
+                fontWeight: FontWeight.bold,
+              );
+            }
+            return null;
+          },
+        ),
         foregroundColor: WidgetStatePropertyAll(
           context.theme.colors.textOnPrimary,
         ),
@@ -45,6 +56,17 @@ class UIButtonStyle {
         overlayColor: UIColors.primary900,
         splashFactory: InkSplash.splashFactory,
       ).copyWith(
+        textStyle: WidgetStateProperty.resolveWith(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return TextStyle(
+                color: UIColors.grey200.withOpacity(0.3),
+                fontWeight: FontWeight.bold,
+              );
+            }
+            return null;
+          },
+        ),
         foregroundColor: WidgetStateProperty.resolveWith(
           (Set<WidgetState> states) {
             if (states.contains(WidgetState.disabled)) {
@@ -77,6 +99,17 @@ class UIButtonStyle {
         overlayColor: UIColors.primary900,
         splashFactory: InkSplash.splashFactory,
       ).copyWith(
+        textStyle: WidgetStateProperty.resolveWith(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return TextStyle(
+                color: UIColors.grey200.withOpacity(0.3),
+                fontWeight: FontWeight.bold,
+              );
+            }
+            return null;
+          },
+        ),
         foregroundColor: WidgetStateProperty.resolveWith(
           (Set<WidgetState> states) {
             if (states.contains(WidgetState.disabled)) {

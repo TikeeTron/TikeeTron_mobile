@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
-
+import 'package:tron/tron.dart' as tron;
+import 'package:blockchain_utils/blockchain_utils.dart' as block;
 import '../../../../../common/utils/encrypter/encrypter.dart';
 import '../../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../../common/utils/wallet_util.dart';
@@ -11,19 +12,18 @@ import '../../models/result_create_wallet_model.dart';
 @LazySingleton(as: TronCoreRepository)
 class TronCoreRepositoryImpl implements TronCoreRepository {
   @override
-  Future<ResultCreateWalletModel> createWallet({required String mnemonic}) async {
+  Future<ResultCreateWalletModel> createWallet({required block.Mnemonic mnemonic, required String seed}) async {
     try {
       Logger.info("createWallet");
 
       final privateKeyResult = await locator<WalletUtils>().extractPrivateKeyFromSeed(
-        mnemonic,
-        '',
+        mnemonic: mnemonic,
         blockchain: BlockchainNetwork.tron,
       );
-
+      final publicKey = privateKeyResult.tronPrivateKey?.publicKey();
       ResultCreateWalletModel result = ResultCreateWalletModel(
-        address: privateKeyResult.ethPrivateKey?.address.hexEip55,
-        seed: mnemonic,
+        address: publicKey?.toAddress().toAddress(),
+        seed: seed,
         blockchainNetwork: BlockchainNetwork.tron,
         privateKey: privateKeyResult.privateKey,
       );

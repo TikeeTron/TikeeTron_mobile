@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../styles/button_style.dart';
+import '../../themes/colors.dart';
 import '../indicator/loading_indicator.dart';
 import '../spacing/gap.dart';
 import 'button_enum.dart';
@@ -56,9 +57,16 @@ class UIPrimaryButton extends StatelessWidget {
             borderRadius: size.radius,
           ),
         ),
-        textStyle: WidgetStatePropertyAll(
-          size.textStyle(context),
-        ),
+        textStyle: WidgetStateProperty.resolveWith((states) {
+          final baseStyle = size.textStyle(context);
+          if (states.contains(WidgetState.disabled)) {
+            return baseStyle.copyWith(
+              color: UIColors.grey200.withOpacity(0.3),
+              fontWeight: FontWeight.normal,
+            );
+          }
+          return baseStyle;
+        }),
       ),
       child: isLoading ? const UILoadingIndicator() : _child,
     );

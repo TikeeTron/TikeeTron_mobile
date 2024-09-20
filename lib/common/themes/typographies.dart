@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,7 +8,7 @@ import '../utils/extensions/theme_extension.dart';
 
 class UITypographies {
   static TextStyle _getTextStyle(BuildContext context, TextStyle Function(BuildContext) defaultStyle, {double? fontSize, FontWeight? fontWeight, Color? color}) {
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
+    if (Platform.isIOS) {
       final cupertinoStyle = const CupertinoThemeData().textTheme;
       return cupertinoStyle.textStyle.copyWith(
         fontSize: fontSize ?? defaultStyle(context).fontSize,
@@ -22,7 +23,7 @@ class UITypographies {
   static TextStyle h1(BuildContext context, {double? fontSize, FontWeight? fontWeight, Color? color}) => _getTextStyle(
         context,
         (context) => GoogleFonts.inter(
-          fontSize: fontSize ?? 48.sp,
+          fontSize: fontSize ?? 38.sp,
           fontWeight: fontWeight ?? FontWeight.w700,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(56.sp),
@@ -34,7 +35,7 @@ class UITypographies {
   static TextStyle h2(BuildContext context, {double? fontSize, FontWeight? fontWeight, Color? color}) => _getTextStyle(
         context,
         (context) => GoogleFonts.inter(
-          fontSize: fontSize ?? 40.sp,
+          fontSize: fontSize ?? 28.sp,
           fontWeight: fontWeight ?? FontWeight.w700,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(48.sp),
@@ -46,7 +47,7 @@ class UITypographies {
   static TextStyle h3(BuildContext context, {double? fontSize, FontWeight? fontWeight, Color? color}) => _getTextStyle(
         context,
         (context) => GoogleFonts.inter(
-          fontSize: fontSize ?? 32.sp,
+          fontSize: fontSize ?? 24.sp,
           fontWeight: fontWeight ?? FontWeight.w700,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(40.sp),
@@ -58,7 +59,7 @@ class UITypographies {
   static TextStyle h4(BuildContext context, {double? fontSize, FontWeight? fontWeight, Color? color}) => _getTextStyle(
         context,
         (context) => GoogleFonts.inter(
-          fontSize: fontSize ?? 24.sp,
+          fontSize: fontSize ?? 22.sp,
           fontWeight: fontWeight ?? FontWeight.w700,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(32.sp),
@@ -70,7 +71,7 @@ class UITypographies {
   static TextStyle h5(BuildContext context, {double? fontSize, FontWeight? fontWeight, Color? color}) => _getTextStyle(
         context,
         (context) => GoogleFonts.inter(
-          fontSize: fontSize ?? 20.sp,
+          fontSize: fontSize ?? 18.sp,
           fontWeight: fontWeight ?? FontWeight.w700,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(28.sp),

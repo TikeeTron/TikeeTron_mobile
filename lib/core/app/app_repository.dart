@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class BaseRepository {
   Future<void> close();
   Future<void> clear();
 }
 
+@LazySingleton(as: BaseRepository)
 class AppRepository implements BaseRepository {
   final String name;
 
