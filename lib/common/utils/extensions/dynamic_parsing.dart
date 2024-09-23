@@ -145,8 +145,6 @@ extension DynamicParsing on dynamic {
 
   String? get shortedWalletAddress {
     try {
-      _logger('shortedWalletAddress $this type $runtimeType');
-
       String? result;
 
       if (this is String) {
@@ -161,12 +159,8 @@ extension DynamicParsing on dynamic {
         }
       }
 
-      _logger('shortedWalletAddress result $result');
-
       return result;
     } catch (e) {
-      _logger('shortedWalletAddress error $e');
-
       return null;
     }
   }

@@ -5,7 +5,7 @@ import '../../../../../common/components/components.dart';
 import '../../../../../common/themes/colors.dart';
 import '../../../../../common/themes/typographies.dart';
 import '../../../../../common/utils/extensions/theme_extension.dart';
-import '../../home/domain/model/coin_model.dart';
+import '../../home/data/model/coin_model.dart';
 
 class CoinCardWidget extends StatelessWidget {
   const CoinCardWidget({

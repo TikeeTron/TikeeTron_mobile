@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../styles/button_style.dart';
 import '../../themes/colors.dart';
@@ -16,6 +15,9 @@ class UIPrimaryButton extends StatelessWidget {
     this.leftIcon,
     this.rightIcon,
     this.isLoading = false,
+    this.borderRadius,
+    this.padding,
+    this.textStyle,
   })  : variant = UIButtonVariant.main,
         icon = null;
 
@@ -25,6 +27,9 @@ class UIPrimaryButton extends StatelessWidget {
     this.onPressed,
     this.size = UIButtonSize.medium,
     this.isLoading = false,
+    this.borderRadius,
+    this.padding,
+    this.textStyle,
   })  : variant = UIButtonVariant.iconOnly,
         text = null,
         leftIcon = null,
@@ -37,6 +42,10 @@ class UIPrimaryButton extends StatelessWidget {
   final Widget? icon;
   final Widget? leftIcon;
   final Widget? rightIcon;
+  final BorderRadius? borderRadius;
+  final EdgeInsets? padding;
+  final TextStyle? textStyle;
+
   final bool isLoading;
 
   bool get isIconOnly => variant == UIButtonVariant.iconOnly;
@@ -50,15 +59,15 @@ class UIPrimaryButton extends StatelessWidget {
           size.size(isIconOnly: isIconOnly),
         ),
         padding: WidgetStatePropertyAll(
-          isIconOnly ? EdgeInsets.zero : size.padding,
+          isIconOnly ? EdgeInsets.zero : padding ?? size.padding,
         ),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
-            borderRadius: size.radius,
+            borderRadius: borderRadius ?? size.radius,
           ),
         ),
         textStyle: WidgetStateProperty.resolveWith((states) {
-          final baseStyle = size.textStyle(context);
+          final baseStyle = textStyle ?? size.textStyle(context);
           if (states.contains(WidgetState.disabled)) {
             return baseStyle.copyWith(
               color: UIColors.grey200.withOpacity(0.3),
@@ -104,13 +113,10 @@ class UIPrimaryButton extends StatelessWidget {
       ],
       if (text != null)
         Flexible(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: Text(
-              text!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+          child: Text(
+            text!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       if (rightIcon != null) ...[

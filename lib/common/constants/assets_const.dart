@@ -70,6 +70,9 @@ class IconsConst {
   static const String checkCircleFill = 'assets/icons/ic_check_circle_fill.svg';
   static const String check1 = 'assets/icons/ic_check_1.svg';
   static const String star = 'assets/icons/ic_star.svg';
+
+  static const String icEmptyEvent = 'assets/icons/ic_empty_event.png';
+  static const String icEmptyActivity = 'assets/icons/ic_empty_activity.png';
 }
 
 class IllustrationsConst {
@@ -107,4 +110,7 @@ class SvgConst {
   static const scanQr = 'assets/svg/scan_qr.svg';
   static const drawer = 'assets/svg/ic_drawer.svg';
   static const icAiHome = 'assets/svg/ic_ai_home.svg';
+  static const icReceive = 'assets/svg/ic_receive.svg';
+  static const icSend = 'assets/svg/ic_send.svg';
+  static const icFilter = 'assets/svg/ic_filter.svg';
 }

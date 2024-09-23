@@ -16,6 +16,8 @@ class UISecondaryButton extends StatelessWidget {
     this.leftIcon,
     this.rightIcon,
     this.isLoading = false,
+    this.borderRadius,
+    this.textStyle,
   })  : variant = UIButtonVariant.main,
         icon = null;
 
@@ -26,6 +28,8 @@ class UISecondaryButton extends StatelessWidget {
     this.size = UIButtonSize.medium,
     this.color,
     this.isLoading = false,
+    this.borderRadius,
+    this.textStyle,
   })  : variant = UIButtonVariant.iconOnly,
         text = null,
         leftIcon = null,
@@ -39,13 +43,15 @@ class UISecondaryButton extends StatelessWidget {
   final Widget? leftIcon;
   final Widget? rightIcon;
   final bool isLoading;
+  final BorderRadius? borderRadius;
+  final TextStyle? textStyle;
   final Color? color;
 
   bool get isIconOnly => variant == UIButtonVariant.iconOnly;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
+    return ElevatedButton(
       onPressed: onPressed,
       style: UIButtonStyle.secondary(context).copyWith(
         fixedSize: WidgetStateProperty.all(
@@ -56,11 +62,11 @@ class UISecondaryButton extends StatelessWidget {
         ),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
-            borderRadius: size.radius,
+            borderRadius: borderRadius ?? size.radius,
           ),
         ),
         textStyle: WidgetStatePropertyAll(
-          size.textStyle(context),
+          textStyle ?? size.textStyle(context),
         ),
         side: color != null
             ? WidgetStatePropertyAll(

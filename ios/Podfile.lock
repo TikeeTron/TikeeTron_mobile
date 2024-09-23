@@ -1,5 +1,5 @@
 PODS:
-  - bdk_flutter (0.29.2):
+  - bdk_flutter (0.30.0):
     - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
@@ -58,7 +58,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/darwin"
 
 SPEC CHECKSUMS:
-  bdk_flutter: ceee48a7dbeb52ebf9774fb583f57dd50d9e9823
+  bdk_flutter: 5d2579914d90aaaf964b24b1344946c7668915ea
   connectivity_plus: ddd7f30999e1faaef5967c23d5b6d503d10434db
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778

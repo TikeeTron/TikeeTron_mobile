@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../common/components/components.dart';
 import '../../../../common/constants/assets_const.dart';
 import '../../../../common/themes/typographies.dart';
-import '../../domain/model/coin_model.dart';
+import '../../data/model/coin_model.dart';
 
 class ManageTokenBottomSheet extends StatelessWidget {
   const ManageTokenBottomSheet();

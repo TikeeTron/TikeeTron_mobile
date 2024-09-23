@@ -99,9 +99,6 @@ class __AppViewState extends State<_AppView> {
 
   Future<void> _init() async {
     try {
-      await Future.delayed(const Duration(seconds: 2), () {
-        FlutterNativeSplash.remove();
-      });
       // check wallets is empty
       final wallets = locator<WalletLocalRepository>().getAll();
       if (wallets == null || wallets.isEmpty) {
@@ -109,7 +106,9 @@ class __AppViewState extends State<_AppView> {
         await _onGoToPage(
           route: const OnBoardingRoute(),
         );
-
+        await Future.delayed(const Duration(seconds: 2), () {
+          FlutterNativeSplash.remove();
+        });
         return;
       }
 
@@ -121,7 +120,9 @@ class __AppViewState extends State<_AppView> {
         await _onGoToPage(
           route: const OnBoardingRoute(),
         );
-
+        await Future.delayed(const Duration(seconds: 2), () {
+          FlutterNativeSplash.remove();
+        });
         return;
       }
 
@@ -129,9 +130,11 @@ class __AppViewState extends State<_AppView> {
       // BlocProvider.of<TokenListCubit>(context).getTokenBalances(
       //   walletIndex: walletIndex,
       // );
-
+      await Future.delayed(const Duration(seconds: 2), () {
+        FlutterNativeSplash.remove();
+      });
       // go to main page
-      _onGoToPage(
+      await _onGoToPage(
         route: const DashboardRoute(),
       );
     } catch (error) {

@@ -33,7 +33,7 @@ abstract class UIColors {
   static const grey500 = Color(0xFF8E8E93);
   static const grey400 = Color(0xFF505052);
   static const grey300 = Color(0xFF6C6C6E);
-  static const grey200 = Color(0xFFEBEBF5);
+  static const grey200 = Color(0xFF787880);
   static const grey100 = Color(0xFFBBBBBC);
   static const grey50 = Color(0xFFE9E9E9);
 

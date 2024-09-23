@@ -98,7 +98,7 @@ class UITypographies {
         context,
         (context) => GoogleFonts.inter(
           fontSize: fontSize ?? 16.sp,
-          fontWeight: fontWeight ?? FontWeight.w500,
+          fontWeight: fontWeight ?? FontWeight.w600,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(24.sp),
         fontSize: fontSize,
@@ -110,7 +110,7 @@ class UITypographies {
         context,
         (context) => GoogleFonts.inter(
           fontSize: fontSize ?? 14.sp,
-          fontWeight: fontWeight ?? FontWeight.w500,
+          fontWeight: fontWeight ?? FontWeight.w600,
           color: color ?? context.theme.colors.textPrimary,
         ).withFigmaLineHeight(22.sp),
         fontSize: fontSize,

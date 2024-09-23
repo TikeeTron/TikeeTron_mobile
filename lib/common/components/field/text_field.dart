@@ -38,6 +38,8 @@ class UITextField extends StatefulWidget {
     this.fillColor,
     this.borderColor,
     this.radius,
+    this.hintColor,
+    this.preffixIcon,
   });
 
   final TextEditingController? textController;
@@ -54,8 +56,10 @@ class UITextField extends StatefulWidget {
   final double? radius;
   final bool expands;
   final Widget? suffixIcon;
+  final Widget? preffixIcon;
   final Color? iconColor;
   final Color? fillColor;
+  final Color? hintColor;
   final bool isPassword;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -108,6 +112,7 @@ class _UITextFieldState extends State<UITextField> {
       builder: (context, setState) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.label != null) ..._label(context),
             TextFormField(
@@ -119,6 +124,7 @@ class _UITextFieldState extends State<UITextField> {
               minLines: widget.minLines,
               expands: widget.expands,
               initialValue: widget.initialValue,
+              scrollPadding: EdgeInsets.zero,
               textAlignVertical: TextAlignVertical.center,
               style: UITypographies.bodyLarge(context).copyWith(
                 color: context.theme.colors.textPrimary,
@@ -129,6 +135,15 @@ class _UITextFieldState extends State<UITextField> {
               decoration: InputDecoration(
                 hintText: widget.hint,
                 errorText: _error,
+                prefixIcon: widget.preffixIcon != null
+                    ? SizedBox(
+                        height: 20.r,
+                        width: 20.r,
+                        child: Center(
+                          child: widget.preffixIcon,
+                        ),
+                      )
+                    : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(widget.radius ?? 10.r),
                   borderSide: BorderSide(
@@ -148,9 +163,10 @@ class _UITextFieldState extends State<UITextField> {
                   ),
                 ),
                 filled: true,
-                fillColor: widget.fillColor,
+                fillColor: widget.fillColor ?? UIColors.grey200.withOpacity(0.24),
                 hintStyle: UITypographies.bodyLarge(context).copyWith(
                   inherit: true,
+                  color: widget.hintColor ?? UIColors.white50.withOpacity(0.4),
                 ),
                 suffixIcon: widget.isPassword
                     ? GestureDetector(

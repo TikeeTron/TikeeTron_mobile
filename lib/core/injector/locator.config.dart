@@ -20,6 +20,12 @@ import 'package:tikeetron_app/features/blockchain/data/repositories/implementati
     as _i111;
 import 'package:tikeetron_app/features/blockchain/domain/repository/tron_core_repository.dart'
     as _i1041;
+import 'package:tikeetron_app/features/home/data/repositories/implementation/ai_repository_implementation.dart'
+    as _i662;
+import 'package:tikeetron_app/features/home/data/repositories/source/remote/ai_remote.dart'
+    as _i303;
+import 'package:tikeetron_app/features/home/domain/repository/ai_repository.dart'
+    as _i306;
 import 'package:tikeetron_app/features/shared/presentation/cubit/dashboard_cubit.dart'
     as _i542;
 import 'package:tikeetron_app/features/shared/presentation/cubit/theme_cubit.dart'
@@ -59,9 +65,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i344.AppRouter>(() => _i344.AppRouter());
     gh.singleton<_i488.NavigationService>(() => _i488.NavigationService());
-    gh.singleton<_i622.ThemeCubit>(() => _i622.ThemeCubit());
     gh.singleton<_i714.ThemeCubit>(() => _i714.ThemeCubit());
     gh.singleton<_i542.DashboardCubit>(() => _i542.DashboardCubit());
+    gh.singleton<_i622.ThemeCubit>(() => _i622.ThemeCubit());
+    gh.lazySingleton<_i303.AiRemote>(() => _i303.AiRemote());
     gh.lazySingleton<_i593.WalletLocalRepository>(
         () => _i593.WalletLocalRepository());
     gh.lazySingleton<_i436.AccountLocalRepository>(
@@ -74,6 +81,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i258.AppRepository(gh<String>()));
     gh.lazySingleton<_i1041.TronCoreRepository>(
         () => _i111.TronCoreRepositoryImpl());
+    gh.lazySingleton<_i306.AiRepository>(
+        () => _i662.AiRepositoryImplementation(gh<_i303.AiRemote>()));
     gh.lazySingleton<_i183.WalletCoreRepository>(
         () => _i678.WallletCoreRepositoryImpl(
               gh<_i1041.TronCoreRepository>(),

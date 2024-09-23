@@ -86,6 +86,52 @@ class ImportWalletRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MyWalletPage]
+class MyWalletRoute extends PageRouteInfo<MyWalletRouteArgs> {
+  MyWalletRoute({
+    Key? key,
+    required WalletModel wallet,
+    List<PageRouteInfo>? children,
+  }) : super(
+          MyWalletRoute.name,
+          args: MyWalletRouteArgs(
+            key: key,
+            wallet: wallet,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'MyWalletRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<MyWalletRouteArgs>();
+      return MyWalletPage(
+        key: args.key,
+        wallet: args.wallet,
+      );
+    },
+  );
+}
+
+class MyWalletRouteArgs {
+  const MyWalletRouteArgs({
+    this.key,
+    required this.wallet,
+  });
+
+  final Key? key;
+
+  final WalletModel wallet;
+
+  @override
+  String toString() {
+    return 'MyWalletRouteArgs{key: $key, wallet: $wallet}';
+  }
+}
+
+/// generated route for
 /// [OnBoardingPage]
 class OnBoardingRoute extends PageRouteInfo<void> {
   const OnBoardingRoute({List<PageRouteInfo>? children})

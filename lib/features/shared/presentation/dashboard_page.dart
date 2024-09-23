@@ -26,31 +26,16 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final TextEditingController _chatController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return const Material(
       color: Colors.transparent,
       child: Stack(
         children: [
           Positioned.fill(
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            child: Column(
-              children: [
-                const Expanded(
-                  child: HomePage(),
-                ),
-                _BottomNavigationWidget(
-                  controller: _chatController,
-                ),
-              ],
-            ),
+            child: HomePage(),
           ),
-          const Positioned.fill(
+          Positioned.fill(
             child: _SideMenuWidget(),
           ),
         ],
@@ -261,32 +246,6 @@ class _SideMenuWidget extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _BottomNavigationWidget extends StatelessWidget {
-  const _BottomNavigationWidget({
-    required this.controller,
-  });
-
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: UIColors.black500,
-      padding: EdgeInsets.only(
-        top: 10.h,
-        bottom: 40.h,
-        left: 16.w,
-        right: 16.w,
-      ),
-      child: UITextField(
-        textController: controller,
-        fillColor: UIColors.black400,
-        borderColor: UIColors.white50.withOpacity(0.15),
       ),
     );
   }

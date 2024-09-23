@@ -21,8 +21,8 @@ class ScaffoldAppBar {
   }) {
     return CupertinoNavigationBar(
       backgroundColor: Colors.transparent,
-      padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 24,
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 16.w,
       ),
       automaticallyImplyLeading: false,
       leading: _LeadingWidget(leading: leading),
@@ -36,14 +36,11 @@ class ScaffoldAppBar {
               children: [
                 BounceTap(
                   onTap: () => Navigator.pop(context),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: TextUI(
-                      title,
-                      color: context.theme.primaryColorDark,
-                      fontSize: 20,
-                      weight: FontWeight.w600,
-                    ),
+                  child: TextUI(
+                    title,
+                    color: UIColors.white50,
+                    fontSize: 20,
+                    weight: FontWeight.w600,
                   ),
                 ),
               ],
