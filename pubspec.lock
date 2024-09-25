@@ -1210,6 +1210,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  qr_flutter_new:
+    dependency: "direct main"
+    description:
+      name: qr_flutter_new
+      sha256: f6fa1c1c30cae75d0c9b31b214572d72e6a3c73bedf6571136544340236eea60
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   recase:
     dependency: transitive
     description:

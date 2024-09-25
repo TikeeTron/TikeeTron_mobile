@@ -151,6 +151,52 @@ class OnBoardingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ReceivePage]
+class ReceiveRoute extends PageRouteInfo<ReceiveRouteArgs> {
+  ReceiveRoute({
+    Key? key,
+    required String walletAddress,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ReceiveRoute.name,
+          args: ReceiveRouteArgs(
+            key: key,
+            walletAddress: walletAddress,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReceiveRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ReceiveRouteArgs>();
+      return ReceivePage(
+        key: args.key,
+        walletAddress: args.walletAddress,
+      );
+    },
+  );
+}
+
+class ReceiveRouteArgs {
+  const ReceiveRouteArgs({
+    this.key,
+    required this.walletAddress,
+  });
+
+  final Key? key;
+
+  final String walletAddress;
+
+  @override
+  String toString() {
+    return 'ReceiveRouteArgs{key: $key, walletAddress: $walletAddress}';
+  }
+}
+
+/// generated route for
 /// [SuccessCreateWalletPage]
 class SuccessCreateWalletRoute
     extends PageRouteInfo<SuccessCreateWalletRouteArgs> {

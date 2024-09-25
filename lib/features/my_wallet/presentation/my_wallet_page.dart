@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:blockies/blockies.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +12,7 @@ import '../../../common/components/container/rounded_container.dart';
 import '../../../common/components/empty_data/empty_data_widget.dart';
 import '../../../common/components/svg/svg_ui.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
+import '../../../core/core.dart';
 import '../../../core/injector/locator.dart';
 import '../../wallet/data/model/wallet_model.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
@@ -189,7 +188,9 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                           child: MenuButton(
                             icon: SvgConst.icReceive,
                             title: 'Receive',
-                            onTap: () {},
+                            onTap: () {
+                              context.pushRoute(ReceiveRoute(walletAddress: walletAddress));
+                            },
                           ),
                         ),
                         UIGap.w12,

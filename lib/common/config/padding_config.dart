@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Paddings {
   const Paddings(this.value, {Key? key, this.child});
   final double value;
   final Widget? child;
 
-  static const EdgeInsets defaultPadding = EdgeInsets.all(
-    24,
+  static EdgeInsets defaultPadding = EdgeInsets.all(
+    16.w,
   );
-  static const EdgeInsets defaultPaddingH = EdgeInsets.symmetric(
-    horizontal: 24,
+  static EdgeInsets defaultPaddingH = EdgeInsets.symmetric(
+    horizontal: 16.w,
   );
-  static const EdgeInsets defaultPaddingV = EdgeInsets.symmetric(
-    vertical: 24,
+  static EdgeInsets defaultPaddingV = EdgeInsets.symmetric(
+    vertical: 16.h,
   );
   static const EdgeInsets p0 = EdgeInsets.all(0);
   static const EdgeInsets p1 = EdgeInsets.all(1);

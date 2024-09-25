@@ -92,7 +92,7 @@ abstract class UIColors {
   static const blue800 = Color(0xFF18518C);
   static const blue700 = Color(0xFF1F69B5);
   static const blue600 = Color(0xFF2887E8);
-  static const blue500 = Color(0xFF2C94FF);
+  static const blue500 = Color(0xFF007AFF);
   static const blue400 = Color(0xFF56A9FF);
   static const blue300 = Color(0xFF72B7FF);
   static const blue200 = Color(0xFF9ECEFF);

@@ -99,6 +99,9 @@ class ImagesConst {
   static const networkEvm = 'assets/images/token/img_evm.png';
   static const networkSolana = 'assets/images/token/img_solana.png';
   static const networkTron = 'assets/images/token/img_tron.png';
+
+  static const appLogo = 'assets/images/logo/img_logo.png';
+  static const appLogoRounded = 'assets/images/logo/img_logo_rounded.png';
 }
 
 class SvgConst {

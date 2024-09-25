@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/my_wallet/presentation/my_wallet_page.dart';
 import '../../features/on_boarding/on_boarding_page.dart';
+import '../../features/receive/presentation/receive_page.dart';
 import '../../features/shared/presentation/dashboard_page.dart';
 import '../../features/wallet/data/model/wallet_model.dart';
 import '../../features/wallet/presentation/create_wallet/create_wallet_page.dart';
@@ -40,6 +41,9 @@ class AppRouter extends RootStackRouter {
         ),
         CupertinoRoute(
           page: MyWalletRoute.page,
+        ),
+        CupertinoRoute(
+          page: ReceiveRoute.page,
         ),
         CupertinoRoute(
           page: DashboardRoute.page,
