@@ -1,0 +1,4 @@
+enum SendTypeEnum {
+  coin,
+  ticket,
+}

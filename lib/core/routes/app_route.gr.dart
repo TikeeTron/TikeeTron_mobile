@@ -151,6 +151,52 @@ class OnBoardingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ReceiptPage]
+class ReceiptRoute extends PageRouteInfo<ReceiptRouteArgs> {
+  ReceiptRoute({
+    Key? key,
+    required ReceiptModel data,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ReceiptRoute.name,
+          args: ReceiptRouteArgs(
+            key: key,
+            data: data,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReceiptRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ReceiptRouteArgs>();
+      return ReceiptPage(
+        key: args.key,
+        data: args.data,
+      );
+    },
+  );
+}
+
+class ReceiptRouteArgs {
+  const ReceiptRouteArgs({
+    this.key,
+    required this.data,
+  });
+
+  final Key? key;
+
+  final ReceiptModel data;
+
+  @override
+  String toString() {
+    return 'ReceiptRouteArgs{key: $key, data: $data}';
+  }
+}
+
+/// generated route for
 /// [ReceivePage]
 class ReceiveRoute extends PageRouteInfo<ReceiveRouteArgs> {
   ReceiveRoute({
@@ -197,9 +243,165 @@ class ReceiveRouteArgs {
 }
 
 /// generated route for
+/// [SelectRecipientPage]
+class SelectRecipientRoute extends PageRouteInfo<SelectRecipientRouteArgs> {
+  SelectRecipientRoute({
+    Key? key,
+    required SendTypeEnum sendType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SelectRecipientRoute.name,
+          args: SelectRecipientRouteArgs(
+            key: key,
+            sendType: sendType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SelectRecipientRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SelectRecipientRouteArgs>();
+      return SelectRecipientPage(
+        key: args.key,
+        sendType: args.sendType,
+      );
+    },
+  );
+}
+
+class SelectRecipientRouteArgs {
+  const SelectRecipientRouteArgs({
+    this.key,
+    required this.sendType,
+  });
+
+  final Key? key;
+
+  final SendTypeEnum sendType;
+
+  @override
+  String toString() {
+    return 'SelectRecipientRouteArgs{key: $key, sendType: $sendType}';
+  }
+}
+
+/// generated route for
+/// [SendPage]
+class SendRoute extends PageRouteInfo<void> {
+  const SendRoute({List<PageRouteInfo>? children})
+      : super(
+          SendRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SendRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SendPage();
+    },
+  );
+}
+
+/// generated route for
+/// [SendTicketPage]
+class SendTicketRoute extends PageRouteInfo<SendTicketRouteArgs> {
+  SendTicketRoute({
+    Key? key,
+    required String walletAddress,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SendTicketRoute.name,
+          args: SendTicketRouteArgs(
+            key: key,
+            walletAddress: walletAddress,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SendTicketRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SendTicketRouteArgs>();
+      return SendTicketPage(
+        key: args.key,
+        walletAddress: args.walletAddress,
+      );
+    },
+  );
+}
+
+class SendTicketRouteArgs {
+  const SendTicketRouteArgs({
+    this.key,
+    required this.walletAddress,
+  });
+
+  final Key? key;
+
+  final String walletAddress;
+
+  @override
+  String toString() {
+    return 'SendTicketRouteArgs{key: $key, walletAddress: $walletAddress}';
+  }
+}
+
+/// generated route for
+/// [SendTokenPage]
+class SendTokenRoute extends PageRouteInfo<SendTokenRouteArgs> {
+  SendTokenRoute({
+    Key? key,
+    required String walletAddress,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SendTokenRoute.name,
+          args: SendTokenRouteArgs(
+            key: key,
+            walletAddress: walletAddress,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SendTokenRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SendTokenRouteArgs>();
+      return SendTokenPage(
+        key: args.key,
+        walletAddress: args.walletAddress,
+      );
+    },
+  );
+}
+
+class SendTokenRouteArgs {
+  const SendTokenRouteArgs({
+    this.key,
+    required this.walletAddress,
+  });
+
+  final Key? key;
+
+  final String walletAddress;
+
+  @override
+  String toString() {
+    return 'SendTokenRouteArgs{key: $key, walletAddress: $walletAddress}';
+  }
+}
+
+/// generated route for
 /// [SuccessCreateWalletPage]
-class SuccessCreateWalletRoute
-    extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
+class SuccessCreateWalletRoute extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
   SuccessCreateWalletRoute({
     Key? key,
     required SuccessCreateWalletPageParams params,

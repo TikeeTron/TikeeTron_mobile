@@ -76,6 +76,7 @@ abstract class UIColors {
   static const green50 = Color(0xFFEBFBEF);
 
   // --- Orange --- //
+  static const orange950 = Color(0xFF1A0F00);
   static const orange900 = Color(0xFF563400);
   static const orange800 = Color(0xFF714400);
   static const orange700 = Color(0xFF925800);

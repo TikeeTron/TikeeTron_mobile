@@ -40,6 +40,7 @@ class UITextField extends StatefulWidget {
     this.radius,
     this.hintColor,
     this.preffixIcon,
+    this.suffixWidth,
   });
 
   final TextEditingController? textController;
@@ -56,6 +57,7 @@ class UITextField extends StatefulWidget {
   final double? radius;
   final bool expands;
   final Widget? suffixIcon;
+  final double? suffixWidth;
   final Widget? preffixIcon;
   final Color? iconColor;
   final Color? fillColor;
@@ -194,7 +196,7 @@ class _UITextFieldState extends State<UITextField> {
                     : widget.suffixIcon != null
                         ? SizedBox(
                             height: 20.r,
-                            width: 20.r,
+                            width: widget.suffixWidth ?? 20.r,
                             child: Center(
                               child: widget.suffixIcon,
                             ),

@@ -7,7 +7,7 @@ part 'env.g.dart';
   fieldRename: FieldRename.screamingSnake,
 )
 abstract class Env {
-  const factory Env(String encryptionKey, String iv) = _$Env;
+  const factory Env() = _$Env;
 
   const Env._();
 

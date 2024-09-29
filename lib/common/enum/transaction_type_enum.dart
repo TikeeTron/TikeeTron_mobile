@@ -1,0 +1,4 @@
+enum TransactionTypeEnum {
+  send,
+  receive,
+}

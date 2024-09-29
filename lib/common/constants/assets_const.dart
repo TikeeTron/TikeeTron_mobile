@@ -109,6 +109,7 @@ class SvgConst {
   static const icEye = 'assets/svg/ic_eye.svg';
   static const icEyeClose = 'assets/svg/ic_eye_close.svg';
   static const wallet = 'assets/svg/wallet.svg';
+  static const icWalletSend = 'assets/svg/ic_wallet_send.svg';
   static const import = 'assets/svg/import.svg';
   static const scanQr = 'assets/svg/scan_qr.svg';
   static const drawer = 'assets/svg/ic_drawer.svg';
@@ -116,4 +117,7 @@ class SvgConst {
   static const icReceive = 'assets/svg/ic_receive.svg';
   static const icSend = 'assets/svg/ic_send.svg';
   static const icFilter = 'assets/svg/ic_filter.svg';
+  static const icTicket = 'assets/svg/ic_ticket.svg';
+  static const icEditAddress = 'assets/svg/ic_edit_address.svg';
+  static const icNetworkFee = 'assets/svg/ic_network_fee.svg';
 }

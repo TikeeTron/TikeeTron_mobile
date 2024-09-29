@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:blockies/blockies.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,12 @@ import '../../../../common/constants/durations_const.dart';
 import '../../../../common/themes/colors.dart';
 import '../../../../common/themes/typographies.dart';
 import '../../../../common/utils/extensions/theme_extension.dart';
+import '../../../common/components/container/rounded_container.dart';
+import '../../../common/utils/extensions/dynamic_parsing.dart';
+import '../../../core/injector/locator.dart';
 import '../../home/presentation/home_page.dart';
+import '../../wallet/domain/repository/wallet_core_repository.dart';
+import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import 'cubit/dashboard_cubit.dart';
 
 @RoutePage()
@@ -76,116 +82,99 @@ class _SideMenuWidget extends StatelessWidget {
           vertical: 16.h,
         ),
         color: context.theme.colors.backgroundPrimary,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UIGap.size(
-              h: ScreenUtil().statusBarHeight,
-            ),
-            SvgPicture.asset(
-              IconsConst.logoFull,
-              height: 45.h,
-              width: 112.w,
-            ),
-            UIGap.h20,
-            _itemMenu(
-              context,
-              title: 'Wallet',
-              icon: IconsConst.menuWallet,
-              onTap: () {
-                context.read<DashboardCubit>().hideDrawer();
-                // navigationService.push(
-                //   const ManageWalletRoute(),
-                // );
-              },
-            ),
-            UIGap.h8,
-            _itemMenu(
-              context,
-              title: 'Recipients',
-              icon: IconsConst.menuRecipients,
-              onTap: () {},
-            ),
-            UIGap.h8,
-            _itemMenu(
-              context,
-              title: 'Business',
-              icon: IconsConst.menuBusiness,
-              onTap: () {
-                context.read<DashboardCubit>().hideDrawer();
-                // navigationService.push(
-                //   const BusinessUpgradeRoute(),
-                // );
-              },
-            ),
-            UIGap.h8,
-            _itemMenu(
-              context,
-              title: 'Check Wallet',
-              icon: IconsConst.menuCheck,
-              onTap: () {},
-            ),
-            UIGap.h8,
-            _itemMenu(
-              context,
-              title: 'Settings',
-              icon: IconsConst.menuSetting,
-              onTap: () {
-                context.read<DashboardCubit>().hideDrawer();
-                // navigationService.push(
-                //   const SettingRoute(),
-                // );
-              },
-            ),
-            const Spacer(),
-            UIScaleButton(
-              onTap: () {},
-              child: Container(
-                decoration: BoxDecoration(
-                  color: context.theme.colors.backgroundTertiary,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                padding: EdgeInsets.all(12.r),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100.r),
-                      child: Image.network(
-                        'https://gravatar.com/avatar/27205e5c51cb03f862138b22bcb5dc20f94a342e744ff6df1b8dc8af3c865109?s=100',
-                        width: 40.r,
-                        height: 40.r,
+        child: BlocBuilder<ActiveWalletCubit, ActiveWalletState>(builder: (context, state) {
+          String? address;
+          String? shortedAddress;
+          if (state.wallet != null) {
+            address = locator<WalletCoreRepository>().getWalletAddress(
+              wallet: state.wallet!,
+            );
+            if (address.isNotEmpty) {
+              shortedAddress = DynamicParsing(address).shortedWalletAddress!;
+            }
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              UIGap.size(
+                h: ScreenUtil().statusBarHeight,
+              ),
+              UIGap.h20,
+              _itemMenu(
+                context,
+                title: 'Wallet',
+                icon: IconsConst.menuWallet,
+                onTap: () {
+                  context.read<DashboardCubit>().hideDrawer();
+                },
+              ),
+              UIGap.h8,
+              _itemMenu(
+                context,
+                title: 'Contacts',
+                icon: IconsConst.menuRecipients,
+                onTap: () {},
+              ),
+              UIGap.h8,
+              _itemMenu(
+                context,
+                title: 'Settings',
+                icon: IconsConst.menuSetting,
+                onTap: () {
+                  context.read<DashboardCubit>().hideDrawer();
+                },
+              ),
+              const Spacer(),
+              UIScaleButton(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: context.theme.colors.backgroundTertiary,
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  padding: EdgeInsets.all(12.r),
+                  child: Row(
+                    children: [
+                      RoundedContainer(
+                        width: 40.w,
+                        height: 40.w,
+                        radius: 9999,
+                        child: Blockies(
+                          seed: address ?? '0xff',
+                        ),
                       ),
-                    ),
-                    UIGap.w8,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'John Doe',
-                            style: UITypographies.subtitleLarge(context),
-                          ),
-                          UIGap.h4,
-                          Text(
-                            'john.doe@gmail.com',
-                            style: UITypographies.bodySmall(context),
-                          ),
-                        ],
+                      UIGap.w8,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              state.wallet?.name ?? '',
+                              style: UITypographies.subtitleLarge(context),
+                            ),
+                            UIGap.h4,
+                            Text(
+                              shortedAddress ?? '',
+                              style: UITypographies.bodySmall(context),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    UIGap.w8,
-                    SvgPicture.asset(
-                      IconsConst.logout,
-                      height: 20.r,
-                      width: 20.r,
-                    ),
-                  ],
+                      UIGap.w8,
+                      SvgPicture.asset(
+                        IconsConst.logout,
+                        height: 20.r,
+                        width: 20.r,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            UIGap.h8,
-          ],
-        ),
+              UIGap.h8,
+            ],
+          );
+        }),
       ),
     );
   }

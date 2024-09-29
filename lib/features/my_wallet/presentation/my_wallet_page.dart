@@ -198,7 +198,9 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                           child: MenuButton(
                             icon: SvgConst.icSend,
                             title: 'Send',
-                            onTap: () {},
+                            onTap: () {
+                              context.pushRoute(const SendRoute());
+                            },
                           ),
                         ),
                       ],
