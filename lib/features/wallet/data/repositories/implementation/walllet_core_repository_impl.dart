@@ -13,16 +13,23 @@ import '../../../../../core/adapters/blockchain_network_adapter.dart';
 import '../../../../../core/injector/locator.dart';
 import '../../../../blockchain/domain/repository/tron_core_repository.dart';
 import '../../../domain/repository/wallet_core_repository.dart';
+import '../../model/sign_in_model.dart';
 import '../../model/wallet_address_model.dart';
 import '../../model/wallet_model.dart';
+import '../source/local/account_local_repository.dart';
 import '../source/local/wallet_local_repository.dart';
 
 @LazySingleton(as: WalletCoreRepository)
 class WallletCoreRepositoryImpl implements WalletCoreRepository {
   final TronCoreRepository _tronCoreRepository;
   final WalletLocalRepository _walletLocalRepository;
+  final AccountLocalRepository _accountLocalRepository;
 
-  WallletCoreRepositoryImpl(this._tronCoreRepository, this._walletLocalRepository);
+  WallletCoreRepositoryImpl(
+    this._tronCoreRepository,
+    this._walletLocalRepository,
+    this._accountLocalRepository,
+  );
 
   @override
   Future<WalletModel> createWallet() async {
@@ -386,7 +393,7 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
 
       final result = _walletLocalRepository.getAll();
       Logger.success("getWallets result: $result");
-      if (result == null) {
+      if (result == null || result == []) {
         return [];
       }
 
@@ -460,51 +467,41 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
         seed: ecnryptedSeedPhrase,
       );
 
-      const blockchains = BlockchainConstant.defaultBlockchains;
+      final extracted = await locator<WalletUtils>().extractPrivateKeyFromSeed(
+        mnemonic: mnemonic,
+        blockchain: BlockchainNetwork.tron,
+      );
 
-      for (final blockchain in blockchains) {
-        switch (blockchain) {
-          case BlockchainNetwork.tron:
-          case BlockchainNetwork.btt:
-            final extracted = await locator<WalletUtils>().extractPrivateKeyFromSeed(
-              mnemonic: mnemonic,
-              blockchain: blockchain,
-            );
+      final publicKey = extracted.tronPrivateKey?.publicKey();
+      final address = publicKey?.toAddress().toAddress();
 
-            final publicKey = extracted.tronPrivateKey?.publicKey();
-            final address = publicKey?.toAddress().toAddress();
+      Logger.info('ADDRESS & BLOCKCHAIN TO BE IMPORTED -> $address');
+      // validate wallet already exist
+      final walletDetail = _getWalletDetailByAddress(
+        address: address,
+        blockchain: BlockchainNetwork.tron,
+      );
 
-            Logger.info('ADDRESS & BLOCKCHAIN TO BE IMPORTED -> $address + $blockchain');
-            // validate wallet already exist
-            final walletDetail = _getWalletDetailByAddress(
-              address: address,
-              blockchain: blockchain,
-            );
-
-            Logger.info('WALLETDETAIL -> $walletDetail');
-            if (walletDetail != null) {
-              throw Exception('wallet-already-exists');
-            }
-
-            // get addresses
-            final addresses = wallet.addresses ?? [];
-
-            // add new address
-            addresses.add(
-              WalletAddressModel(
-                address: address,
-                blockchain: blockchain,
-              ),
-            );
-
-            // set addresses in wallet
-            wallet = wallet.copyWith(
-              addresses: addresses,
-            );
-
-            break;
-        }
+      Logger.info('WALLETDETAIL -> $walletDetail');
+      if (walletDetail != null) {
+        throw Exception('wallet-already-exists');
       }
+
+      // get addresses
+      final addresses = wallet.addresses ?? [];
+
+      // add new address
+      addresses.add(
+        WalletAddressModel(
+          address: address,
+          blockchain: BlockchainNetwork.tron,
+        ),
+      );
+
+      // set addresses in wallet
+      wallet = wallet.copyWith(
+        addresses: addresses,
+      );
 
       return wallet;
     } catch (error) {
@@ -523,7 +520,10 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
     BlockchainNetwork? blockchain,
   }) {
     final wallets = getWallets();
-
+    if (wallets.isNullOrEmpty) {
+      return null;
+    }
+    Logger.info('_getWalletDetailByAddress params: $address');
     final result = wallets.firstWhere((element) {
       // check if address is in token list
       for (final wallet in element.addresses!) {
@@ -540,7 +540,6 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
 
       return false;
     });
-
     return result;
   }
 
@@ -550,9 +549,18 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
       Logger.info("saveAddressToBackend: $walletAddress");
 
       // post wallet to backend
-      await AppApi(version: 1).post('/address', body: {
+      final result = await AppApi(version: 1).post('/auth/sign-in-or-sign-up', body: {
         "address": walletAddress,
       });
+
+      Logger.info('SIGN IN RAW RESULT: ${result}');
+
+      final signInData = SignInModel.fromJson(result);
+
+      if (signInData.data != null) {
+        _accountLocalRepository.setToken(signInData.data?.token ?? '');
+        _accountLocalRepository.setIdUser(signInData.data?.user?.id ?? '');
+      }
 
       Logger.success("saveAddressToBackend success");
     } catch (error) {
@@ -589,10 +597,9 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
 
       for (final walletAddress in walletAddressList) {
         // post wallet to backend
-        //TODO: Waiting for backend
-        // await saveAddressToBackend(
-        //   walletAddress: walletAddress,
-        // );
+        await saveAddressToBackend(
+          walletAddress: walletAddress,
+        );
       }
 
       // add to wallet repository

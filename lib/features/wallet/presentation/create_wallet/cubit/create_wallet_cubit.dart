@@ -2,10 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../common/utils/extensions/object_parsing.dart';
-import '../../../../common/utils/helpers/safe_emit_helper.dart';
-import '../../data/model/wallet_model.dart';
-import '../../domain/repository/wallet_core_repository.dart';
+import '../../../../../common/utils/extensions/object_parsing.dart';
+import '../../../../../common/utils/helpers/safe_emit_helper.dart';
+import '../../../data/model/wallet_model.dart';
+import '../../../domain/repository/wallet_core_repository.dart';
 
 part 'create_wallet_state.dart';
 

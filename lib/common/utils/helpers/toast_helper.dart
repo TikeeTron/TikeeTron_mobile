@@ -29,15 +29,20 @@ class ToastHelper {
     EdgeInsetsGeometry? margin,
     bool dismissible = true,
   }) {
-    _fToast
-      ..removeCustomToast()
-      ..showToast(
-        child: _customToast(
-          ToastType.info,
-          message,
-        ),
-        isDismissable: dismissible,
-      );
+    Fluttertoast.showToast(
+      msg: message,
+      textColor: UIColors.red500,
+      backgroundColor: UIColors.red950,
+    );
+    // _fToast
+    //   ..removeCustomToast()
+    //   ..showToast(
+    //     child: _customToast(
+    //       ToastType.info,
+    //       message,
+    //     ),
+    //     isDismissable: dismissible,
+    //   );
   }
 
   void showSuccess(
@@ -46,15 +51,21 @@ class ToastHelper {
     EdgeInsetsGeometry? margin,
     bool dismissible = true,
   }) {
-    _fToast
-      ..removeCustomToast()
-      ..showToast(
-        child: _customToast(
-          ToastType.success,
-          message,
-        ),
-        isDismissable: dismissible,
-      );
+    Fluttertoast.showToast(
+      msg: message,
+      textColor: UIColors.white50,
+      backgroundColor: UIColors.blue500,
+    );
+
+    // _fToast
+    //   ..removeCustomToast()
+    //   ..showToast(
+    //     child: _customToast(
+    //       ToastType.success,
+    //       message,
+    //     ),
+    //     isDismissable: dismissible,
+    //   );
   }
 
   void showError(
@@ -64,15 +75,20 @@ class ToastHelper {
     EdgeInsetsGeometry? margin,
     bool dismissible = true,
   }) {
-    _fToast
-      ..removeCustomToast()
-      ..showToast(
-        child: _customToast(
-          ToastType.error,
-          message,
-        ),
-        isDismissable: dismissible,
-      );
+    Fluttertoast.showToast(
+      msg: message,
+      textColor: UIColors.red500,
+      backgroundColor: UIColors.red950,
+    );
+    // _fToast
+    //   ..removeCustomToast()
+    //   ..showToast(
+    //     child: _customToast(
+    //       ToastType.error,
+    //       message,
+    //     ),
+    //     isDismissable: dismissible,
+    //   );
   }
 
   removeToast() {

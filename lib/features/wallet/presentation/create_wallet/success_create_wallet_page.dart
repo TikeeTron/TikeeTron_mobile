@@ -132,36 +132,10 @@ class _SuccessCreateWalletPageState extends State<SuccessCreateWalletPage> {
       await BlocProvider.of<ActiveWalletCubit>(context).setActiveWallet(
         wallet: widget.params.wallet,
       );
-      final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context).state;
-      // final watchlistBloc = BlocProvider.of<WatchlistBloc>(context);
-      // if (activeWalletCubit.walletIndex != null) {
-      //   List<dynamic> tokenList = watchlistBloc.state.watchlists ?? [];
-      //   if (tokenList.isNotEmpty) {
-      //     for (var item in tokenList) {
-      //       var mapData = (item as Map).toMapString;
-
-      //       final tokenData = mapData.maybeWhere((e) {
-      //         return e['id'] == 'bitcoin' || e['id'] == 'ethereum' || e['id'] == 'solana' || e['id'] == 'tether' || e['id'] == 'usd-coin';
-      //       })?.toMapString;
-      //       if (tokenData != null) {
-      //         await locator<TokenWatchlistLocalDataSource>().addWatchList(
-      //           walletIndex: activeWalletCubit.walletIndex ?? 0,
-      //           tokenData: tokenData,
-      //         );
-      //       }
-      //     }
-      //   }
-      // }
-
       await Future.delayed(DurationConstant.d500);
       // go to main page
       navigationService.pushAndPopUntil(
-        const DashboardRoute(children: [
-          HomeRoute(),
-          HomeRoute(),
-          HomeRoute(),
-          HomeRoute(),
-        ]),
+        const DashboardRoute(),
         predicate: (route) => false,
       );
     } catch (error) {

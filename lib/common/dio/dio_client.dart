@@ -112,7 +112,7 @@ class ApiResources {
     }
 
     if (version != null) {
-      return '$url/v$version';
+      return 'http://143.198.88.184:3000/api/v$version';
     }
 
     return url;

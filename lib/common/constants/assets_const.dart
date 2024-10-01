@@ -79,6 +79,7 @@ class IllustrationsConst {
   static const String onBoarding1 = 'assets/images/ob_1.png';
   static const String onBoarding2 = 'assets/images/ob_2.png';
   static const String onBoarding3 = 'assets/images/ob_3.png';
+  static const String warning = 'assets/images/warning.png';
 }
 
 class ImagesConst {
@@ -120,4 +121,5 @@ class SvgConst {
   static const icTicket = 'assets/svg/ic_ticket.svg';
   static const icEditAddress = 'assets/svg/ic_edit_address.svg';
   static const icNetworkFee = 'assets/svg/ic_network_fee.svg';
+  static const icAlert = 'assets/svg/alert.svg';
 }

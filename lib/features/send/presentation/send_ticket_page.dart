@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:blockies/blockies.dart';
@@ -142,11 +143,17 @@ class _SendTicketPageState extends State<SendTicketPage> {
                                 ),
                               ),
                               UIGap.w12,
-                              SvgUI(
-                                SvgConst.icEditAddress,
-                                width: 16.w,
-                                height: 16.h,
-                                color: UIColors.white50,
+                              BounceTap(
+                                onTap: () {
+                                  log('POP BACK');
+                                  context.maybePop();
+                                },
+                                child: SvgUI(
+                                  SvgConst.icEditAddress,
+                                  width: 16.w,
+                                  height: 16.h,
+                                  color: UIColors.white50,
+                                ),
                               ),
                               UIGap.w4,
                             ],

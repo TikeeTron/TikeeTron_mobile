@@ -35,8 +35,6 @@ class HiveInitialization {
     final key = await secureStorage.read(key: 'key');
     final encryptionKeyUint8List = base64Url.decode(key!);
 
-    // if old db exist without aes encryption, running migration function
-
     await Hive.openBox(
       'wallet',
       encryptionCipher: HiveAesCipher(encryptionKeyUint8List),

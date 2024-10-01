@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../common/themes/cubit/theme_cubit.dart';
 import '../../common/utils/extensions/object_parsing.dart';
 import '../../common/utils/helpers/logger_helper.dart';
 import '../../features/shared/presentation/cubit/dashboard_cubit.dart';
+import '../../features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart';
+import '../../features/shared/presentation/loading_page.dart';
 import '../../features/wallet/data/repositories/source/local/wallet_local_repository.dart';
+import '../../features/wallet/presentation/create_wallet/cubit/create_wallet_cubit.dart';
 import '../../features/wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
-import '../../features/wallet/presentation/cubit/create_wallet_cubit.dart';
 import '../../features/wallet/presentation/cubit/token_list/token_list_cubit.dart';
 import '../../features/wallet/presentation/cubit/wallets/wallets_cubit.dart';
+import '../../features/wallet/presentation/import_wallet/cubit/import_wallet_cubit.dart';
 import '../injector/locator.dart';
 import '../routes/app_route.dart';
 
@@ -48,6 +50,12 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => locator<DashboardCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<FullScreenLoadingCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<ImportWalletCubit>(),
         ),
       ],
       child: _AppView(
@@ -154,7 +162,6 @@ class __AppViewState extends State<_AppView> {
             return Theme(
               data: state.materialThemeData,
               child: CupertinoApp.router(
-                builder: FToastBuilder(),
                 debugShowCheckedModeBanner: false,
                 title: 'TikeeTron',
                 localizationsDelegates: const [
@@ -164,6 +171,30 @@ class __AppViewState extends State<_AppView> {
                 ],
                 theme: state.cupertinoThemeData,
                 routerConfig: _appRouter.config(),
+                builder: (context, child) {
+                  return Stack(
+                    children: <Widget>[
+                      if (child != null) ...[
+                        child,
+                      ],
+                      BlocBuilder<FullScreenLoadingCubit, FullscreenLoadingState>(
+                        builder: (context, state) {
+                          if (state is ShowFullScreenLoading) {
+                            return LoadingPage(
+                              opacity: 1,
+                              title: state.title,
+                              subtitle: state.subtitle,
+                            );
+                          }
+
+                          return const LoadingPage(
+                            opacity: 0,
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
               ),
             );
           },

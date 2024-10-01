@@ -5,9 +5,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../../common/utils/extensions/string_parsing.dart';
 import '../../../../../common/utils/helpers/safe_emit_helper.dart';
 import '../../../../../core/core.dart';
 import '../../../../../core/injector/locator.dart';
+import '../../../../blockchain/domain/repository/tron_core_repository.dart';
 import '../../../data/model/wallet_model.dart';
 import '../../../data/repositories/source/local/account_local_repository.dart';
 import '../../../domain/repository/wallet_core_repository.dart';
@@ -19,10 +21,14 @@ part 'active_wallet_state.dart';
 class ActiveWalletCubit extends Cubit<ActiveWalletState> {
   final AccountLocalRepository accountLocalRepository;
   final WalletCoreRepository walletCore;
+  final TronCoreRepository tronCoreRepository;
+  final WalletCoreRepository walletCoreRepository;
 
   ActiveWalletCubit({
     required this.accountLocalRepository,
     required this.walletCore,
+    required this.tronCoreRepository,
+    required this.walletCoreRepository,
   }) : super(const ActiveWalletState());
 
   WalletModel? getActiveWallet() {
@@ -76,18 +82,25 @@ class ActiveWalletCubit extends Cubit<ActiveWalletState> {
       AccountLocalRepository.activeWalletIndex,
       index,
     );
+    final tronAccount = await tronCoreRepository.getTronAccount(walletAddress: wallet.addresses?[0].address ?? '');
 
-    // TODO: Need this? --> do not disconnect
-    // if (state.wallet != null) {
-    //   // if previous active wallet is not null,
-    //   // disconnect the wallet from wallet connect
-    //   await wcService.disconnectPairingsByWalletAddress(
-    //     walletAddress: walletCore.getWalletAddress(
-    //       wallet: state.wallet!,
-    //       blockchain: BlockchainNetwork.evm,
-    //     ),
-    //   );
-    // }
+    final totalBalance = tronAccount?.balance.toString().amountInWeiToToken(
+          decimals: 6,
+          fractionDigits: 2,
+        );
+    walletCore.updateWalletData(
+      walletIndex: index,
+      keyValue: [
+        {
+          "key": "lastUpdate",
+          "value": DateTime.now(),
+        },
+        {
+          "key": "totalBalance",
+          "value": totalBalance,
+        }
+      ],
+    );
 
     // emit state
     safeEmit(ActiveWalletState(
@@ -101,6 +114,28 @@ class ActiveWalletCubit extends Cubit<ActiveWalletState> {
     ).getTokenBalances(
       walletIndex: index,
     );
+  }
+
+  Future<void> getWalletBalance({required String walletAddress, required int walletIndex}) async {
+    final tronAccount = await tronCoreRepository.getTronAccount(walletAddress: walletAddress);
+    final totalBalance = tronAccount?.balance.toString().amountInWeiToToken(
+          decimals: 6,
+          fractionDigits: 2,
+        );
+    walletCore.updateWalletData(
+      walletIndex: walletIndex,
+      keyValue: [
+        {
+          "key": "lastUpdate",
+          "value": DateTime.now(),
+        },
+        {
+          "key": "totalBalance",
+          "value": totalBalance,
+        }
+      ],
+    );
+    refreshWallet();
   }
 
   WalletModel? refreshWallet() {

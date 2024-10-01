@@ -60,7 +60,7 @@ class SendPage extends StatelessWidget {
               UIGap.h16,
               SendItemWidget(
                 icon: SvgConst.icWalletSend,
-                title: '2.000 TRX',
+                title: 'TRX',
                 onTap: () {
                   context.pushRoute(
                     SelectRecipientRoute(
@@ -68,7 +68,7 @@ class SendPage extends StatelessWidget {
                     ),
                   );
                 },
-                subtitle: '0x8f25a...5c42f',
+                subtitle: 'send trx to another account',
                 iconSize: 20,
               ),
               UIGap.h24,

@@ -175,7 +175,7 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                     ),
                     UIGap.size(h: 10.h),
                     Text(
-                      '2.242,34 TRX',
+                      '${state.wallet?.totalBalance ?? 0} TRX',
                       style: UITypographies.h2(
                         context,
                       ),

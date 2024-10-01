@@ -75,7 +75,7 @@ class AccountLocalRepository {
     return false;
   }
 
-  Future<void> setIdUser(int idUser) async {
+  Future<void> setIdUser(String idUser) async {
     await _appRepository!.put("idUser", idUser);
   }
 

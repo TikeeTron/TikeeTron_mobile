@@ -8,15 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../common/components/components.dart';
-import '../../../../common/constants/animation_const.dart';
-import '../../../../common/constants/assets_const.dart';
-import '../../../../common/constants/durations_const.dart';
-import '../../../../common/themes/colors.dart';
-import '../../../../common/themes/typographies.dart';
-import '../../../../common/utils/extensions/theme_extension.dart';
+import '../../../common/common.dart';
 import '../../../common/components/container/rounded_container.dart';
+import '../../../common/components/dialogs/confirmation_alert_widget.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
+import '../../../core/adapters/blockchain_network_adapter.dart';
+import '../../../core/core.dart';
 import '../../../core/injector/locator.dart';
 import '../../home/presentation/home_page.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
@@ -127,7 +124,36 @@ class _SideMenuWidget extends StatelessWidget {
               ),
               const Spacer(),
               UIScaleButton(
-                onTap: () {},
+                onTap: () async {
+                  if (state.wallet != null) {
+                    final confirm = await ModalHelper.showModalBottomSheet(
+                      context,
+                      padding: EdgeInsets.zero,
+                      child: const ConfirmationAlertWidget(
+                        title: "Are you sure?",
+                        description: "Your current Wallet will be deleted from this device.",
+                      ),
+                    );
+                    if (confirm) {
+                      // get wallet address
+                      final walletAddress = locator<WalletCoreRepository>().getWalletAddress(
+                        wallet: state.wallet!,
+                        blockchain: BlockchainNetwork.tron,
+                      );
+
+                      // delete wallet
+                      await locator<WalletCoreRepository>().deleteWallet(
+                        walletIndex: state.walletIndex ?? 0,
+                        walletAddress: walletAddress,
+                      );
+
+                      navigationService.pushAndPopUntil(
+                        const OnBoardingRoute(),
+                        predicate: (p0) => false,
+                      );
+                    }
+                  }
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: context.theme.colors.backgroundTertiary,

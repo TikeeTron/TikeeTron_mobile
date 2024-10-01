@@ -8,9 +8,9 @@ import '../../../../common/constants/duration_constant.dart';
 import '../../../../common/utils/encrypter/encrypter.dart';
 import '../../../../common/utils/helpers/logger_helper.dart';
 import '../../data/model/wallet_model.dart';
-import '../cubit/create_wallet_cubit.dart';
 import '../widget/back_up_step_page_view.dart';
 import '../widget/confirm_step_page_view.dart';
+import 'cubit/create_wallet_cubit.dart';
 
 @RoutePage()
 class CreateWalletPage extends StatefulWidget {

@@ -38,14 +38,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      resizeToAvoidBottomInset: false,
-      child: Column(
-        children: [
-          Expanded(
-            child: _contentSection,
-          ),
-        ],
-      ),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: UIColors.black500,
+      child: _contentSection,
     );
   }
 

@@ -11,8 +11,10 @@ import '../../../common/components/button/bounce_tap.dart';
 import '../../../common/components/svg/svg_ui.dart';
 import '../../../common/config/padding_config.dart';
 import '../../../core/core.dart';
+import '../../../core/injector/injector.dart';
 import '../../shared/presentation/cubit/cubit.dart';
 import '../../shared/presentation/event_card_widget.dart';
+import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 
 @RoutePage()
@@ -39,6 +41,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     _tabController = TabController(vsync: this, length: 5);
     _tabController.addListener(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context);
+      final activeWallet = activeWalletCubit.getActiveWallet();
+      if (activeWallet != null) {
+        final walletAddress = locator<WalletCoreRepository>().getWalletAddress(
+          wallet: activeWallet,
+        );
+        activeWalletCubit.getWalletBalance(
+          walletAddress: walletAddress,
+          walletIndex: activeWalletCubit.state.walletIndex ?? 0,
+        );
+      }
+    });
     super.initState();
   }
 
@@ -78,7 +93,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     UIGap.h4,
                     Text(
-                      '2.000 TRX',
+                      '${state.wallet?.totalBalance} TRX',
                       style: UITypographies.bodyLarge(
                         context,
                         fontWeight: FontWeight.w600,

@@ -24,12 +24,6 @@ class WalletModel extends Equatable {
   final DateTime? lastUpdate; // from String to DateTime
   final List<TokenModel>? tokenList; // from List<Map<String, Object>> to List<TokenModel>
 
-  // WILL DELETED
-  // final String? privateKey;
-  // final BlockchainNetwork? network;
-  // final String? address;
-  // final String? username;
-
   // ADD NEW
   final String? userName;
   final String? userEmail;
@@ -37,62 +31,61 @@ class WalletModel extends Equatable {
   final String? appVersion;
   final String? tikeetronUsername;
   final List<WalletAddressModel>? addresses;
-  final int? mpcVersion;
 
-  const WalletModel(
-      {this.name,
-      // this.address,
-      this.seed,
-      // this.privateKey,
-      this.tokenList,
-      this.status,
-      this.method,
-      this.readOnly,
-      this.totalBalance,
-      this.lastUpdate,
-      this.walletPath,
-      // this.network,
-      this.isGeneric,
-      this.createdAt,
-      this.isLoading,
-      this.nft,
-      this.userName,
-      this.userEmail,
-      this.userProfilePictureUrl,
-      this.nonVisibleNFT,
-      this.appVersion,
-      this.tikeetronUsername,
-      this.addresses,
-      this.tagData,
-      this.mpcVersion});
+  const WalletModel({
+    this.name,
+    // this.address,
+    this.seed,
+    // this.privateKey,
+    this.tokenList,
+    this.status,
+    this.method,
+    this.readOnly,
+    this.totalBalance,
+    this.lastUpdate,
+    this.walletPath,
+    // this.network,
+    this.isGeneric,
+    this.createdAt,
+    this.isLoading,
+    this.nft,
+    this.userName,
+    this.userEmail,
+    this.userProfilePictureUrl,
+    this.nonVisibleNFT,
+    this.appVersion,
+    this.tikeetronUsername,
+    this.addresses,
+    this.tagData,
+  });
 
   factory WalletModel.fromJson(Map<dynamic, dynamic> json) {
     return WalletModel(
-        name: json['name'],
-        // address: json['address'],
-        seed: json['seed'],
-        // privateKey: json['privateKey'],
-        status: json['status'],
-        method: json['method'],
-        readOnly: json['readOnly'],
-        totalBalance: json['totalBalance'],
-        lastUpdate: json['lastUpdate'],
-        walletPath: json['walletPath'],
-        // network: json['network'],
-        tagData: json['tagData'] != null ? TagDataModel.fromJson(json['tagData']['data']) : null,
-        isGeneric: json['isGeneric'],
-        createdAt: json['createdAt'],
-        isLoading: json['isLoading'],
-        nft: json['nft'],
-        tokenList: (json['tokenList'] as List<dynamic>?)?.map((e) => TokenModel.fromJson(e)).toList(),
-        userName: json['userName'],
-        userEmail: json['userEmail'],
-        userProfilePictureUrl: json['userProfilePictureUrl'],
-        nonVisibleNFT: json['nonVisibleNFT'],
-        appVersion: json['app_version'],
-        tikeetronUsername: json['tikeetronUsername'],
-        addresses: (json['addresses'] as List<dynamic>?)?.map((e) => WalletAddressModel.fromJson(e)).toList(),
-        mpcVersion: json['mpcVersion']);
+      name: json['name'],
+      // address: json['address'],
+      seed: json['seed'],
+      // privateKey: json['privateKey'],
+      status: json['status'],
+      method: json['method'],
+      readOnly: json['readOnly'],
+      totalBalance: json['totalBalance'],
+      lastUpdate: json['lastUpdate'],
+      walletPath: json['walletPath'],
+      // network: json['network'],
+      tagData: json['tagData'] != null ? TagDataModel.fromJson(json['tagData']['data']) : null,
+      isGeneric: json['isGeneric'],
+      createdAt: json['createdAt'],
+      isLoading: json['isLoading'],
+      nft: json['nft'],
+      tokenList: (json['tokenList'] as List<dynamic>?)?.map((e) => TokenModel.fromJson(e)).toList(),
+      userName: json['userName'],
+      userEmail: json['userEmail'],
+      userProfilePictureUrl: json['userProfilePictureUrl'],
+      nonVisibleNFT: json['nonVisibleNFT'],
+      appVersion: json['app_version'],
+      tikeetronUsername: json['tikeetronUsername'],
+      addresses: (json['addresses'] as List<dynamic>?)?.map((e) => WalletAddressModel.fromJson(e)).toList(),
+    );
   }
 
   WalletModel copyWith({
@@ -121,7 +114,6 @@ class WalletModel extends Equatable {
     String? tikeetronUsername,
     List<WalletAddressModel>? addresses,
     TagDataModel? tagData,
-    int? mpcVersion,
   }) {
     return WalletModel(
       name: name ?? this.name,
@@ -145,7 +137,6 @@ class WalletModel extends Equatable {
       tikeetronUsername: tikeetronUsername ?? this.tikeetronUsername,
       addresses: addresses ?? this.addresses,
       tagData: tagData ?? this.tagData,
-      mpcVersion: mpcVersion ?? this.mpcVersion,
     );
   }
 
@@ -172,7 +163,6 @@ class WalletModel extends Equatable {
       "tagData": tagData?.toJson(),
       "tikeetronUsername": tikeetronUsername,
       "addresses": addresses?.map((e) => e.toJson()).toList(),
-      "mpcVersion": mpcVersion
     };
   }
 
@@ -207,6 +197,5 @@ class WalletModel extends Equatable {
         tikeetronUsername,
         addresses,
         tagData,
-        mpcVersion
       ];
 }

@@ -401,7 +401,8 @@ class SendTokenRouteArgs {
 
 /// generated route for
 /// [SuccessCreateWalletPage]
-class SuccessCreateWalletRoute extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
+class SuccessCreateWalletRoute
+    extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
   SuccessCreateWalletRoute({
     Key? key,
     required SuccessCreateWalletPageParams params,

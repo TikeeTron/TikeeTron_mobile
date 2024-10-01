@@ -18,6 +18,8 @@ import 'package:tikeetron_app/core/routes/app_route.dart' as _i344;
 import 'package:tikeetron_app/core/services/navigation_service.dart' as _i488;
 import 'package:tikeetron_app/features/blockchain/data/repositories/implementation/tron_core_repository_impl.dart'
     as _i111;
+import 'package:tikeetron_app/features/blockchain/data/repositories/source/tron_remote.dart'
+    as _i446;
 import 'package:tikeetron_app/features/blockchain/domain/repository/tron_core_repository.dart'
     as _i1041;
 import 'package:tikeetron_app/features/home/data/repositories/implementation/ai_repository_implementation.dart'
@@ -28,6 +30,8 @@ import 'package:tikeetron_app/features/home/domain/repository/ai_repository.dart
     as _i306;
 import 'package:tikeetron_app/features/shared/presentation/cubit/dashboard_cubit.dart'
     as _i542;
+import 'package:tikeetron_app/features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart'
+    as _i80;
 import 'package:tikeetron_app/features/shared/presentation/cubit/theme_cubit.dart'
     as _i714;
 import 'package:tikeetron_app/features/wallet/data/repositories/implementation/token_core_repository_impl.dart'
@@ -42,14 +46,16 @@ import 'package:tikeetron_app/features/wallet/domain/repository/token_core_repos
     as _i592;
 import 'package:tikeetron_app/features/wallet/domain/repository/wallet_core_repository.dart'
     as _i183;
+import 'package:tikeetron_app/features/wallet/presentation/create_wallet/cubit/create_wallet_cubit.dart'
+    as _i671;
 import 'package:tikeetron_app/features/wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart'
     as _i878;
-import 'package:tikeetron_app/features/wallet/presentation/cubit/create_wallet_cubit.dart'
-    as _i1025;
 import 'package:tikeetron_app/features/wallet/presentation/cubit/token_list/token_list_cubit.dart'
     as _i546;
 import 'package:tikeetron_app/features/wallet/presentation/cubit/wallets/wallets_cubit.dart'
     as _i693;
+import 'package:tikeetron_app/features/wallet/presentation/import_wallet/cubit/import_wallet_cubit.dart'
+    as _i89;
 import 'package:tikeetron_app/hive_initialization.dart' as _i1057;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -77,21 +83,21 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1057.HiveInitialization());
     gh.lazySingleton<_i810.WalletUtils>(() => _i810.WalletUtils());
     gh.lazySingleton<_i139.ToastHelper>(() => _i139.ToastHelper());
+    gh.lazySingleton<_i80.FullScreenLoadingCubit>(
+        () => _i80.FullScreenLoadingCubit());
+    gh.lazySingleton<_i446.TronRemote>(() => _i446.TronRemote());
     gh.lazySingleton<_i258.BaseRepository>(
         () => _i258.AppRepository(gh<String>()));
     gh.lazySingleton<_i1041.TronCoreRepository>(
-        () => _i111.TronCoreRepositoryImpl());
+        () => _i111.TronCoreRepositoryImpl(gh<_i446.TronRemote>()));
     gh.lazySingleton<_i306.AiRepository>(
         () => _i662.AiRepositoryImplementation(gh<_i303.AiRemote>()));
     gh.lazySingleton<_i183.WalletCoreRepository>(
         () => _i678.WallletCoreRepositoryImpl(
               gh<_i1041.TronCoreRepository>(),
               gh<_i593.WalletLocalRepository>(),
+              gh<_i436.AccountLocalRepository>(),
             ));
-    gh.lazySingleton<_i1025.CreateWalletCubit>(() =>
-        _i1025.CreateWalletCubit(walletCore: gh<_i183.WalletCoreRepository>()));
-    gh.lazySingleton<_i693.WalletsCubit>(
-        () => _i693.WalletsCubit(walletCore: gh<_i183.WalletCoreRepository>()));
     gh.lazySingleton<_i592.TokenCoreRepository>(
         () => _i48.TokenCoreRepositoryImpl(
               tronCore: gh<_i1041.TronCoreRepository>(),
@@ -101,9 +107,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i878.ActiveWalletCubit>(() => _i878.ActiveWalletCubit(
           accountLocalRepository: gh<_i436.AccountLocalRepository>(),
           walletCore: gh<_i183.WalletCoreRepository>(),
+          tronCoreRepository: gh<_i1041.TronCoreRepository>(),
+          walletCoreRepository: gh<_i183.WalletCoreRepository>(),
         ));
     gh.lazySingleton<_i546.TokenListCubit>(
         () => _i546.TokenListCubit(tokenCore: gh<_i592.TokenCoreRepository>()));
+    gh.lazySingleton<_i693.WalletsCubit>(
+        () => _i693.WalletsCubit(walletCore: gh<_i183.WalletCoreRepository>()));
+    gh.lazySingleton<_i671.CreateWalletCubit>(() =>
+        _i671.CreateWalletCubit(walletCore: gh<_i183.WalletCoreRepository>()));
+    gh.lazySingleton<_i89.ImportWalletCubit>(() =>
+        _i89.ImportWalletCubit(walletCore: gh<_i183.WalletCoreRepository>()));
     return this;
   }
 }
