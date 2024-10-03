@@ -11,6 +11,8 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:tikeetron_app/common/themes/cubit/theme_cubit.dart' as _i622;
+import 'package:tikeetron_app/common/utils/helpers/debouncer_helper.dart'
+    as _i196;
 import 'package:tikeetron_app/common/utils/helpers/toast_helper.dart' as _i139;
 import 'package:tikeetron_app/common/utils/wallet_util.dart' as _i810;
 import 'package:tikeetron_app/core/app/app_repository.dart' as _i258;
@@ -28,6 +30,8 @@ import 'package:tikeetron_app/features/home/data/repositories/source/remote/ai_r
     as _i303;
 import 'package:tikeetron_app/features/home/domain/repository/ai_repository.dart'
     as _i306;
+import 'package:tikeetron_app/features/send/presentation/cubit/send_token_quoting_cubit.dart'
+    as _i259;
 import 'package:tikeetron_app/features/shared/presentation/cubit/dashboard_cubit.dart'
     as _i542;
 import 'package:tikeetron_app/features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart'
@@ -86,6 +90,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i80.FullScreenLoadingCubit>(
         () => _i80.FullScreenLoadingCubit());
     gh.lazySingleton<_i446.TronRemote>(() => _i446.TronRemote());
+    gh.lazySingleton<_i196.Debouncer>(() => _i196.Debouncer());
     gh.lazySingleton<_i258.BaseRepository>(
         () => _i258.AppRepository(gh<String>()));
     gh.lazySingleton<_i1041.TronCoreRepository>(
@@ -112,6 +117,8 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i546.TokenListCubit>(
         () => _i546.TokenListCubit(tokenCore: gh<_i592.TokenCoreRepository>()));
+    gh.lazySingleton<_i259.SendTokenQuotingCubit>(
+        () => _i259.SendTokenQuotingCubit(gh<_i1041.TronCoreRepository>()));
     gh.lazySingleton<_i693.WalletsCubit>(
         () => _i693.WalletsCubit(walletCore: gh<_i183.WalletCoreRepository>()));
     gh.lazySingleton<_i671.CreateWalletCubit>(() =>

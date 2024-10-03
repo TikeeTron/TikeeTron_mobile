@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/themes/cubit/theme_cubit.dart';
 import '../../common/utils/extensions/object_parsing.dart';
 import '../../common/utils/helpers/logger_helper.dart';
+import '../../features/send/presentation/cubit/send_token_quoting_cubit.dart';
 import '../../features/shared/presentation/cubit/dashboard_cubit.dart';
 import '../../features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart';
 import '../../features/shared/presentation/loading_page.dart';
@@ -56,6 +57,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => locator<ImportWalletCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<SendTokenQuotingCubit>(),
         ),
       ],
       child: _AppView(

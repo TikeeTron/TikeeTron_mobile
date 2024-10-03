@@ -12,4 +12,6 @@ abstract class TronCoreRepository {
   Future<void> getTokenBalances({required String walletAddress});
   Future<void> sendTransaction();
   Future<void> signTransaction();
+  Future<double?> getTokenInFiat({required double tokenBalance});
+  Future<double?> getTokenPrice();
 }

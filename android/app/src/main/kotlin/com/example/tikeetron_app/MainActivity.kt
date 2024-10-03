@@ -1,4 +1,4 @@
-package com.example.tikeetron_app
+package com.tikeetron.apps
 
 import io.flutter.embedding.android.FlutterActivity
 

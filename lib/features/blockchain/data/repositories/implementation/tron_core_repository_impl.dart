@@ -79,4 +79,26 @@ class TronCoreRepositoryImpl implements TronCoreRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<double?> getTokenInFiat({required double tokenBalance}) async {
+    try {
+      final tokenPrice = await _tronRemote.getTokenPrice();
+      final tokenInFiat = tokenBalance * (tokenPrice ?? 0.1) * 1.00;
+      return tokenInFiat;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<double?> getTokenPrice() async {
+    try {
+      final tokenPrice = await _tronRemote.getTokenPrice();
+
+      return tokenPrice;
+    } catch (e) {
+      return null;
+    }
+  }
 }

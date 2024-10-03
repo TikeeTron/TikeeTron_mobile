@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:blockchain_utils/hex/hex.dart' as hex;
 import 'package:injectable/injectable.dart';
 import 'package:on_chain/on_chain.dart';
 
+import '../../../../../common/dio/api.config.dart';
 import '../../../../../common/dio/tron_provider.dart';
 import '../../../../../common/utils/helpers/logger_helper.dart';
 
@@ -27,9 +30,22 @@ class TronRemote {
       TronRequestGetAccount(
         address: TronAddress(walletAddress),
       ),
+      const Duration(seconds: 5),
     );
     Logger.info('Account info $tronAccount');
 
     return tronAccount;
+  }
+
+  Future<double?> getTokenPrice() async {
+    final result = await AppApi().getWithCache(
+      'https://api.coingecko.com/api/v3/simple/token_price/tron?contract_addresses=TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR&vs_currencies=usd',
+    );
+    if (result != null) {
+      final tokenPrice = result['TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR']['usd'];
+      return tokenPrice;
+    } else {
+      return null;
+    }
   }
 }

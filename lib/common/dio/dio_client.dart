@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -232,6 +233,7 @@ class ApiResources {
     }
   }
 
+  static final MemCacheStore _cacheStore = MemCacheStore();
   Future<dynamic> getWithCache(
     String path, {
     Map<String, dynamic>? params,
@@ -239,30 +241,80 @@ class ApiResources {
     CancelToken? cancelToken,
     Duration? cacheDuration = const Duration(hours: 12),
   }) async {
+    final String cacheKey = '$path${params != null ? '?${params.toString()}' : 'pr'}';
+
+    CacheOptions cacheOptions = CacheOptions(
+      store: MemCacheStore(),
+      policy: CachePolicy.refresh,
+      hitCacheOnErrorExcept: [],
+      maxStale: cacheDuration,
+      priority: CachePriority.high,
+      keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+      allowPostMethod: true,
+    );
+
+    final cacheInterceptor = DioCacheInterceptor(options: cacheOptions);
+
+    if (!_dio.interceptors.contains(cacheInterceptor)) {
+      _dio.interceptors.add(cacheInterceptor);
+    }
+
     try {
-      CacheOptions cacheOptions = CacheOptions(
-        store: MemCacheStore(),
-        policy: CachePolicy.forceCache,
-        hitCacheOnErrorExcept: [401, 403],
-        maxStale: cacheDuration,
-        priority: CachePriority.normal,
-        cipher: null,
-        keyBuilder: CacheOptions.defaultCacheKeyBuilder,
-        allowPostMethod: true,
-      );
-
-      _dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
-
       final Response response = await _dio.get(
         path,
         queryParameters: params,
         cancelToken: cancelToken ?? _cancelToken,
-        options: options ?? dioOption,
+        options: (options ?? dioOption).copyWith(
+          extra: {
+            'dio_cache_interceptor': cacheOptions,
+          },
+        ),
       );
 
-      debugPrint('REQUEST GET CACHE WITH KEY : ${response.extra} \nPATH : $path');
+      if (response.statusCode == 200) {
+        // Simpan respons sukses ke cache secara manual
+        final cacheResponse = CacheResponse(
+          cacheControl: CacheControl(),
+          content: utf8.encode(json.encode(response.data)),
+          date: DateTime.now(),
+          eTag: response.headers.value('etag'),
+          expires: null,
+          headers: utf8.encode(json.encode(response.headers.map)),
+          key: cacheKey,
+          lastModified: response.headers.value('last-modified'),
+          maxStale: null,
+          priority: CachePriority.high,
+          requestDate: DateTime.now(),
+          responseDate: DateTime.now(),
+          url: response.requestOptions.uri.toString(),
+        );
+        await _cacheStore.set(cacheResponse);
 
-      return response.data;
+        return response.data;
+      } else if (response.statusCode == 429) {
+        // Rate limit hit, coba ambil dari cache
+        final cacheResponse = await _cacheStore.get(cacheKey);
+
+        if (cacheResponse != null) {
+          String cachedString = utf8.decode(cacheResponse.content ?? []);
+
+          return json.decode(cachedString);
+        } else {
+          throw DioException(
+            requestOptions: response.requestOptions,
+            response: response,
+            type: DioExceptionType.badResponse,
+            error: 'Rate limit exceeded and no cached data available',
+          );
+        }
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          error: 'Unexpected status code: ${response.statusCode}',
+        );
+      }
     } on DioException catch (err) {
       ApiResources.dioErrorHandlerFunc(err);
     } on SocketException catch (e) {

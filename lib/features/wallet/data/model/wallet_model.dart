@@ -11,6 +11,7 @@ class WalletModel extends Equatable {
   final String? method;
   final bool? readOnly;
   final dynamic totalBalance;
+  final dynamic balanceInFiat;
   final int? walletPath;
   final bool? isGeneric;
   final bool? isLoading;
@@ -42,6 +43,7 @@ class WalletModel extends Equatable {
     this.method,
     this.readOnly,
     this.totalBalance,
+    this.balanceInFiat,
     this.lastUpdate,
     this.walletPath,
     // this.network,
@@ -69,6 +71,7 @@ class WalletModel extends Equatable {
       method: json['method'],
       readOnly: json['readOnly'],
       totalBalance: json['totalBalance'],
+      balanceInFiat: json['balanceInFiat'],
       lastUpdate: json['lastUpdate'],
       walletPath: json['walletPath'],
       // network: json['network'],
@@ -99,6 +102,7 @@ class WalletModel extends Equatable {
     String? method,
     bool? readOnly,
     dynamic totalBalance,
+    dynamic balanceInFiat,
     DateTime? lastUpdate,
     int? walletPath,
     BlockchainNetwork? network,
@@ -123,6 +127,7 @@ class WalletModel extends Equatable {
       method: method ?? this.method,
       readOnly: readOnly ?? this.readOnly,
       totalBalance: totalBalance ?? this.totalBalance,
+      balanceInFiat: balanceInFiat ?? this.balanceInFiat,
       lastUpdate: lastUpdate ?? this.lastUpdate,
       walletPath: walletPath ?? this.walletPath,
       isGeneric: isGeneric ?? this.isGeneric,
@@ -149,6 +154,7 @@ class WalletModel extends Equatable {
       "method": method,
       "readOnly": readOnly,
       "totalBalance": totalBalance,
+      "balanceInFiat": balanceInFiat,
       "lastUpdate": lastUpdate,
       "walletPath": walletPath,
       "isGeneric": isGeneric,
@@ -182,6 +188,7 @@ class WalletModel extends Equatable {
         method,
         readOnly,
         totalBalance,
+        balanceInFiat,
         lastUpdate,
         walletPath,
         // network,
