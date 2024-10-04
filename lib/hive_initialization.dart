@@ -43,5 +43,9 @@ class HiveInitialization {
       'account',
       encryptionCipher: HiveAesCipher(encryptionKeyUint8List),
     );
+    await Hive.openBox(
+      'transaction',
+      encryptionCipher: HiveAesCipher(encryptionKeyUint8List),
+    );
   }
 }

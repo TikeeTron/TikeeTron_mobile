@@ -143,10 +143,12 @@ class ActiveWalletCubit extends Cubit<ActiveWalletState> {
         }
       ],
     );
-    refreshWallet();
+    refreshWallet(
+      freeNetUsage: tronAccount?.freeNetUsage,
+    );
   }
 
-  WalletModel? refreshWallet() {
+  WalletModel? refreshWallet({int? freeNetUsage}) {
     final wallets = walletCore.getWallets();
     if (wallets.isEmpty) {
       return null;
@@ -158,6 +160,7 @@ class ActiveWalletCubit extends Cubit<ActiveWalletState> {
     safeEmit(ActiveWalletState(
       wallet: activeWallet,
       walletIndex: state.walletIndex,
+      freeNetUsage: freeNetUsage,
     ));
 
     return activeWallet;

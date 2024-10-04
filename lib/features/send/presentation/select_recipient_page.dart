@@ -11,7 +11,9 @@ import '../../../common/config/padding_config.dart';
 import '../../../common/enum/send_type_enum.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
 import '../../../core/core.dart';
+import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import '../../wallet/presentation/cubit/wallets/wallets_cubit.dart';
+import 'cubit/send_token_cubit.dart';
 import 'widget/send_item_widget.dart';
 
 @RoutePage()
@@ -202,8 +204,13 @@ class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerPr
                                   iconSize: 20,
                                   onTap: () {
                                     if (widget.sendType == SendTypeEnum.coin) {
+                                      final senderAddress = BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
+                                      BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
+                                        senderAddress: senderAddress?.addresses?[0].address ?? '',
+                                        targetAddress: state.wallets[index].addresses?[0].address ?? '',
+                                      );
                                       context.pushRoute(
-                                        SendTokenRoute(walletAddress: state.wallets[index].addresses?[0].address ?? ''),
+                                        const SendTokenRoute(),
                                       );
                                     } else {
                                       context.pushRoute(

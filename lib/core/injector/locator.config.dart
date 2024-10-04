@@ -30,8 +30,16 @@ import 'package:tikeetron_app/features/home/data/repositories/source/remote/ai_r
     as _i303;
 import 'package:tikeetron_app/features/home/domain/repository/ai_repository.dart'
     as _i306;
+import 'package:tikeetron_app/features/send/presentation/cubit/send_token_cubit.dart'
+    as _i632;
 import 'package:tikeetron_app/features/send/presentation/cubit/send_token_quoting_cubit.dart'
     as _i259;
+import 'package:tikeetron_app/features/shared/data/repositories/implementation/transaction_repository_implementation.dart'
+    as _i380;
+import 'package:tikeetron_app/features/shared/data/repositories/source/local/transaction_local_repository.dart'
+    as _i720;
+import 'package:tikeetron_app/features/shared/domain/transaction_repository.dart'
+    as _i1047;
 import 'package:tikeetron_app/features/shared/presentation/cubit/dashboard_cubit.dart'
     as _i542;
 import 'package:tikeetron_app/features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart'
@@ -91,8 +99,15 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i80.FullScreenLoadingCubit());
     gh.lazySingleton<_i446.TronRemote>(() => _i446.TronRemote());
     gh.lazySingleton<_i196.Debouncer>(() => _i196.Debouncer());
+    gh.lazySingleton<_i720.TransactionLocalRepository>(
+        () => _i720.TransactionLocalRepository());
     gh.lazySingleton<_i258.BaseRepository>(
         () => _i258.AppRepository(gh<String>()));
+    gh.lazySingleton<_i1047.TransactionRepository>(
+        () => _i380.TransactionRepositoryImplementation(
+              gh<_i720.TransactionLocalRepository>(),
+              gh<_i446.TronRemote>(),
+            ));
     gh.lazySingleton<_i1041.TronCoreRepository>(
         () => _i111.TronCoreRepositoryImpl(gh<_i446.TronRemote>()));
     gh.lazySingleton<_i306.AiRepository>(
@@ -114,6 +129,10 @@ extension GetItInjectableX on _i174.GetIt {
           walletCore: gh<_i183.WalletCoreRepository>(),
           tronCoreRepository: gh<_i1041.TronCoreRepository>(),
           walletCoreRepository: gh<_i183.WalletCoreRepository>(),
+        ));
+    gh.lazySingleton<_i632.SendTokenCubit>(() => _i632.SendTokenCubit(
+          gh<_i1041.TronCoreRepository>(),
+          gh<_i1047.TransactionRepository>(),
         ));
     gh.lazySingleton<_i546.TokenListCubit>(
         () => _i546.TokenListCubit(tokenCore: gh<_i592.TokenCoreRepository>()));

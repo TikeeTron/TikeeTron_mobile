@@ -1,0 +1,4 @@
+enum AssetTypeEnum {
+  token,
+  nft,
+}

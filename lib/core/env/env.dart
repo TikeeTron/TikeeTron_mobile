@@ -12,7 +12,7 @@ abstract class Env {
   const Env._();
 
   @FieldKey(name: 'BASE_URL')
-  String get baseUrl => 'https://api.xellar.co';
+  String get baseUrl => 'https://api.tikeetron.laam.my.id';
 
   @FieldKey(name: 'AI_URL')
   String get aiUrl => 'https://ai.tikeetron.laam.my.id';

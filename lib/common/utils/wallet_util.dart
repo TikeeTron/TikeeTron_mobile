@@ -39,7 +39,6 @@ class WalletUtils {
           final childKey = bip44.deriveDefaultPath;
           final tronPrivKey = TronPrivateKey.fromBytes(childKey.privateKey.raw);
 
-// block.Bip44.fromSeed(seed, block.Bip44Coins.tron);
           tronPrivateKey = tronPrivKey;
           privateKey = tronPrivKey.toHex();
           break;

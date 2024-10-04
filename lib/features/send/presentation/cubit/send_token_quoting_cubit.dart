@@ -20,7 +20,6 @@ class SendTokenQuotingCubit extends Cubit<SendTokenQuotingState> {
 
       final amountInFiat = await _tronCoreRepository.getTokenInFiat(tokenBalance: amount);
       final exchangeRate = await _tronCoreRepository.getTokenPrice();
-      final networkFee = 0;
       safeEmit(SendTokenQuotingSuccessState(
         amountInFiat: amountInFiat == 0.0 ? 0 : amountInFiat,
         exchangeRate: exchangeRate,
@@ -36,6 +35,6 @@ class SendTokenQuotingCubit extends Cubit<SendTokenQuotingState> {
   }
 
   Future<void> resetQuoting() async {
-    safeEmit(SendTokenQuotingLoadingState());
+    safeEmit(SendTokenQuotingInitialState());
   }
 }

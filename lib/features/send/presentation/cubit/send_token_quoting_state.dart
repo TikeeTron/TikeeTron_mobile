@@ -7,6 +7,8 @@ class SendTokenQuotingState extends Equatable {
   List<Object?> get props => [];
 }
 
+class SendTokenQuotingInitialState extends SendTokenQuotingState {}
+
 class SendTokenQuotingLoadingState extends SendTokenQuotingState {}
 
 class SendTokenQuotingSuccessState extends SendTokenQuotingState {

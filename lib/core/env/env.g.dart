@@ -10,7 +10,7 @@ class _$Env extends Env {
   const _$Env() : super._();
 
   static const String _encryptedValues =
-      'eyJCQVNFX1VSTCI6ImFIUjBjSE02THk5aGNHa3VlR1ZzYkdGeUxtTnYiLCJBSV9VUkwiOiJhSFIwY0hNNkx5OWhhUzUwYVd0bFpYUnliMjR1YkdGaGJTNXRlUzVwWkE9PSJ9';
+      'eyJCQVNFX1VSTCI6ImFIUjBjSE02THk5aGNHa3VkR2xyWldWMGNtOXVMbXhoWVcwdWJYa3VhV1E9IiwiQUlfVVJMIjoiYUhSMGNITTZMeTloYVM1MGFXdGxaWFJ5YjI0dWJHRmhiUzV0ZVM1cFpBPT0ifQ==';
   @override
   String get baseUrl => _get('BASE_URL');
 

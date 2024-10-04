@@ -6,6 +6,7 @@ import '../../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../../common/utils/wallet_util.dart';
 import '../../../../../core/adapters/blockchain_network_adapter.dart';
 import '../../../../../core/injector/locator.dart';
+import '../../../../wallet/data/model/wallet_model.dart';
 import '../../../domain/repository/tron_core_repository.dart';
 import '../../models/result_create_wallet_model.dart';
 import '../source/tron_remote.dart';
@@ -59,15 +60,23 @@ class TronCoreRepositoryImpl implements TronCoreRepository {
   }
 
   @override
-  Future<void> sendTransaction() {
-    // TODO: implement sendTransaction
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> signTransaction() {
-    // TODO: implement signTransaction
-    throw UnimplementedError();
+  Future<String?> sendTransaction({
+    required String walletAddress,
+    required String targetAddress,
+    required String amount,
+    required WalletModel wallet,
+  }) async {
+    try {
+      final txId = await _tronRemote.sendTransaction(
+        walletAddress: walletAddress,
+        targetAddress: targetAddress,
+        amount: amount,
+        wallet: wallet,
+      );
+      return txId;
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
