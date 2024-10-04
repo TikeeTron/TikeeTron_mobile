@@ -14,11 +14,8 @@ import '../../../common/components/components.dart';
 import '../../../common/components/container/rounded_container.dart';
 import '../../../common/components/svg/svg_ui.dart';
 import '../../../common/constants/assets_const.dart';
-import '../../../common/enum/transaction_type_enum.dart';
 import '../../../common/themes/themes.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
-import '../../../core/routes/app_route.dart';
-import '../../shared/data/model/receipt_model.dart';
 import 'widget/ticket_widget.dart';
 
 @RoutePage()
@@ -374,14 +371,14 @@ class _SendTicketPageState extends State<SendTicketPage> {
                   borderRadius: 16.r,
                   enabled: _amountController.text.isNotEmpty,
                   onSubmit: () {
-                    context.pushRoute(
-                      ReceiptRoute(
-                        data: ReceiptModel(
-                          'Send TRX',
-                          TransactionTypeEnum.send,
-                        ),
-                      ),
-                    );
+                    // context.pushRoute(
+                    //   ReceiptRoute(
+                    //     data: ReceiptModel(
+                    //       'Send TRX',
+                    //       TransactionTypeEnum.send,
+                    //     ),
+                    //   ),
+                    // );
                     return null;
                   },
                   outerColor: UIColors.grey200.withOpacity(0.24),

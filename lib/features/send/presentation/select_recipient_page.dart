@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,6 +12,7 @@ import '../../../common/config/padding_config.dart';
 import '../../../common/enum/send_type_enum.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
 import '../../../core/core.dart';
+import '../../shared/presentation/account_card_widget.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import '../../wallet/presentation/cubit/wallets/wallets_cubit.dart';
 import 'cubit/send_token_cubit.dart';
@@ -28,12 +30,24 @@ class SelectRecipientPage extends StatefulWidget {
 class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerProviderStateMixin {
   late TabController _tabController;
   TextEditingController _searchController = TextEditingController();
+  String senderAddress = '';
   @override
   void initState() {
     _tabController = TabController(vsync: this, length: 2);
     _tabController.addListener(() {});
+    final activeWallet = BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
+    senderAddress = activeWallet?.addresses?[0].address ?? '';
+    _searchController.addListener(
+      () {},
+    );
     BlocProvider.of<WalletsCubit>(context).getWallets();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    BlocProvider.of<SendTokenCubit>(context).resetSendState();
+    super.didChangeDependencies();
   }
 
   @override
@@ -79,168 +93,224 @@ class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerPr
             padding: Paddings.defaultPaddingH,
             child: Material(
               color: Colors.transparent,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  UIGap.h24,
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: UITextField(
-                          radius: 999,
-                          suffixWidth: 70.w,
-                          textController: _searchController,
-                          hint: 'Search Address ...',
-                          suffixIcon: Container(
-                            padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 10.w),
-                            decoration: BoxDecoration(
-                              color: UIColors.primary500,
-                              borderRadius: BorderRadius.circular(40.r),
-                            ),
-                            child: Text(
-                              'Paste',
-                              style: UITypographies.bodyLarge(
-                                context,
-                                fontSize: 15.sp,
-                              ),
-                            ),
+              child: BlocBuilder<SendTokenCubit, SendTokenState>(builder: (context, sendTokenState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    UIGap.h24,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: UITextField(
+                            radius: 999,
+                            suffixWidth: 70.w,
+                            textController: _searchController,
+                            onChanged: (value) {
+                              if (_searchController.text.isNotEmpty) {
+                                BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
+                                  senderAddress: senderAddress,
+                                  targetAddress: value,
+                                );
+                              } else {
+                                BlocProvider.of<SendTokenCubit>(context).resetSendState();
+                              }
+                            },
+                            hint: 'Search Address ...',
+                            suffixIcon: sendTokenState is SendToken
+                                ? null
+                                : BounceTap(
+                                    onTap: () async {
+                                      ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+
+                                      if (data != null) {
+                                        _searchController.text = data.text ?? '';
+
+                                        if (_searchController.text.isNotEmpty) {
+                                          BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
+                                            senderAddress: senderAddress,
+                                            targetAddress: data.text ?? '',
+                                          );
+                                        } else {
+                                          BlocProvider.of<SendTokenCubit>(context).resetSendState();
+                                        }
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 10.w),
+                                      decoration: BoxDecoration(
+                                        color: UIColors.primary500,
+                                        borderRadius: BorderRadius.circular(40.r),
+                                      ),
+                                      child: Text(
+                                        'Paste',
+                                        style: UITypographies.bodyLarge(
+                                          context,
+                                          fontSize: 15.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
-                      ),
-                      UIGap.w8,
-                      Container(
-                        padding: EdgeInsets.all(14.w),
-                        decoration: BoxDecoration(
-                          color: UIColors.grey200.withOpacity(0.24),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Icon(
-                          CupertinoIcons.qrcode_viewfinder,
-                          size: 20.w,
-                          color: UIColors.white50,
-                        ),
-                      ),
-                    ],
-                  ),
-                  UIGap.h20,
-                  TabBar(
-                    tabAlignment: TabAlignment.start,
-                    labelColor: UIColors.white50,
-                    unselectedLabelColor: UIColors.grey500,
-                    controller: _tabController,
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(99),
-                      color: UIColors.black400,
-                    ),
-                    isScrollable: true,
-                    indicatorWeight: 1,
-                    indicatorPadding: EdgeInsets.symmetric(vertical: 2.h),
-                    labelPadding: EdgeInsets.only(right: 10.w),
-                    dividerColor: Colors.transparent,
-                    labelStyle: UITypographies.subtitleLarge(
-                      context,
-                      color: UIColors.black500,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    unselectedLabelStyle: UITypographies.bodyLarge(
-                      context,
-                      color: UIColors.grey500,
-                    ),
-                    padding: EdgeInsets.zero,
-                    tabs: [
-                      Tab(
-                        height: 42.h,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 10.h,
-                          ),
+                        UIGap.w8,
+                        Container(
+                          padding: EdgeInsets.all(14.w),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(99),
-                            border: _tabController.index != 0
-                                ? Border.all(
-                                    color: UIColors.white50.withOpacity(0.15),
-                                  )
-                                : null,
+                            color: UIColors.grey200.withOpacity(0.24),
+                            borderRadius: BorderRadius.circular(999),
                           ),
-                          child: const Text('My Account'),
+                          child: Icon(
+                            CupertinoIcons.qrcode_viewfinder,
+                            size: 20.w,
+                            color: UIColors.white50,
+                          ),
                         ),
-                      ),
-                      Tab(
-                        height: 42.h,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 10.h,
+                      ],
+                    ),
+                    UIGap.h24,
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, 1),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(99),
-                            border: _tabController.index != 1
-                                ? Border.all(
-                                    color: UIColors.white50.withOpacity(0.15),
-                                  )
-                                : null,
-                          ),
-                          child: const Text('Account'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (state is WalletsLoadedState) ...[
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          SingleChildScrollView(
-                            padding: EdgeInsets.symmetric(vertical: 20.h),
-                            child: Column(
-                                children: List.generate(
-                              state.wallets.length,
-                              (index) {
-                                return SendItemWidget(
-                                  icon: SvgConst.icWalletSend,
-                                  title: 'Account ${index + 1}',
-                                  subtitle: DynamicParsing(state.wallets[index].addresses?[0].address).shortedWalletAddress ?? '',
-                                  iconSize: 20,
-                                  onTap: () {
-                                    if (widget.sendType == SendTypeEnum.coin) {
-                                      final senderAddress = BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
-                                      BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
-                                        senderAddress: senderAddress?.addresses?[0].address ?? '',
-                                        targetAddress: state.wallets[index].addresses?[0].address ?? '',
-                                      );
-                                      context.pushRoute(
-                                        const SendTokenRoute(),
-                                      );
-                                    } else {
-                                      context.pushRoute(
-                                        SendTicketRoute(walletAddress: state.wallets[index].addresses?[0].address ?? ''),
-                                      );
-                                    }
-                                  },
+                        );
+                      },
+                      child: sendTokenState is SendToken
+                          ? AccountCardWidget(
+                              address: _searchController.text,
+                              onTap: () {
+                                context.pushRoute(
+                                  const SendTokenRoute(),
                                 );
                               },
-                            )),
-                          ),
-                          SingleChildScrollView(
-                            padding: EdgeInsets.symmetric(vertical: 20.h),
-                            child: const Column(
-                              children: [
-                                SendItemWidget(
-                                  icon: SvgConst.icTicket,
-                                  title: 'Account 3',
-                                  subtitle: '0x8f25a...5cccd',
-                                  iconSize: 20,
+                            )
+                          : TabBar(
+                              tabAlignment: TabAlignment.start,
+                              labelColor: UIColors.white50,
+                              unselectedLabelColor: UIColors.grey500,
+                              controller: _tabController,
+                              indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(99),
+                                color: UIColors.black400,
+                              ),
+                              isScrollable: true,
+                              indicatorWeight: 1,
+                              indicatorPadding: EdgeInsets.symmetric(vertical: 2.h),
+                              labelPadding: EdgeInsets.only(right: 10.w),
+                              dividerColor: Colors.transparent,
+                              labelStyle: UITypographies.subtitleLarge(
+                                context,
+                                color: UIColors.black500,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              unselectedLabelStyle: UITypographies.bodyLarge(
+                                context,
+                                color: UIColors.grey500,
+                              ),
+                              padding: EdgeInsets.zero,
+                              tabs: [
+                                Tab(
+                                  height: 42.h,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 10.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(99),
+                                      border: _tabController.index != 0
+                                          ? Border.all(
+                                              color: UIColors.white50.withOpacity(0.15),
+                                            )
+                                          : null,
+                                    ),
+                                    child: const Text('My Account'),
+                                  ),
+                                ),
+                                Tab(
+                                  height: 42.h,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 10.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(99),
+                                      border: _tabController.index != 1
+                                          ? Border.all(
+                                              color: UIColors.white50.withOpacity(0.15),
+                                            )
+                                          : null,
+                                    ),
+                                    child: const Text('Account'),
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
                     ),
+                    if (state is WalletsLoadedState && _searchController.text.isEmpty) ...[
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(vertical: 20.h),
+                              child: Column(
+                                  children: List.generate(
+                                state.wallets.length,
+                                (index) {
+                                  return SendItemWidget(
+                                    icon: SvgConst.icWalletSend,
+                                    title: 'Account ${index + 1}',
+                                    subtitle: DynamicParsing(state.wallets[index].addresses?[0].address).shortedWalletAddress ?? '',
+                                    iconSize: 20,
+                                    onTap: () {
+                                      if (widget.sendType == SendTypeEnum.coin) {
+                                        final senderAddress = BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
+                                        BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
+                                          senderAddress: senderAddress?.addresses?[0].address ?? '',
+                                          targetAddress: state.wallets[index].addresses?[0].address ?? '',
+                                        );
+                                        context.pushRoute(
+                                          const SendTokenRoute(),
+                                        );
+                                      } else {
+                                        context.pushRoute(
+                                          SendTicketRoute(walletAddress: state.wallets[index].addresses?[0].address ?? ''),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              )),
+                            ),
+                            SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(vertical: 20.h),
+                              child: const Column(
+                                children: [
+                                  SendItemWidget(
+                                    icon: SvgConst.icTicket,
+                                    title: 'Account 3',
+                                    subtitle: '0x8f25a...5cccd',
+                                    iconSize: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
-                ],
-              ),
+                );
+              }),
             ),
           ),
         );

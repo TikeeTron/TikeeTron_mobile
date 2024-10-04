@@ -1,11 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../common/enum/asset_type_enum.dart';
 import '../../../../common/enum/transaction_state_enum.dart';
 import '../../../../common/enum/transaction_type_enum.dart';
 import '../../../../common/utils/extensions/object_parsing.dart';
+import '../../../../common/utils/helpers/format_date_helper.dart';
 import '../../../../common/utils/helpers/safe_emit_helper.dart';
 import '../../../blockchain/domain/repository/tron_core_repository.dart';
 import '../../../shared/data/model/transaction_model.dart';
@@ -24,8 +26,9 @@ class SendTokenCubit extends Cubit<SendTokenState> {
           const SendTokenState(),
         );
 
-  Future<String?> sendToken({
+  Future<TransactionModel?> sendToken({
     required WalletModel wallet,
+    required int resourcesConsumed,
   }) async {
     try {
       if (state is! SendToken) {
@@ -46,22 +49,25 @@ class SendTokenCubit extends Cubit<SendTokenState> {
 
       // insert transaction history
       if (sendTransactionResult != null) {
-        _transactionRepository.insertTransactionHistory(
-          transaction: TransactionModel(
-            title: 'Send Token',
-            transactionType: TransactionTypeEnum.send,
-            assetType: AssetTypeEnum.token,
-            resourcesConsumed: 0,
-            toAddress: currentState.targetAddress,
-            fromAddress: currentState.senderAddress,
-            date: DateTime.now().toString(),
-            amount: amount,
-            txId: sendTransactionResult,
-            transactionStatus: TransactionStateEnum.success,
-          ),
+        final transaction = TransactionModel(
+          title: 'Send Token',
+          transactionType: TransactionTypeEnum.send,
+          assetType: AssetTypeEnum.token,
+          resourcesConsumed: resourcesConsumed,
+          toAddress: currentState.targetAddress,
+          fromAddress: currentState.senderAddress,
+          date: formatDateTime(DateTime.now()),
+          amount: amount,
+          txId: sendTransactionResult,
+          transactionStatus: TransactionStateEnum.success,
         );
+        _transactionRepository.insertTransactionHistory(
+          transaction: transaction,
+        );
+        return transaction;
+      } else {
+        return null;
       }
-      return sendTransactionResult;
     } catch (error) {
       safeEmit(SendTokenErrorState(
         message: error.errorMessage,

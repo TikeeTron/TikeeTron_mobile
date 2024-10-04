@@ -11,7 +11,7 @@ import '../../features/send/presentation/select_recipient_page.dart';
 import '../../features/send/presentation/send_page.dart';
 import '../../features/send/presentation/send_ticket_page.dart';
 import '../../features/send/presentation/send_token_page.dart';
-import '../../features/shared/data/model/receipt_model.dart';
+import '../../features/shared/data/model/transaction_model.dart';
 import '../../features/shared/presentation/dashboard_page.dart';
 import '../../features/shared/presentation/receipt/receipt_page.dart';
 import '../../features/wallet/data/model/wallet_model.dart';

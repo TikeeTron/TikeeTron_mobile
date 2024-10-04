@@ -70,7 +70,7 @@ class TransactionModel extends Equatable {
     };
   }
 
-  factory TransactionModel.fromJson(Map<String, dynamic> json) {
+  factory TransactionModel.fromJson(Map<dynamic, dynamic> json) {
     return TransactionModel(
       title: json['title'],
       transactionType: TransactionTypeEnum.values.firstWhere((e) => e.toString() == json['transactionType']),

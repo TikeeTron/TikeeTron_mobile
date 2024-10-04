@@ -155,7 +155,7 @@ class OnBoardingRoute extends PageRouteInfo<void> {
 class ReceiptRoute extends PageRouteInfo<ReceiptRouteArgs> {
   ReceiptRoute({
     Key? key,
-    required ReceiptModel data,
+    required TransactionModel data,
     List<PageRouteInfo>? children,
   }) : super(
           ReceiptRoute.name,
@@ -188,7 +188,7 @@ class ReceiptRouteArgs {
 
   final Key? key;
 
-  final ReceiptModel data;
+  final TransactionModel data;
 
   @override
   String toString() {

@@ -73,7 +73,7 @@ dependencies:
   encrypt: ^5.0.1
   package_info_plus: ^8.0.2
   blockies: ^0.1.2
-
+  url_launcher: ^6.3.0
 
 
   # Network

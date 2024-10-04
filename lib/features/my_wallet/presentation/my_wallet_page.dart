@@ -17,8 +17,8 @@ import '../../../core/injector/locator.dart';
 import '../../wallet/data/model/wallet_model.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
+import 'view/wallet_activity_tab_bar_view.dart';
 import 'widget/filter/filter_event_modal.dart';
-import 'widget/history_transaction_card_widget.dart';
 import 'widget/menu_button.dart';
 
 @RoutePage()
@@ -344,38 +344,7 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                             title: 'No upcoming events',
                             desc: 'You haven’t purchased any tickets yet. Browse events and book your spot!',
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.h),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                UIDivider(
-                                  color: UIColors.white50.withOpacity(0.15),
-                                ),
-                                UIGap.size(h: 20.h),
-                                Text(
-                                  'Today',
-                                  style: UITypographies.bodyLarge(context),
-                                ),
-                                UIGap.size(h: 18.h),
-                                HistoryTransactionCardWidget(
-                                  type: HistoryTransactionType.send,
-                                  address: shortedAddress,
-                                  amount: '300',
-                                ),
-                                HistoryTransactionCardWidget(
-                                  type: HistoryTransactionType.receive,
-                                  address: shortedAddress,
-                                  amount: '200',
-                                ),
-                              ],
-                            ),
-                          ),
-                          // const EmptyDataWidget(
-                          //   image: IconsConst.icEmptyActivity,
-                          //   title: 'No upcoming events',
-                          //   desc: 'You haven’t purchased any tickets yet. Browse events and book your spot!',
-                          // ),
+                          const WalletActivityTabBarView(),
                         ],
                       ),
                     ),

@@ -30,6 +30,7 @@ class IconsConst {
   static const String radioChecked = 'assets/icons/ic_radio_button_checked.svg';
 
   static const String copy = 'assets/icons/ic_copy.svg';
+  static const String copyFill = 'assets/icons/ic_copy_fill.svg';
   static const String qrCode = 'assets/icons/ic_qr_code.svg';
   static const String alert = 'assets/icons/ic_alert.svg';
 
@@ -73,6 +74,10 @@ class IconsConst {
 
   static const String icEmptyEvent = 'assets/icons/ic_empty_event.png';
   static const String icEmptyActivity = 'assets/icons/ic_empty_activity.png';
+
+  static const String icConcertHome = 'assets/icons/ic_concert_home.png';
+  static const String icFestivalHome = 'assets/icons/ic_festival_home.png';
+  static const String icTicketHome = 'assets/icons/ic_ticket_home.png';
 }
 
 class IllustrationsConst {
