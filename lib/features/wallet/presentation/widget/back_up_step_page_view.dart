@@ -1,11 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/common.dart';
+import '../../../../common/components/button/bounce_tap.dart';
 import '../../../../common/components/button/button_rounded_ui.dart';
 import '../../../../common/components/container/rounded_container.dart';
+import '../../../../common/components/svg/svg_ui.dart';
 import '../../../../common/components/text/text_ui.dart';
 import '../../../../common/config/padding_config.dart';
 import '../../../../common/utils/extensions/list_string_parsing.dart';
@@ -75,7 +79,7 @@ class _BackUpStepPageViewState extends State<BackUpStepPageView> {
                       Positioned.fill(
                         child: RoundedContainer(
                           borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFF1F2025).withOpacity(0.9),
+                          color: UIColors.black500.withOpacity(0.4),
                           child: BackdropFilter(
                             filter: ImageFilter.blur(
                               sigmaX: 4,
@@ -84,32 +88,39 @@ class _BackUpStepPageViewState extends State<BackUpStepPageView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                TextUI(
+                                Text(
                                   'Tap to reveal your seed phrase',
-                                  overwriteStyle: context.theme.textTheme.labelMedium,
+                                  style: UITypographies.subtitleLarge(context),
                                 ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                TextUI(
-                                  'Make sure no one is watching your screen',
-                                  overwriteStyle: context.theme.textTheme.labelSmall,
+                                UIGap.h12,
+                                Text(
+                                  'Write down your seed phrase and keep it secure.',
+                                  style: UITypographies.bodyMedium(context, color: UIColors.grey500),
                                 ),
                                 const SizedBox(
                                   height: 32,
                                 ),
-                                ButtonRoundedUI(
-                                  text: 'View',
-                                  useInkWell: true,
-                                  useHeavyHaptic: true,
-                                  color: context.theme.secondaryHeaderColor,
-                                  prefixSvg: SvgConst.icEye,
-                                  width: 169,
-                                  onPress: () {
+                                BounceTap(
+                                  onTap: () {
                                     setState(() {
                                       isShowSeedPhrase = !isShowSeedPhrase;
                                     });
                                   },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        CupertinoIcons.eye,
+                                        color: UIColors.primary500,
+                                        size: 24.w,
+                                      ),
+                                      UIGap.w4,
+                                      Text(
+                                        'View',
+                                        style: UITypographies.bodyLarge(context, color: UIColors.primary500),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -153,6 +164,32 @@ class _BackUpStepPageViewState extends State<BackUpStepPageView> {
               ),
             ),
           ],
+          UIGap.h20,
+          BounceTap(
+            onTap: () async {
+              await Clipboard.setData(ClipboardData(text: widget.mnemonicWords.join(' '))).then((_) {
+                toastHelper.showSuccess('Copied!');
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SvgUI(
+                  IconsConst.copyFill,
+                  size: 22.w,
+                  color: UIColors.primary500,
+                ),
+                UIGap.w4,
+                Text(
+                  'Copy to clipboard',
+                  style: UITypographies.bodyLarge(
+                    context,
+                    color: UIColors.primary500,
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(
             height: 120,
           ),

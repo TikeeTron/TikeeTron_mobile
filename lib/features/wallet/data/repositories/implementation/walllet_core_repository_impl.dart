@@ -553,8 +553,6 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
         "address": walletAddress,
       });
 
-      Logger.info('SIGN IN RAW RESULT: ${result}');
-
       final signInData = SignInModel.fromJson(result);
 
       if (signInData.data != null) {

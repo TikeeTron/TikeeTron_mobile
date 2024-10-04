@@ -31,8 +31,8 @@ class ToastHelper {
   }) {
     Fluttertoast.showToast(
       msg: message,
-      textColor: UIColors.red500,
-      backgroundColor: UIColors.red950,
+      textColor: UIColors.white50,
+      backgroundColor: UIColors.blue500,
     );
     // _fToast
     //   ..removeCustomToast()
@@ -54,7 +54,7 @@ class ToastHelper {
     Fluttertoast.showToast(
       msg: message,
       textColor: UIColors.white50,
-      backgroundColor: UIColors.blue500,
+      backgroundColor: UIColors.green500,
     );
 
     // _fToast

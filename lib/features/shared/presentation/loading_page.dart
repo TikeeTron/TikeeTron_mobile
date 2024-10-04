@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/common.dart';
+import '../../../common/config/padding_config.dart';
 
 class LoadingPage extends StatelessWidget {
   final String? title;
@@ -18,6 +19,7 @@ class LoadingPage extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       color: UIColors.black500,
+      padding: Paddings.defaultPaddingH,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -39,6 +41,7 @@ class LoadingPage extends StatelessWidget {
           UIGap.h4,
           Text(
             subtitle ?? '',
+            textAlign: TextAlign.center,
             style: UITypographies.subtitleLarge(
               context,
               fontSize: 20.sp,

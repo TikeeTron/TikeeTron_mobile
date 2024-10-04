@@ -2,6 +2,7 @@ import 'dart:ui';
 
 abstract class UIColors {
   // --- Primary --- //
+  static const primary950 = Color(0xFF000C1A);
   static const primary900 = Color(0xFF001833);
   static const primary800 = Color(0xFF003166);
   static const primary700 = Color(0xFF004999);

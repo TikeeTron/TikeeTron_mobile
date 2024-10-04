@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -61,7 +62,7 @@ class ApiResources {
   late int? timeOut;
 
   late BaseOptions _options = BaseOptions(
-    baseUrl: '',
+    baseUrl: 'https://api.tikeetron.cloud/api',
     validateStatus: (_) => true,
     contentType: Headers.jsonContentType,
     sendTimeout: const Duration(milliseconds: 60000),
@@ -106,14 +107,14 @@ class ApiResources {
   }
 
   String _apiBaseUrl(int? version, String? baseUrl) {
-    String url = '';
+    String url = 'https://api.tikeetron.cloud/api';
 
     if (baseUrl != null) {
       url = baseUrl;
     }
 
     if (version != null) {
-      return 'http://143.198.88.184:3000/api/v$version';
+      return '$url/v$version';
     }
 
     return url;

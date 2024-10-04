@@ -2,25 +2,15 @@ import 'package:blockies/blockies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../common/components/button/bounce_tap.dart';
-import '../../../../common/components/components.dart';
-import '../../../../common/components/container/rounded_container.dart';
-import '../../../../common/themes/themes.dart';
+import '../../../common/common.dart';
+import '../../../common/components/button/bounce_tap.dart';
+import '../../../common/components/container/rounded_container.dart';
+import '../../../common/utils/extensions/dynamic_parsing.dart';
 
-class SendItemWidget extends StatelessWidget {
-  final String icon;
-  final String title;
-  final String subtitle;
-  final double? iconSize;
-  final Function()? onTap;
-  const SendItemWidget({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.iconSize,
-    this.onTap,
-  });
+class AccountCardWidget extends StatelessWidget {
+  final String address;
+  final void Function()? onTap;
+  const AccountCardWidget({super.key, required this.address, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -32,29 +22,12 @@ class SendItemWidget extends StatelessWidget {
           Expanded(
             child: Row(
               children: <Widget>[
-                // Container(
-                //   width: 56.w,
-                //   height: 56.w,
-                //   decoration: BoxDecoration(
-                //     color: UIColors.grey200.withOpacity(0.24),
-                //     borderRadius: BorderRadius.circular(999),
-                //   ),
-                //   child: Center(
-                //     child: SvgUI(
-                //       icon,
-                //       width: iconSize?.w,
-                //       height: iconSize?.w,
-                //       fit: BoxFit.cover,
-                //       color: UIColors.white50,
-                //     ),
-                //   ),
-                // ),
                 RoundedContainer(
                   width: 46.w,
                   height: 46.w,
                   radius: 9999,
                   child: Blockies(
-                    seed: subtitle,
+                    seed: address,
                   ),
                 ),
                 UIGap.w16,
@@ -65,7 +38,7 @@ class SendItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          title,
+                          address,
                           style: UITypographies.subtitleLarge(
                             context,
                             fontSize: 17.sp,
@@ -73,7 +46,7 @@ class SendItemWidget extends StatelessWidget {
                         ),
                         UIGap.h2,
                         Text(
-                          subtitle,
+                          shortedAddress,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: UITypographies.bodyMedium(
@@ -97,5 +70,12 @@ class SendItemWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String get shortedAddress {
+    if (address.isNotEmpty) {
+      return DynamicParsing(address).shortedWalletAddress!;
+    }
+    return '';
   }
 }
