@@ -10,6 +10,25 @@
 part of 'app_route.dart';
 
 /// generated route for
+/// [ConfirmBuyTicketPage]
+class ConfirmBuyTicketRoute extends PageRouteInfo<void> {
+  const ConfirmBuyTicketRoute({List<PageRouteInfo>? children})
+      : super(
+          ConfirmBuyTicketRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ConfirmBuyTicketRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ConfirmBuyTicketPage();
+    },
+  );
+}
+
+/// generated route for
 /// [CreateWalletPage]
 class CreateWalletRoute extends PageRouteInfo<void> {
   const CreateWalletRoute({List<PageRouteInfo>? children})
@@ -43,6 +62,25 @@ class DashboardRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const DashboardPage();
+    },
+  );
+}
+
+/// generated route for
+/// [DetailEventPage]
+class DetailEventRoute extends PageRouteInfo<void> {
+  const DetailEventRoute({List<PageRouteInfo>? children})
+      : super(
+          DetailEventRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DetailEventRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DetailEventPage();
     },
   );
 }
@@ -286,6 +324,25 @@ class SelectRecipientRouteArgs {
   String toString() {
     return 'SelectRecipientRouteArgs{key: $key, sendType: $sendType}';
   }
+}
+
+/// generated route for
+/// [SelectTicketPage]
+class SelectTicketRoute extends PageRouteInfo<void> {
+  const SelectTicketRoute({List<PageRouteInfo>? children})
+      : super(
+          SelectTicketRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SelectTicketRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SelectTicketPage();
+    },
+  );
 }
 
 /// generated route for

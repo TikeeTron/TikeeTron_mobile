@@ -42,7 +42,7 @@ enum UIButtonSize {
           ),
         UIButtonSize.medium => Size(
             isIconOnly ? 36.h : double.infinity,
-            36.h,
+            35.h,
           ),
         UIButtonSize.large => Size(
             isIconOnly ? 44.h : double.infinity,

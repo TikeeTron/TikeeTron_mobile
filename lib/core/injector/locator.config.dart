@@ -26,10 +26,24 @@ import 'package:tikeetron_app/features/blockchain/domain/repository/tron_core_re
     as _i1041;
 import 'package:tikeetron_app/features/home/data/repositories/implementation/ai_repository_implementation.dart'
     as _i662;
+import 'package:tikeetron_app/features/home/data/repositories/implementation/event_repository_implementation.dart'
+    as _i68;
+import 'package:tikeetron_app/features/home/data/repositories/implementation/ticket_repository_implementation.dart'
+    as _i788;
 import 'package:tikeetron_app/features/home/data/repositories/source/remote/ai_remote.dart'
     as _i303;
+import 'package:tikeetron_app/features/home/data/repositories/source/remote/event_remote.dart'
+    as _i679;
+import 'package:tikeetron_app/features/home/data/repositories/source/remote/ticket_remote.dart'
+    as _i470;
 import 'package:tikeetron_app/features/home/domain/repository/ai_repository.dart'
     as _i306;
+import 'package:tikeetron_app/features/home/domain/repository/event_repository.dart'
+    as _i137;
+import 'package:tikeetron_app/features/home/domain/repository/ticket_repository.dart'
+    as _i441;
+import 'package:tikeetron_app/features/home/presentation/cubit/get_list_event_cubit.dart'
+    as _i39;
 import 'package:tikeetron_app/features/send/presentation/cubit/send_token_cubit.dart'
     as _i632;
 import 'package:tikeetron_app/features/send/presentation/cubit/send_token_quoting_cubit.dart'
@@ -86,7 +100,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i714.ThemeCubit>(() => _i714.ThemeCubit());
     gh.singleton<_i542.DashboardCubit>(() => _i542.DashboardCubit());
     gh.singleton<_i622.ThemeCubit>(() => _i622.ThemeCubit());
+    gh.lazySingleton<_i679.EventRemote>(() => _i679.EventRemote());
     gh.lazySingleton<_i303.AiRemote>(() => _i303.AiRemote());
+    gh.lazySingleton<_i470.TicketRemote>(() => _i470.TicketRemote());
+    gh.lazySingleton<_i720.TransactionLocalRepository>(
+        () => _i720.TransactionLocalRepository());
+    gh.lazySingleton<_i80.FullScreenLoadingCubit>(
+        () => _i80.FullScreenLoadingCubit());
+    gh.lazySingleton<_i446.TronRemote>(() => _i446.TronRemote());
     gh.lazySingleton<_i593.WalletLocalRepository>(
         () => _i593.WalletLocalRepository());
     gh.lazySingleton<_i436.AccountLocalRepository>(
@@ -94,13 +115,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1057.HiveInitialization>(
         () => _i1057.HiveInitialization());
     gh.lazySingleton<_i810.WalletUtils>(() => _i810.WalletUtils());
-    gh.lazySingleton<_i139.ToastHelper>(() => _i139.ToastHelper());
-    gh.lazySingleton<_i80.FullScreenLoadingCubit>(
-        () => _i80.FullScreenLoadingCubit());
-    gh.lazySingleton<_i446.TronRemote>(() => _i446.TronRemote());
     gh.lazySingleton<_i196.Debouncer>(() => _i196.Debouncer());
-    gh.lazySingleton<_i720.TransactionLocalRepository>(
-        () => _i720.TransactionLocalRepository());
+    gh.lazySingleton<_i139.ToastHelper>(() => _i139.ToastHelper());
     gh.lazySingleton<_i258.BaseRepository>(
         () => _i258.AppRepository(gh<String>()));
     gh.lazySingleton<_i1047.TransactionRepository>(
@@ -108,6 +124,18 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i720.TransactionLocalRepository>(),
               gh<_i446.TronRemote>(),
             ));
+    gh.lazySingleton<_i441.TicketRepository>(
+        () => _i788.TicketRepositoryImplementation(
+              gh<_i470.TicketRemote>(),
+              gh<_i436.AccountLocalRepository>(),
+            ));
+    gh.lazySingleton<_i137.EventRepository>(
+        () => _i68.EventRepositoryImplementation(
+              gh<_i679.EventRemote>(),
+              gh<_i436.AccountLocalRepository>(),
+            ));
+    gh.lazySingleton<_i39.GetListEventCubit>(
+        () => _i39.GetListEventCubit(gh<_i137.EventRepository>()));
     gh.lazySingleton<_i1041.TronCoreRepository>(
         () => _i111.TronCoreRepositoryImpl(gh<_i446.TronRemote>()));
     gh.lazySingleton<_i306.AiRepository>(

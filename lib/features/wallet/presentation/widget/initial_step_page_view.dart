@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
+
 import '../../../../common/common.dart';
-import '../../../../common/utils/extensions/size_extension.dart';
-import '../../../../common/config/font_config.dart';
 import '../../../../common/components/text/text_ui.dart';
+import '../../../../common/config/font_config.dart';
+import '../../../../common/utils/extensions/size_extension.dart';
 
 class InitialStepPageView extends StatelessWidget {
   const InitialStepPageView({

@@ -25,6 +25,7 @@ dependencies:
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   auto_size_text: ^3.0.0
+  mobile_scanner: 5.2.3
   figma_squircle: ^0.5.3
   flutter_carousel_widget: ^2.3.0
   show_up_animation: ^2.0.0
