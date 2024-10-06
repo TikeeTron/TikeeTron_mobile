@@ -98,51 +98,6 @@ class ToastHelper {
   removeAllQueuedToasts() {
     _fToast.removeQueuedCustomToasts();
   }
-
-  Widget _customToast(
-    ToastType type,
-    String message,
-  ) {
-    late Color backgroundColor;
-    late Color textColor;
-    late IconData iconData;
-
-    switch (type) {
-      case ToastType.info:
-        backgroundColor = UIColors.blue500;
-        textColor = UIColors.white50;
-        iconData = Icons.info;
-        break;
-      case ToastType.success:
-        backgroundColor = UIColors.green950;
-        textColor = UIColors.green500;
-        iconData = Icons.check;
-        break;
-      case ToastType.error:
-        backgroundColor = UIColors.red950;
-        textColor = UIColors.red500;
-        iconData = Icons.error;
-        break;
-    }
-
-    return Builder(builder: (context) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: backgroundColor,
-        ),
-        child: Text(
-          message,
-          softWrap: true,
-          textAlign: TextAlign.center,
-          style: UITypographies.bodyMedium(context).copyWith(
-            color: textColor,
-          ),
-        ),
-      );
-    });
-  }
 }
 
 final toastHelper = locator<ToastHelper>();

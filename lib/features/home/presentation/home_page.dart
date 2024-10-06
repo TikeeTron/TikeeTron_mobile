@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:blockies/blockies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,12 +8,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../common/common.dart';
 import '../../../common/components/app_bar/scaffold_app_bar.dart';
 import '../../../common/components/button/bounce_tap.dart';
-import '../../../common/components/svg/svg_ui.dart';
+import '../../../common/components/container/rounded_container.dart';
 import '../../../core/injector/injector.dart';
 import '../../shared/presentation/cubit/cubit.dart';
 import '../../shared/presentation/loading_page.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
+import 'cubit/get_list_event_cubit.dart';
 import 'view/home_chat_tab_bar_view.dart';
 import 'view/home_explore_tab_bar_view.dart';
 
@@ -26,12 +28,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _appBarTabController;
+  late GetListEventCubit getListEventCubit;
 
   @override
   void initState() {
     _appBarTabController = TabController(vsync: this, length: 2);
+    getListEventCubit = BlocProvider.of<GetListEventCubit>(context);
+    final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context);
       final activeWallet = activeWalletCubit.getActiveWallet();
       if (activeWallet != null) {
         final walletAddress = locator<WalletCoreRepository>().getWalletAddress(
@@ -42,7 +46,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           walletIndex: activeWalletCubit.state.walletIndex ?? 0,
         );
       }
+      await getListEventCubit.getListEvent();
     });
+
     super.initState();
   }
 
@@ -111,27 +117,53 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onTap: () {
                 context.read<DashboardCubit>().showDrawer();
               },
-              child: SvgUI(
-                SvgConst.drawer,
-                color: UIColors.white50,
-                width: 16.w,
-                height: 16.w,
+              child: Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: UIColors.white50.withOpacity(0.15),
+                  ),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    RoundedContainer(
+                      width: 35.w,
+                      height: 40.h,
+                      radius: 9999,
+                      child: Blockies(
+                        seed: state.wallet?.addresses?[0].address ?? '0xf',
+                      ),
+                    ),
+                    UIGap.w4,
+                    Icon(
+                      CupertinoIcons.chevron_down,
+                      size: 20.w,
+                      color: UIColors.white50,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          child: TabBarView(
-            controller: _appBarTabController,
-            children: [
-              const HomeChatTabBarView(),
-              state.wallet != null
-                  ? HomeExploreTabBarView(
-                      walletData: state.wallet!,
-                    )
-                  : const LoadingPage(
-                      opacity: 1,
-                      title: 'Loading Event Data',
-                    ),
-            ],
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.w),
+            child: TabBarView(
+              controller: _appBarTabController,
+              children: [
+                const HomeChatTabBarView(),
+                state.wallet != null
+                    ? HomeExploreTabBarView(
+                        walletData: state.wallet!,
+                        listEventCubit: getListEventCubit,
+                      )
+                    : const LoadingPage(
+                        opacity: 1,
+                        title: 'Loading Event Data',
+                      ),
+              ],
+            ),
           ),
         );
       },

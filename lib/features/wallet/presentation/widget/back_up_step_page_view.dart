@@ -1,16 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/components/button/bounce_tap.dart';
-import '../../../../common/components/button/button_rounded_ui.dart';
 import '../../../../common/components/container/rounded_container.dart';
 import '../../../../common/components/svg/svg_ui.dart';
-import '../../../../common/components/text/text_ui.dart';
 import '../../../../common/config/padding_config.dart';
 import '../../../../common/utils/extensions/list_string_parsing.dart';
 import 'seed_phrase_item_widget.dart';

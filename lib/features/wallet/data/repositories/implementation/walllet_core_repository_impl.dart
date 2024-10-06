@@ -418,9 +418,9 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
       wallet = await _importNonCustodialWallet(
         mnemonic: mnemonic,
       );
-      final walletAddress = getWalletAddress(
-        wallet: wallet,
-      );
+      // final walletAddress = getWalletAddress(
+      //   wallet: wallet,
+      // );
 
       walletName = 'Imported Wallet ${walletLength + 1}';
 

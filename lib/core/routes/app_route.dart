@@ -3,6 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/enum/send_type_enum.dart';
+import '../../features/buy_ticket/presentation/confirm_buy_ticket_page.dart';
+import '../../features/buy_ticket/presentation/detail_event_page.dart';
+import '../../features/buy_ticket/presentation/select_ticket_page.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/my_wallet/presentation/my_wallet_page.dart';
 import '../../features/on_boarding/on_boarding_page.dart';
@@ -66,6 +69,15 @@ class AppRouter extends RootStackRouter {
         ),
         CupertinoRoute(
           page: ReceiptRoute.page,
+        ),
+        CupertinoRoute(
+          page: DetailEventRoute.page,
+        ),
+        CupertinoRoute(
+          page: SelectTicketRoute.page,
+        ),
+        CupertinoRoute(
+          page: ConfirmBuyTicketRoute.page,
         ),
         CupertinoRoute(
           page: DashboardRoute.page,

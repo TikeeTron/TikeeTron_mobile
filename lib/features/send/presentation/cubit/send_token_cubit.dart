@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../common/enum/asset_type_enum.dart';
 import '../../../../common/enum/transaction_state_enum.dart';

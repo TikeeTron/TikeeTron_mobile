@@ -1,7 +1,8 @@
+import 'package:blockchain_utils/blockchain_utils.dart' as blockUtils;
 import 'package:blockchain_utils/hex/hex.dart' as hex;
 import 'package:injectable/injectable.dart';
 import 'package:on_chain/on_chain.dart';
-import 'package:blockchain_utils/blockchain_utils.dart' as blockUtils;
+
 import '../../../../../common/dio/api.config.dart';
 import '../../../../../common/dio/tron_provider.dart';
 import '../../../../../common/utils/extensions/dynamic_parsing.dart';
@@ -86,7 +87,7 @@ class TronRemote {
 
     /// An error has occurred with the request, and we need to investigate the issue to determine what is happening.
     if (!request.isSuccess) {
-      print(request.error ?? request.respose);
+      Logger.error('${request.error ?? request.respose}');
       return null;
     }
 
