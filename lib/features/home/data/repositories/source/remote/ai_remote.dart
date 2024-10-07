@@ -1,39 +1,38 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../../common/dio/api.config.dart';
 import '../../../../../../common/error/exception.dart';
-import '../../../../../../main.dart';
+import '../../../model/response/ask_ai_response.dart';
 
 @LazySingleton()
 class AiRemote {
   AiRemote();
 
-  Future<String> askAi({required String question}) async {
+  Future<AskAiResponse> askAi({
+    required String question,
+    required String userAddress,
+  }) async {
     try {
       final result = await AppApi(
-        baseUrl: env.aiUrl,
+        baseUrl: 'https://ai.tikeetron.cloud',
       ).post(
         '/ask',
         body: {
           'question': question,
         },
+        options: Options(
+          headers: {
+            'user-address': userAddress,
+          },
+        ),
       );
 
       if (result == null) {
         throw const ServerException();
       }
 
-      // if ((result as Map).containsKey('status')) {
-      //   if (result['status'] != 200) {
-      //     throw result['message'];
-      //   }
-      // } else if (result.containsKey('statusCode')) {
-      //   if (result['statusCode'] != 200) {
-      //     throw result['message'];
-      //   }
-      // }
-
-      return result;
+      return AskAiResponse.fromJson(result);
     } catch (error) {
       rethrow;
     }

@@ -1,6 +1,6 @@
 name: tikeetron_app
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # blockchain  
+  # blockchain
   tron: ^0.0.2
   web3dart: ^2.7.3
   bdk_flutter: ^0.30.0
@@ -20,13 +20,16 @@ dependencies:
   bip32_bip44: ^1.0.0
   on_chain: ^4.2.0
 
-   # UI
+  # UI
   badges: ^3.1.2
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   auto_size_text: ^3.0.0
   mobile_scanner: 5.2.3
-  figma_squircle: ^0.5.3
+  figma_squircle:
+    git:
+      url: https://github.com/mark8044/figma_squircle
+      ref: fix0
   flutter_carousel_widget: ^2.3.0
   show_up_animation: ^2.0.0
   flutter_cache_manager: ^3.4.1
@@ -46,6 +49,8 @@ dependencies:
       url: https://github.com/Luvti/flutter-widgets
       path: packages/syncfusion_flutter_charts
       ref: 15e3c4a95e3cf2e2393755bf5aa11c0206ed6dea
+  flutter_markdown: ^0.7.3
+  typewritertext: ^3.0.9
 
   # State Management
   flutter_bloc: ^8.1.6
@@ -58,7 +63,6 @@ dependencies:
   hive: ^2.2.3
   path_provider: ^2.1.4
   flutter_secure_storage: ^9.2.2
-
 
   # Navigation
   auto_route: ^9.2.0
@@ -76,7 +80,6 @@ dependencies:
   blockies: ^0.1.2
   url_launcher: ^6.3.0
 
-
   # Network
   dio: ^5.7.0
   dio_cache_interceptor: ^3.4.2
@@ -85,13 +88,12 @@ dependencies:
   # ENV
   secure_dotenv: ^1.0.0
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
 
-   # Code Generation
+  # Code Generation
   auto_route_generator: ^9.0.0
   build_runner: ^2.4.11
   hive_generator: ^2.0.1
@@ -114,4 +116,3 @@ flutter:
     - assets/svg/
     - assets/images/token/
     - assets/images/logo/
-

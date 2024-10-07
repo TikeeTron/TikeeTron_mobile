@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/themes/cubit/theme_cubit.dart';
 import '../../common/utils/extensions/object_parsing.dart';
 import '../../common/utils/helpers/logger_helper.dart';
+import '../../features/home/presentation/cubit/ask_ai_cubit.dart';
 import '../../features/home/presentation/cubit/get_list_event_cubit.dart';
 import '../../features/send/presentation/cubit/send_token_cubit.dart';
 import '../../features/send/presentation/cubit/send_token_quoting_cubit.dart';
@@ -69,6 +70,9 @@ class App extends StatelessWidget {
         BlocProvider(
           create: (_) => locator<GetListEventCubit>(),
         ),
+        BlocProvider(
+          create: (_) => locator<AskAiCubit>(),
+        )
       ],
       child: _AppView(
         key: key,
@@ -134,7 +138,8 @@ class __AppViewState extends State<_AppView> {
 
       // set & get active wallet
       BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
-      final walletIndex = BlocProvider.of<ActiveWalletCubit>(context).state.walletIndex;
+      final walletIndex =
+          BlocProvider.of<ActiveWalletCubit>(context).state.walletIndex;
       if (walletIndex == null) {
         // go to onboarding page
         await _onGoToPage(
@@ -189,7 +194,8 @@ class __AppViewState extends State<_AppView> {
                       if (child != null) ...[
                         child,
                       ],
-                      BlocBuilder<FullScreenLoadingCubit, FullscreenLoadingState>(
+                      BlocBuilder<FullScreenLoadingCubit,
+                          FullscreenLoadingState>(
                         builder: (context, state) {
                           if (state is ShowFullScreenLoading) {
                             return LoadingPage(

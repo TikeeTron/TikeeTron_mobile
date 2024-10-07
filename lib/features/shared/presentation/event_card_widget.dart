@@ -14,6 +14,8 @@ class EventCardWidget extends StatelessWidget {
   final bool haveTicket;
   final void Function()? onTapDetail;
   final void Function()? onTapMyTicket;
+  final double? width;
+
   const EventCardWidget({
     super.key,
     required this.image,
@@ -23,6 +25,7 @@ class EventCardWidget extends StatelessWidget {
     this.estimatePrice,
     this.onTapDetail,
     this.onTapMyTicket,
+    this.width,
   });
 
   @override
@@ -30,7 +33,7 @@ class EventCardWidget extends StatelessWidget {
     return BounceTap(
       onTap: onTapDetail,
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: width ?? MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(bottom: 20.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),

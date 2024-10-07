@@ -42,6 +42,8 @@ import 'package:tikeetron_app/features/home/domain/repository/event_repository.d
     as _i137;
 import 'package:tikeetron_app/features/home/domain/repository/ticket_repository.dart'
     as _i441;
+import 'package:tikeetron_app/features/home/presentation/cubit/ask_ai_cubit.dart'
+    as _i589;
 import 'package:tikeetron_app/features/home/presentation/cubit/get_list_event_cubit.dart'
     as _i39;
 import 'package:tikeetron_app/features/send/presentation/cubit/send_token_cubit.dart'
@@ -162,6 +164,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i1041.TronCoreRepository>(),
           gh<_i1047.TransactionRepository>(),
         ));
+    gh.lazySingleton<_i589.AskAiCubit>(
+        () => _i589.AskAiCubit(gh<_i306.AiRepository>()));
     gh.lazySingleton<_i546.TokenListCubit>(
         () => _i546.TokenListCubit(tokenCore: gh<_i592.TokenCoreRepository>()));
     gh.lazySingleton<_i259.SendTokenQuotingCubit>(
