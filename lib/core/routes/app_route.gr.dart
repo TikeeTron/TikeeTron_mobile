@@ -11,10 +11,19 @@ part of 'app_route.dart';
 
 /// generated route for
 /// [ConfirmBuyTicketPage]
-class ConfirmBuyTicketRoute extends PageRouteInfo<void> {
-  const ConfirmBuyTicketRoute({List<PageRouteInfo>? children})
-      : super(
+class ConfirmBuyTicketRoute extends PageRouteInfo<ConfirmBuyTicketRouteArgs> {
+  ConfirmBuyTicketRoute({
+    Key? key,
+    required TicketType selectedTicket,
+    required int eventId,
+    List<PageRouteInfo>? children,
+  }) : super(
           ConfirmBuyTicketRoute.name,
+          args: ConfirmBuyTicketRouteArgs(
+            key: key,
+            selectedTicket: selectedTicket,
+            eventId: eventId,
+          ),
           initialChildren: children,
         );
 
@@ -23,9 +32,33 @@ class ConfirmBuyTicketRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const ConfirmBuyTicketPage();
+      final args = data.argsAs<ConfirmBuyTicketRouteArgs>();
+      return ConfirmBuyTicketPage(
+        key: args.key,
+        selectedTicket: args.selectedTicket,
+        eventId: args.eventId,
+      );
     },
   );
+}
+
+class ConfirmBuyTicketRouteArgs {
+  const ConfirmBuyTicketRouteArgs({
+    this.key,
+    required this.selectedTicket,
+    required this.eventId,
+  });
+
+  final Key? key;
+
+  final TicketType selectedTicket;
+
+  final int eventId;
+
+  @override
+  String toString() {
+    return 'ConfirmBuyTicketRouteArgs{key: $key, selectedTicket: $selectedTicket, eventId: $eventId}';
+  }
 }
 
 /// generated route for
@@ -68,10 +101,17 @@ class DashboardRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [DetailEventPage]
-class DetailEventRoute extends PageRouteInfo<void> {
-  const DetailEventRoute({List<PageRouteInfo>? children})
-      : super(
+class DetailEventRoute extends PageRouteInfo<DetailEventRouteArgs> {
+  DetailEventRoute({
+    Key? key,
+    required EventDetailEntity eventData,
+    List<PageRouteInfo>? children,
+  }) : super(
           DetailEventRoute.name,
+          args: DetailEventRouteArgs(
+            key: key,
+            eventData: eventData,
+          ),
           initialChildren: children,
         );
 
@@ -80,9 +120,29 @@ class DetailEventRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DetailEventPage();
+      final args = data.argsAs<DetailEventRouteArgs>();
+      return DetailEventPage(
+        key: args.key,
+        eventData: args.eventData,
+      );
     },
   );
+}
+
+class DetailEventRouteArgs {
+  const DetailEventRouteArgs({
+    this.key,
+    required this.eventData,
+  });
+
+  final Key? key;
+
+  final EventDetailEntity eventData;
+
+  @override
+  String toString() {
+    return 'DetailEventRouteArgs{key: $key, eventData: $eventData}';
+  }
 }
 
 /// generated route for

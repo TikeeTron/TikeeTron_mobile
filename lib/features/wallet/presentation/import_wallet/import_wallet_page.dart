@@ -12,8 +12,10 @@ import '../../../../common/constants/assets_const.dart';
 import '../../../../common/themes/colors.dart';
 import '../../../../common/themes/typographies.dart';
 import '../../../../common/utils/extensions/context_parsing.dart';
+import '../../../../common/utils/utils.dart';
 import '../../../../core/core.dart';
 import '../../../../core/injector/locator.dart';
+import '../../../shared/presentation/scan_qr_bottom_sheet.dart';
 import '../../domain/repository/wallet_core_repository.dart';
 import '../cubit/active_wallet/active_wallet_cubit.dart';
 import '../cubit/wallets/wallets_cubit.dart';
@@ -40,7 +42,37 @@ class _ImportWalletPageState extends State<ImportWalletPage> {
           context,
           title: '',
           trailing: BounceTap(
-            onTap: () {},
+            onTap: () async {
+              final scanQrResult = await ModalHelper.showModalBottomSheet(
+                context,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 1.1,
+                  decoration: BoxDecoration(
+                    color: UIColors.black400,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(16.r),
+                      topLeft: Radius.circular(16.r),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: Text(
+                          'Scan QR',
+                          style: UITypographies.h4(context),
+                        ),
+                      ),
+                      ScanQrBottomSheet(),
+                    ],
+                  ),
+                ),
+                padding: EdgeInsets.zero,
+              );
+              _seedPhraseController.text = scanQrResult.toString();
+            },
             child: SvgUI(
               SvgConst.scanQr,
               color: UIColors.white50,

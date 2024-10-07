@@ -24,6 +24,12 @@ import 'package:tikeetron_app/features/blockchain/data/repositories/source/tron_
     as _i446;
 import 'package:tikeetron_app/features/blockchain/domain/repository/tron_core_repository.dart'
     as _i1041;
+import 'package:tikeetron_app/features/buy_ticket/presentation/cubit/buy_ticket_quoting_cubit.dart'
+    as _i531;
+import 'package:tikeetron_app/features/buy_ticket/presentation/cubit/confirm_buy_ticket_cubit.dart'
+    as _i174;
+import 'package:tikeetron_app/features/buy_ticket/presentation/cubit/get_list_event_ticket_cubit.dart'
+    as _i1072;
 import 'package:tikeetron_app/features/home/data/repositories/implementation/ai_repository_implementation.dart'
     as _i662;
 import 'package:tikeetron_app/features/home/data/repositories/implementation/event_repository_implementation.dart'
@@ -46,6 +52,8 @@ import 'package:tikeetron_app/features/home/presentation/cubit/ask_ai_cubit.dart
     as _i589;
 import 'package:tikeetron_app/features/home/presentation/cubit/get_list_event_cubit.dart'
     as _i39;
+import 'package:tikeetron_app/features/home/presentation/cubit/get_list_user_ticket_cubit.dart'
+    as _i185;
 import 'package:tikeetron_app/features/send/presentation/cubit/send_token_cubit.dart'
     as _i632;
 import 'package:tikeetron_app/features/send/presentation/cubit/send_token_quoting_cubit.dart'
@@ -138,10 +146,14 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.lazySingleton<_i39.GetListEventCubit>(
         () => _i39.GetListEventCubit(gh<_i137.EventRepository>()));
+    gh.lazySingleton<_i1072.GetListEventTicketCubit>(
+        () => _i1072.GetListEventTicketCubit(gh<_i137.EventRepository>()));
     gh.lazySingleton<_i1041.TronCoreRepository>(
         () => _i111.TronCoreRepositoryImpl(gh<_i446.TronRemote>()));
     gh.lazySingleton<_i306.AiRepository>(
         () => _i662.AiRepositoryImplementation(gh<_i303.AiRemote>()));
+    gh.lazySingleton<_i185.GetListUserTicketCubit>(
+        () => _i185.GetListUserTicketCubit(gh<_i441.TicketRepository>()));
     gh.lazySingleton<_i183.WalletCoreRepository>(
         () => _i678.WallletCoreRepositoryImpl(
               gh<_i1041.TronCoreRepository>(),
@@ -160,6 +172,11 @@ extension GetItInjectableX on _i174.GetIt {
           tronCoreRepository: gh<_i1041.TronCoreRepository>(),
           walletCoreRepository: gh<_i183.WalletCoreRepository>(),
         ));
+    gh.lazySingleton<_i174.ConfirmBuyTicketCubit>(
+        () => _i174.ConfirmBuyTicketCubit(
+              gh<_i1041.TronCoreRepository>(),
+              gh<_i1047.TransactionRepository>(),
+            ));
     gh.lazySingleton<_i632.SendTokenCubit>(() => _i632.SendTokenCubit(
           gh<_i1041.TronCoreRepository>(),
           gh<_i1047.TransactionRepository>(),
@@ -168,6 +185,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i589.AskAiCubit(gh<_i306.AiRepository>()));
     gh.lazySingleton<_i546.TokenListCubit>(
         () => _i546.TokenListCubit(tokenCore: gh<_i592.TokenCoreRepository>()));
+    gh.lazySingleton<_i531.BuyTicketQuotingCubit>(
+        () => _i531.BuyTicketQuotingCubit(gh<_i1041.TronCoreRepository>()));
     gh.lazySingleton<_i259.SendTokenQuotingCubit>(
         () => _i259.SendTokenQuotingCubit(gh<_i1041.TronCoreRepository>()));
     gh.lazySingleton<_i693.WalletsCubit>(

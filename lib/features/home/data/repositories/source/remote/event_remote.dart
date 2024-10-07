@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../../../common/dio/api.config.dart';
 import '../../../../../../common/error/exception.dart';
-import '../../../../../../common/utils/helpers/logger_helper.dart';
 import '../../../model/response/get_detail_event_response.dart';
 import '../../../model/response/get_list_event_response.dart';
 
@@ -15,6 +14,10 @@ class EventRemote {
         version: 1,
       ).get(
         '/events',
+        params: {
+          "take": 50,
+          "page": 1,
+        },
         options: Options(headers: {
           'Authorization': 'Bearer $accessToken',
         }),
@@ -23,7 +26,6 @@ class EventRemote {
       if (result == null) {
         throw const ServerException();
       }
-      Logger.error(' GET LIST EVENT ${result.toString()}');
 
       final response = GetListEventResponse.fromJson(result);
       if (response.statusCode != 200) {
@@ -32,7 +34,6 @@ class EventRemote {
         return response;
       }
     } catch (error) {
-      Logger.error('ERROR GET LIST EVENT ${error.toString()}');
       rethrow;
     }
   }

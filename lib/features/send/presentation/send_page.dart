@@ -62,7 +62,7 @@ class SendPage extends StatelessWidget {
                 icon: SvgConst.icWalletSend,
                 title: 'TRX',
                 onTap: () {
-                  context.pushRoute(
+                  navigationService.push(
                     SelectRecipientRoute(
                       sendType: SendTypeEnum.coin,
                     ),
@@ -82,7 +82,7 @@ class SendPage extends StatelessWidget {
                 title: '2 Ticket Available',
                 subtitle: 'Ed Sheeran Live at Madison Square Garden',
                 onTap: () {
-                  context.pushRoute(
+                  navigationService.push(
                     SelectRecipientRoute(
                       sendType: SendTypeEnum.ticket,
                     ),
@@ -96,7 +96,7 @@ class SendPage extends StatelessWidget {
                 title: '2 Ticket Available',
                 subtitle: 'Ed Sheeran Live at Madison Square Garden',
                 onTap: () {
-                  context.pushRoute(
+                  navigationService.push(
                     SelectRecipientRoute(
                       sendType: SendTypeEnum.ticket,
                     ),
@@ -110,7 +110,7 @@ class SendPage extends StatelessWidget {
                 title: '2 Ticket Available',
                 subtitle: 'Ed Sheeran Live at Madison Square Garden',
                 onTap: () {
-                  context.pushRoute(
+                  navigationService.push(
                     SelectRecipientRoute(
                       sendType: SendTypeEnum.ticket,
                     ),

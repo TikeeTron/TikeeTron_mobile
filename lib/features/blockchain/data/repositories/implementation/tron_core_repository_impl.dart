@@ -2,6 +2,7 @@ import 'package:blockchain_utils/blockchain_utils.dart' as block;
 import 'package:injectable/injectable.dart';
 import 'package:on_chain/on_chain.dart';
 import '../../../../../common/utils/encrypter/encrypter.dart';
+import '../../../../../common/utils/extensions/object_parsing.dart';
 import '../../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../../common/utils/wallet_util.dart';
 import '../../../../../core/adapters/blockchain_network_adapter.dart';
@@ -107,6 +108,45 @@ class TronCoreRepositoryImpl implements TronCoreRepository {
 
       return tokenPrice;
     } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<int?> getNetworkFee({
+    required String walletAddress,
+    required String targetAddress,
+  }) async {
+    try {
+      final result = await _tronRemote.calculateTransactionFee(
+        walletAddress: walletAddress,
+        targetAddress: targetAddress,
+      );
+      return result;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String?> buyTicket({
+    required String ticketType,
+    required String walletAddress,
+    required int ticketPrice,
+    required int eventId,
+    required WalletModel wallet,
+  }) async {
+    try {
+      final txId = await _tronRemote.buyTicket(
+        walletAddress: walletAddress,
+        ticketType: ticketType,
+        ticketPrice: ticketPrice,
+        wallet: wallet,
+        eventId: eventId,
+      );
+      return txId;
+    } catch (e) {
+      Logger.error('Failed Buy Ticket ${e.errorMessage}');
       return null;
     }
   }

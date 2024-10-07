@@ -15,6 +15,7 @@ import '../../shared/presentation/loading_page.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import 'cubit/get_list_event_cubit.dart';
+import 'cubit/get_list_user_ticket_cubit.dart';
 import 'view/home_chat_tab_bar_view.dart';
 import 'view/home_explore_tab_bar_view.dart';
 
@@ -29,11 +30,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _appBarTabController;
   late GetListEventCubit getListEventCubit;
+  late GetListUserTicketCubit getListTicketCubit;
 
   @override
   void initState() {
     _appBarTabController = TabController(vsync: this, length: 2);
     getListEventCubit = BlocProvider.of<GetListEventCubit>(context);
+    getListTicketCubit = BlocProvider.of<GetListUserTicketCubit>(context);
     final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final activeWallet = activeWalletCubit.getActiveWallet();
@@ -45,8 +48,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           walletAddress: walletAddress,
           walletIndex: activeWalletCubit.state.walletIndex ?? 0,
         );
+        await getListEventCubit.getListEvent();
+        await getListTicketCubit.getListUserTicket(walletAddress: walletAddress);
       }
-      await getListEventCubit.getListEvent();
     });
 
     super.initState();

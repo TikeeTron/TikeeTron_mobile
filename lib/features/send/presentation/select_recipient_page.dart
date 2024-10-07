@@ -13,6 +13,7 @@ import '../../../common/enum/send_type_enum.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
 import '../../../core/core.dart';
 import '../../shared/presentation/account_card_widget.dart';
+import '../../shared/presentation/scan_qr_bottom_sheet.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import '../../wallet/presentation/cubit/wallets/wallets_cubit.dart';
 import 'cubit/send_token_cubit.dart';
@@ -153,16 +154,28 @@ class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerPr
                           ),
                         ),
                         UIGap.w8,
-                        Container(
-                          padding: EdgeInsets.all(14.w),
-                          decoration: BoxDecoration(
-                            color: UIColors.grey200.withOpacity(0.24),
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Icon(
-                            CupertinoIcons.qrcode_viewfinder,
-                            size: 20.w,
-                            color: UIColors.white50,
+                        BounceTap(
+                          onTap: () async {
+                            final qrResult = await ModalHelper.showModalBottomSheet(
+                              context,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height / 1.2,
+                                child: Expanded(child: const ScanQrBottomSheet()),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(14.w),
+                            decoration: BoxDecoration(
+                              color: UIColors.grey200.withOpacity(0.24),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Icon(
+                              CupertinoIcons.qrcode_viewfinder,
+                              size: 20.w,
+                              color: UIColors.white50,
+                            ),
                           ),
                         ),
                       ],
@@ -186,9 +199,12 @@ class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerPr
                           ? AccountCardWidget(
                               address: _searchController.text,
                               onTap: () {
-                                context.pushRoute(
-                                  const SendTokenRoute(),
-                                );
+                                if (sendTokenState.senderAddress != sendTokenState.targetAddress) {
+                                  navigationService.push(
+                                    const SendTokenRoute(),
+                                  );
+                                }
+                                toastHelper.showError('Could not transfer to your self');
                               },
                             )
                           : TabBar(
@@ -274,15 +290,20 @@ class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerPr
                                     onTap: () {
                                       if (widget.sendType == SendTypeEnum.coin) {
                                         final senderAddress = BlocProvider.of<ActiveWalletCubit>(context).getActiveWallet();
-                                        BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
-                                          senderAddress: senderAddress?.addresses?[0].address ?? '',
-                                          targetAddress: state.wallets[index].addresses?[0].address ?? '',
-                                        );
-                                        context.pushRoute(
-                                          const SendTokenRoute(),
-                                        );
+
+                                        if (senderAddress?.addresses?[0].address != state.wallets[index].addresses?[0].address) {
+                                          BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
+                                            senderAddress: senderAddress?.addresses?[0].address ?? '',
+                                            targetAddress: state.wallets[index].addresses?[0].address ?? '',
+                                          );
+                                          navigationService.push(
+                                            const SendTokenRoute(),
+                                          );
+                                        } else {
+                                          toastHelper.showError('Could not transfer to same address');
+                                        }
                                       } else {
-                                        context.pushRoute(
+                                        navigationService.push(
                                           SendTicketRoute(walletAddress: state.wallets[index].addresses?[0].address ?? ''),
                                         );
                                       }

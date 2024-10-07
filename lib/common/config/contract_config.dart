@@ -39,8 +39,8 @@ class ContractConfig {
       "inputs": [
         {"name": "name", "type": "string", "internalType": "string"},
         {"name": "metadata", "type": "string", "internalType": "string"},
-        {"name": "date", "type": "uint256", "internalType": "uint256"},
-        {"name": "totalTickets", "type": "uint256", "internalType": "uint256"},
+        {"name": "startDate", "type": "uint256", "internalType": "uint256"},
+        {"name": "endDate", "type": "uint256", "internalType": "uint256"},
         {
           "name": "ticketInfos",
           "type": "tuple[]",
@@ -48,7 +48,9 @@ class ContractConfig {
           "components": [
             {"name": "ticketType", "type": "string", "internalType": "string"},
             {"name": "ticketPrice", "type": "uint256", "internalType": "uint256"},
-            {"name": "ticketSupply", "type": "uint256", "internalType": "uint256"}
+            {"name": "ticketSupply", "type": "uint256", "internalType": "uint256"},
+            {"name": "ticketStartDate", "type": "uint256", "internalType": "uint256"},
+            {"name": "ticketEndDate", "type": "uint256", "internalType": "uint256"}
           ]
         }
       ],
@@ -65,8 +67,8 @@ class ContractConfig {
         {"name": "name", "type": "string", "internalType": "string"},
         {"name": "metadata", "type": "string", "internalType": "string"},
         {"name": "organizer", "type": "address", "internalType": "address payable"},
-        {"name": "date", "type": "uint256", "internalType": "uint256"},
-        {"name": "totalTickets", "type": "uint256", "internalType": "uint256"}
+        {"name": "startDate", "type": "uint256", "internalType": "uint256"},
+        {"name": "endDate", "type": "uint256", "internalType": "uint256"}
       ],
       "stateMutability": "view"
     },
@@ -83,9 +85,10 @@ class ContractConfig {
     },
     {
       "type": "function",
-      "name": "getAvailableTickets",
+      "name": "getAvailableTicketsByType",
       "inputs": [
-        {"name": "eventId", "type": "uint256", "internalType": "uint256"}
+        {"name": "eventId", "type": "uint256", "internalType": "uint256"},
+        {"name": "ticketType", "type": "string", "internalType": "string"}
       ],
       "outputs": [
         {"name": "", "type": "uint256", "internalType": "uint256"}
@@ -94,10 +97,31 @@ class ContractConfig {
     },
     {
       "type": "function",
-      "name": "getAvailableTicketsByType",
+      "name": "getEvent",
       "inputs": [
-        {"name": "eventId", "type": "uint256", "internalType": "uint256"},
-        {"name": "ticketType", "type": "string", "internalType": "string"}
+        {"name": "eventId", "type": "uint256", "internalType": "uint256"}
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct EventInfo",
+          "components": [
+            {"name": "name", "type": "string", "internalType": "string"},
+            {"name": "metadata", "type": "string", "internalType": "string"},
+            {"name": "organizer", "type": "address", "internalType": "address payable"},
+            {"name": "startDate", "type": "uint256", "internalType": "uint256"},
+            {"name": "endDate", "type": "uint256", "internalType": "uint256"}
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getEventId",
+      "inputs": [
+        {"name": "ticketId", "type": "uint256", "internalType": "uint256"}
       ],
       "outputs": [
         {"name": "", "type": "uint256", "internalType": "uint256"}
@@ -201,25 +225,17 @@ class ContractConfig {
     },
     {
       "type": "function",
-      "name": "ticketPrices",
+      "name": "ticketInfo",
       "inputs": [
         {"name": "eventId", "type": "uint256", "internalType": "uint256"},
         {"name": "ticketType", "type": "string", "internalType": "string"}
       ],
       "outputs": [
-        {"name": "price", "type": "uint256", "internalType": "uint256"}
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "ticketSupplies",
-      "inputs": [
-        {"name": "eventId", "type": "uint256", "internalType": "uint256"},
-        {"name": "ticketType", "type": "string", "internalType": "string"}
-      ],
-      "outputs": [
-        {"name": "supply", "type": "uint256", "internalType": "uint256"}
+        {"name": "ticketType", "type": "string", "internalType": "string"},
+        {"name": "ticketPrice", "type": "uint256", "internalType": "uint256"},
+        {"name": "ticketSupply", "type": "uint256", "internalType": "uint256"},
+        {"name": "ticketStartDate", "type": "uint256", "internalType": "uint256"},
+        {"name": "ticketEndDate", "type": "uint256", "internalType": "uint256"}
       ],
       "stateMutability": "view"
     },
@@ -231,18 +247,6 @@ class ContractConfig {
       ],
       "outputs": [
         {"name": "eventId", "type": "uint256", "internalType": "uint256"}
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "ticketsOwned",
-      "inputs": [
-        {"name": "eventId", "type": "uint256", "internalType": "uint256"},
-        {"name": "owner", "type": "address", "internalType": "address"}
-      ],
-      "outputs": [
-        {"name": "ticketCount", "type": "uint256", "internalType": "uint256"}
       ],
       "stateMutability": "view"
     },
@@ -289,38 +293,6 @@ class ContractConfig {
       "stateMutability": "nonpayable"
     },
     {
-      "type": "function",
-      "name": "updateEvent",
-      "inputs": [
-        {"name": "eventId", "type": "uint256", "internalType": "uint256"},
-        {"name": "name", "type": "string", "internalType": "string"},
-        {"name": "metadata", "type": "string", "internalType": "string"},
-        {"name": "date", "type": "uint256", "internalType": "uint256"}
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "updateTicketSupplies",
-      "inputs": [
-        {"name": "eventId", "type": "uint256", "internalType": "uint256"},
-        {
-          "name": "ticketInfos",
-          "type": "tuple[]",
-          "internalType": "struct TicketInfo[]",
-          "components": [
-            {"name": "ticketType", "type": "string", "internalType": "string"},
-            {"name": "ticketPrice", "type": "uint256", "internalType": "uint256"},
-            {"name": "ticketSupply", "type": "uint256", "internalType": "uint256"}
-          ]
-        },
-        {"name": "totalTickets", "type": "uint256", "internalType": "uint256"}
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
       "type": "event",
       "name": "Approval",
       "inputs": [
@@ -357,18 +329,8 @@ class ContractConfig {
         {"name": "name", "type": "string", "indexed": false, "internalType": "string"},
         {"name": "metadata", "type": "string", "indexed": false, "internalType": "string"},
         {"name": "organizer", "type": "address", "indexed": true, "internalType": "address"},
-        {"name": "eventDate", "type": "uint256", "indexed": false, "internalType": "uint256"}
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "EventUpdated",
-      "inputs": [
-        {"name": "eventId", "type": "uint256", "indexed": true, "internalType": "uint256"},
-        {"name": "name", "type": "string", "indexed": false, "internalType": "string"},
-        {"name": "metadata", "type": "string", "indexed": false, "internalType": "string"},
-        {"name": "date", "type": "uint256", "indexed": false, "internalType": "uint256"}
+        {"name": "startDate", "type": "uint256", "indexed": false, "internalType": "uint256"},
+        {"name": "endDate", "type": "uint256", "indexed": false, "internalType": "uint256"}
       ],
       "anonymous": false
     },
@@ -398,15 +360,6 @@ class ContractConfig {
         {"name": "ticketType", "type": "string", "indexed": false, "internalType": "string"},
         {"name": "buyer", "type": "address", "indexed": true, "internalType": "address"},
         {"name": "ticketPrice", "type": "uint256", "indexed": false, "internalType": "uint256"}
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "TicketSupplyUpdated",
-      "inputs": [
-        {"name": "eventId", "type": "uint256", "indexed": true, "internalType": "uint256"},
-        {"name": "supply", "type": "uint256", "indexed": false, "internalType": "uint256"}
       ],
       "anonymous": false
     },

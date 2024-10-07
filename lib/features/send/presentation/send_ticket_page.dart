@@ -371,7 +371,7 @@ class _SendTicketPageState extends State<SendTicketPage> {
                   borderRadius: 16.r,
                   enabled: _amountController.text.isNotEmpty,
                   onSubmit: () {
-                    // context.pushRoute(
+                    // navigationService.push(
                     //   ReceiptRoute(
                     //     data: ReceiptModel(
                     //       'Send TRX',

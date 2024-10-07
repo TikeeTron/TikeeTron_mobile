@@ -7,13 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../common/common.dart';
 import '../../../../common/components/button/bounce_tap.dart';
 import '../../../../common/components/svg/svg_ui.dart';
+import '../../../../common/utils/extensions/string_parsing.dart';
 import '../../../../core/routes/app_route.dart';
+import '../../../buy_ticket/data/model/entity/event_detail_entity.dart';
 import '../../../my_wallet/presentation/widget/filter/filter_event_modal.dart';
 import '../../../shared/presentation/event_card_widget.dart';
 import '../../../shared/presentation/loading_page.dart';
 import '../../../shared/presentation/my_ticket_qr_bottom_sheet.dart';
 import '../../../wallet/data/model/wallet_model.dart';
 import '../cubit/get_list_event_cubit.dart';
+import '../cubit/get_list_user_ticket_cubit.dart';
 import '../widget/home_wallet_widget.dart';
 
 class HomeExploreTabBarView extends StatefulWidget {
@@ -83,19 +86,19 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                 HomeWalletWidget(
                   walletBalance: widget.walletData.totalBalance ?? '0',
                   onGoToDetailWallet: () {
-                    context.pushRoute(
+                    navigationService.push(
                       MyWalletRoute(wallet: widget.walletData),
                     );
                   },
                   onReceive: () {
-                    context.pushRoute(
+                    navigationService.push(
                       ReceiveRoute(
                         walletAddress: widget.walletData.addresses?[0].address ?? '',
                       ),
                     );
                   },
                   onSend: () {
-                    context.pushRoute(
+                    navigationService.push(
                       const SendRoute(),
                     );
                   },
@@ -112,7 +115,6 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                   ),
                   isScrollable: true,
                   indicatorWeight: 1,
-                  indicatorPadding: EdgeInsets.symmetric(vertical: 2.h),
                   labelPadding: EdgeInsets.only(right: 10.w),
                   dividerColor: Colors.transparent,
                   labelStyle: UITypographies.subtitleLarge(
@@ -127,11 +129,9 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                   tabs: _listHomeTabs
                       .map(
                         (e) => Tab(
-                          height: 42.h,
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.w,
-                              vertical: 10.h,
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(99),
@@ -139,7 +139,7 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                                 color: UIColors.white50.withOpacity(0.15),
                               ),
                             ),
-                            child: Text(e),
+                            child: Center(child: Text(e)),
                           ),
                         ),
                       )
@@ -221,43 +221,50 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                     controller: _listEventTabController,
                     children: [
                       // My Event View
-                      SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            0.w,
-                            8.h,
-                            0,
-                            50.h,
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                EventCardWidget(
-                                  image: '',
-                                  haveTicket: true,
-                                  onTapMyTicket: () async {
-                                    await ModalHelper.showModalBottomSheet(
-                                      context,
-                                      child: const MyTicketQrBottomSheet(ticketId: 'EVT20241025987'),
-                                      isHasCloseButton: false,
-                                      padding: EdgeInsets.zero,
+                      BlocBuilder<GetListUserTicketCubit, GetListUserTicketState>(builder: (context, ticketState) {
+                        if (ticketState is! GetListUserTicketLoadedState) {
+                          return const LoadingPage(opacity: 1);
+                        }
+                        return SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              0.w,
+                              8.h,
+                              0,
+                              50.h,
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: List.generate(
+                                  ticketState.listTicket?.data?.length ?? 0,
+                                  (index) {
+                                    final eventData = ticketState.listTicket?.data?[index].event;
+                                    final ticketId = ticketState.listTicket?.data?[index].ticketId;
+                                    final isTicketUsed = ticketState.listTicket?.data?[index].isUsed;
+                                    return EventCardWidget(
+                                      image: eventData?.banner ?? '',
+                                      isTicketUsed: isTicketUsed ?? true,
+                                      onTapDetail: () {},
+                                      onTapMyTicket: () async {
+                                        await ModalHelper.showModalBottomSheet(
+                                          context,
+                                          child: MyTicketQrBottomSheet(
+                                            ticketId: ticketId.toString(),
+                                          ),
+                                          isHasCloseButton: false,
+                                          padding: EdgeInsets.zero,
+                                        );
+                                      },
+                                      title: eventData?.name ?? '',
+                                      desc: eventData?.location ?? '',
                                     );
                                   },
-                                  title: 'Ed Sheeran Live at Madison Square Garden',
-                                  desc: 'Madison Square Garden, New York',
                                 ),
-                                EventCardWidget(
-                                  image: '',
-                                  haveTicket: true,
-                                  onTapMyTicket: () {},
-                                  title: 'Ed Sheeran Live at Madison Square Garden',
-                                  desc: 'Madison Square Garden, New York',
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                       ...List.generate(
                         _listHomeTabs.length - 1,
                         (index) {
@@ -278,10 +285,24 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                                   filteredEvents.length,
                                   (eventIndex) {
                                     final event = filteredEvents[eventIndex];
+                                    final lowestPrice = event.ticketTypes?.map((e) => e.price).reduce((value, element) => (element ?? 0) < (value ?? 0) ? element : value);
 
                                     return EventCardWidget(
                                       image: event.banner ?? '',
                                       title: event.name ?? '',
+                                      onTapDetail: () {
+                                        navigationService.push(
+                                          DetailEventRoute(
+                                            eventData: EventDetailEntity.fromJson(
+                                              event.toJson(),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      estimatePrice: lowestPrice.toString().amountInWeiToToken(
+                                            decimals: 6,
+                                            fractionDigits: (lowestPrice ?? 0) > 1 ? 1 : 4,
+                                          ),
                                       desc: event.location ?? '',
                                     );
                                   },

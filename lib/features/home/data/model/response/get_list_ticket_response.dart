@@ -1,30 +1,30 @@
-class GetListTIcketResponse {
+class GetListTicketResponse {
   final bool? status;
   final int? statusCode;
   final List<Datum>? data;
   final Meta? meta;
 
-  GetListTIcketResponse({
+  GetListTicketResponse({
     this.status,
     this.statusCode,
     this.data,
     this.meta,
   });
 
-  GetListTIcketResponse copyWith({
+  GetListTicketResponse copyWith({
     bool? status,
     int? statusCode,
     List<Datum>? data,
     Meta? meta,
   }) =>
-      GetListTIcketResponse(
+      GetListTicketResponse(
         status: status ?? this.status,
         statusCode: statusCode ?? this.statusCode,
         data: data ?? this.data,
         meta: meta ?? this.meta,
       );
 
-  factory GetListTIcketResponse.fromJson(Map<String, dynamic> json) => GetListTIcketResponse(
+  factory GetListTicketResponse.fromJson(Map<String, dynamic> json) => GetListTicketResponse(
         status: json["status"],
         statusCode: json["statusCode"],
         data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),

@@ -14,16 +14,22 @@ class SendTokenQuotingCubit extends Cubit<SendTokenQuotingState> {
 
   Future<void> quotingSend({
     required double amount,
+    required String walletAddress,
+    required String targetAddress,
   }) async {
     try {
       safeEmit(SendTokenQuotingLoadingState());
 
       final amountInFiat = await _tronCoreRepository.getTokenInFiat(tokenBalance: amount);
       final exchangeRate = await _tronCoreRepository.getTokenPrice();
+      final networkFee = await _tronCoreRepository.getNetworkFee(
+        walletAddress: walletAddress,
+        targetAddress: targetAddress,
+      );
       safeEmit(SendTokenQuotingSuccessState(
         amountInFiat: amountInFiat == 0.0 ? 0 : amountInFiat,
         exchangeRate: exchangeRate,
-        networkFee: 0,
+        networkFee: networkFee,
       ));
     } catch (error) {
       safeEmit(SendTokenQuotingErrorState(

@@ -189,7 +189,7 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                             icon: SvgConst.icReceive,
                             title: 'Receive',
                             onTap: () {
-                              context.pushRoute(ReceiveRoute(walletAddress: walletAddress));
+                              navigationService.push(ReceiveRoute(walletAddress: walletAddress));
                             },
                           ),
                         ),
@@ -199,7 +199,7 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                             icon: SvgConst.icSend,
                             title: 'Send',
                             onTap: () {
-                              context.pushRoute(const SendRoute());
+                              navigationService.push(const SendRoute());
                             },
                           ),
                         ),

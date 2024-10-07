@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/common.dart';
 import '../../../common/components/button/bounce_tap.dart';
-import '../../../common/components/image/asset_image_ui.dart';
 import '../../../common/components/svg/svg_ui.dart';
 
 class EventCardWidget extends StatelessWidget {
@@ -11,7 +10,7 @@ class EventCardWidget extends StatelessWidget {
   final String title;
   final String? estimatePrice;
   final String desc;
-  final bool haveTicket;
+  final bool isTicketUsed;
   final void Function()? onTapDetail;
   final void Function()? onTapMyTicket;
   final double? width;
@@ -21,7 +20,7 @@ class EventCardWidget extends StatelessWidget {
     required this.image,
     required this.title,
     required this.desc,
-    this.haveTicket = false,
+    this.isTicketUsed = true,
     this.estimatePrice,
     this.onTapDetail,
     this.onTapMyTicket,
@@ -45,22 +44,13 @@ class EventCardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                AssetImageUI(
-                  path: IllustrationsConst.onBoarding2,
+                UINetworkImage(
+                  url: image,
+                  width: double.infinity,
                   height: 140.h,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(18.r),
-                    topLeft: Radius.circular(18.r),
-                  ),
-                  boxFit: BoxFit.cover,
+                  fit: BoxFit.cover,
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                // UINetworkImage(
-                //   url: '',
-                //   width: double.infinity,
-                //   height: 140.h,
-                //   borderRadius: BorderRadius.circular(10.r),
-                // ),
-
                 Padding(
                   padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 8.h),
                   child: Column(
@@ -86,7 +76,7 @@ class EventCardWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                haveTicket
+                !isTicketUsed
                     ? Padding(
                         padding: EdgeInsets.fromLTRB(
                           12.w,
@@ -119,7 +109,7 @@ class EventCardWidget extends StatelessWidget {
                           12.h,
                         ),
                         child: Text(
-                          'From 1,200 TRX',
+                          'From $estimatePrice TRX',
                           style: UITypographies.subtitleMedium(
                             context,
                             fontSize: 15.sp,

@@ -263,7 +263,7 @@ class _ChatTextFieldWidget extends StatelessWidget {
       padding: EdgeInsets.only(
         top: 10.h,
         bottom: 30.h,
-        left: 16.w,
+        left: 0.w,
         right: 16.w,
       ),
       child: _chatField(),

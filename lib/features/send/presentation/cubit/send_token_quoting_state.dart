@@ -12,7 +12,7 @@ class SendTokenQuotingInitialState extends SendTokenQuotingState {}
 class SendTokenQuotingLoadingState extends SendTokenQuotingState {}
 
 class SendTokenQuotingSuccessState extends SendTokenQuotingState {
-  final double? networkFee;
+  final int? networkFee;
   final double? exchangeRate;
   final double? amountInFiat;
 

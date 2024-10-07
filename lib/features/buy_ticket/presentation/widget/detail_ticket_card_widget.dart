@@ -8,7 +8,7 @@ class DetailTicketCardWidget extends StatelessWidget {
   final String title;
   final String subtitle;
   final String price;
-
+  final int capacity;
   final void Function()? onTap;
   const DetailTicketCardWidget({
     super.key,
@@ -16,71 +16,73 @@ class DetailTicketCardWidget extends StatelessWidget {
     required this.subtitle,
     required this.price,
     this.onTap,
+    required this.capacity,
   });
 
   @override
   Widget build(BuildContext context) {
     return BounceTap(
       onTap: onTap,
-      child: ClipPath(
-        clipper: TicketClipper(),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 210.h,
-          decoration: BoxDecoration(
-            color: UIColors.black400,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              const BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: UITypographies.subtitleLarge(
-                          context,
-                          fontSize: 20.sp,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 20.h),
+        child: ClipPath(
+          clipper: TicketClipper(),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 210.h,
+            decoration: BoxDecoration(
+              color: UIColors.black400,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                const BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.all(20.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: UITypographies.subtitleLarge(
+                            context,
+                            fontSize: 20.sp,
+                          ),
                         ),
-                      ),
-                      UIGap.h8,
-                      Text(
-                        subtitle,
-                        style: UITypographies.bodyLarge(
-                          context,
-                          color: UIColors.grey500,
+                        UIGap.h8,
+                        Text(
+                          subtitle,
+                          style: UITypographies.bodyLarge(
+                            context,
+                            color: UIColors.grey500,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              UIGap.h8,
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 36.w,
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 36.w,
+                  ),
+                  child: UIDivider(
+                    color: UIColors.white50.withOpacity(0.15),
+                    variant: UIDividerVariant.dash,
+                  ),
                 ),
-                child: UIDivider(
-                  color: UIColors.white50.withOpacity(0.15),
-                  variant: UIDividerVariant.dash,
-                ),
-              ),
-              Expanded(
-                child: Padding(
+                Padding(
                   padding: EdgeInsets.all(20.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,23 +101,23 @@ class DetailTicketCardWidget extends StatelessWidget {
                           vertical: 7.h,
                         ),
                         decoration: BoxDecoration(
-                          color: UIColors.green900,
+                          color: capacity == 0 ? UIColors.red900 : UIColors.green900,
                           borderRadius: BorderRadius.circular(40.r),
                         ),
                         child: Text(
-                          'Available',
+                          capacity == 0 ? 'Sold Out' : 'Available',
                           textAlign: TextAlign.center,
                           style: UITypographies.bodyLarge(
                             context,
-                            color: UIColors.green400,
+                            color: capacity == 0 ? UIColors.red400 : UIColors.green400,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
