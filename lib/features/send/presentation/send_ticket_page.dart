@@ -18,7 +18,9 @@ import '../../../common/utils/extensions/dynamic_parsing.dart';
 import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../common/utils/helpers/format_date_helper.dart';
 import '../../../core/routes/app_route.dart';
+import '../../shared/presentation/cubit/pin/pin_cubit.dart';
 import '../../shared/presentation/loading_page.dart';
+import '../../wallet/data/model/wallet_model.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import 'cubit/ticket/send_ticket_cubit.dart';
 import 'cubit/ticket/send_ticket_quoting_cubit.dart';
@@ -59,6 +61,37 @@ class _SendTicketPageState extends State<SendTicketPage> {
     });
   }
 
+  void confirmSendTicket({WalletModel? walletData, required int networkFee}) async {
+    if (walletData != null) {
+      context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
+      final sendTicketResult = await BlocProvider.of<SendTicketCubit>(context).sendTicket(
+        wallet: walletData,
+        resourcesConsumed: networkFee,
+      );
+      if (sendTicketResult != null) {
+        context.hideFullScreenLoading;
+        navigationService.pushAndPopUntil(
+          ReceiptRoute(
+            data: sendTicketResult,
+          ),
+          predicate: (p0) => false,
+        );
+      } else {
+        context.hideFullScreenLoading;
+        toastHelper.showError('Transaction reverted, please try again');
+      }
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    BlocProvider.of<SendTicketCubit>(context).setTargetAndSenderAddress(
+      targetAddress: null,
+    );
+
+    super.didChangeDependencies();
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -78,6 +111,7 @@ class _SendTicketPageState extends State<SendTicketPage> {
   @override
   void dispose() {
     _timer.cancel();
+
     super.dispose();
   }
 
@@ -396,44 +430,48 @@ class _SendTicketPageState extends State<SendTicketPage> {
                       ],
                     ),
                     BlocBuilder<ActiveWalletCubit, ActiveWalletState>(builder: (context, activeWalletState) {
-                      return SlideAction(
-                        height: 50.h,
-                        borderRadius: 16.r,
-                        onSubmit: () async {
-                          if (activeWalletState.wallet != null) {
-                            context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
-                            final sendTicketResult = await BlocProvider.of<SendTicketCubit>(context).sendTicket(
-                              wallet: activeWalletState.wallet!,
-                              resourcesConsumed: quotingState.networkFee ?? 0,
-                            );
-                            if (sendTicketResult != null) {
-                              context.hideFullScreenLoading;
-                              navigationService.push(
-                                ReceiptRoute(
-                                  data: sendTicketResult,
-                                ),
-                              );
-                            } else {
-                              context.hideFullScreenLoading;
-                              toastHelper.showError('Transaction reverted, please try again');
+                      return BlocListener<PinCubit, PinState>(
+                        listener: (context, PinState pinState) {
+                          if (pinState is CorrectPin) {
+                            // on sending transaction
+                            if (pinState.passedData != 'confirm-send-ticket') {
+                              return;
                             }
+                            confirmSendTicket(
+                              networkFee: quotingState.networkFee ?? 0,
+                              walletData: activeWalletState.wallet,
+                            );
+                            return;
+                          } else if (pinState is PinCreated) {
+                            // on sending transaction
+                            confirmSendTicket(
+                              networkFee: quotingState.networkFee ?? 0,
+                              walletData: activeWalletState.wallet,
+                            );
                           }
                         },
-                        outerColor: UIColors.grey200.withOpacity(0.24),
-                        text: 'Slide to Send',
-                        textColor: UIColors.primary500,
-                        sliderRotate: false,
-                        textStyle: UITypographies.bodyLarge(
-                          context,
-                          fontSize: 17.sp,
-                          color: UIColors.primary500,
-                        ),
-                        innerColor: UIColors.primary500,
-                        animationDuration: const Duration(milliseconds: 300),
-                        sliderButtonIcon: Icon(
-                          CupertinoIcons.chevron_right_2,
-                          size: 28.w,
-                          color: UIColors.white50,
+                        child: SlideAction(
+                          height: 50.h,
+                          borderRadius: 16.r,
+                          onSubmit: () async {
+                            BlocProvider.of<PinCubit>(context).showPin(passedData: 'confirm-send-ticket');
+                          },
+                          outerColor: UIColors.grey200.withOpacity(0.24),
+                          text: 'Slide to Send',
+                          textColor: UIColors.primary500,
+                          sliderRotate: false,
+                          textStyle: UITypographies.bodyLarge(
+                            context,
+                            fontSize: 17.sp,
+                            color: UIColors.primary500,
+                          ),
+                          innerColor: UIColors.primary500,
+                          animationDuration: const Duration(milliseconds: 300),
+                          sliderButtonIcon: Icon(
+                            CupertinoIcons.chevron_right_2,
+                            size: 28.w,
+                            color: UIColors.white50,
+                          ),
                         ),
                       );
                     }),

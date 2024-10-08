@@ -354,38 +354,41 @@ class _SelectRecipientPageState extends State<SelectRecipientPage> with TickerPr
                                     children: List.generate(
                                   state.wallets.length,
                                   (index) {
-                                    return SendItemWidget(
-                                      icon: SvgConst.icWalletSend,
-                                      title: 'Account ${index + 1}',
-                                      subtitle: DynamicParsing(state.wallets[index].addresses?[0].address).shortedWalletAddress ?? '',
-                                      iconSize: 20,
-                                      onTap: () {
-                                        if (widget.sendType == SendTypeEnum.coin) {
-                                          if (senderAddress != state.wallets[index].addresses?[0].address) {
-                                            BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
-                                              senderAddress: senderAddress,
-                                              targetAddress: state.wallets[index].addresses?[0].address ?? '',
-                                            );
-                                            navigationService.push(
-                                              const SendTokenRoute(),
-                                            );
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 10.h),
+                                      child: SendItemWidget(
+                                        icon: SvgConst.icWalletSend,
+                                        title: 'Account ${index + 1}',
+                                        subtitle: DynamicParsing(state.wallets[index].addresses?[0].address).shortedWalletAddress ?? '',
+                                        iconSize: 20,
+                                        onTap: () {
+                                          if (widget.sendType == SendTypeEnum.coin) {
+                                            if (senderAddress != state.wallets[index].addresses?[0].address) {
+                                              BlocProvider.of<SendTokenCubit>(context).setTargetAndSenderAddress(
+                                                senderAddress: senderAddress,
+                                                targetAddress: state.wallets[index].addresses?[0].address ?? '',
+                                              );
+                                              navigationService.push(
+                                                const SendTokenRoute(),
+                                              );
+                                            } else {
+                                              toastHelper.showError('Could not transfer to same address');
+                                            }
                                           } else {
-                                            toastHelper.showError('Could not transfer to same address');
+                                            if (senderAddress != state.wallets[index].addresses?[0].address) {
+                                              BlocProvider.of<SendTicketCubit>(context).setTargetAndSenderAddress(
+                                                senderAddress: senderAddress,
+                                                targetAddress: state.wallets[index].addresses?[0].address ?? '',
+                                              );
+                                              navigationService.push(
+                                                const SendTicketRoute(),
+                                              );
+                                            } else {
+                                              toastHelper.showError('Could not transfer to same address');
+                                            }
                                           }
-                                        } else {
-                                          if (senderAddress != state.wallets[index].addresses?[0].address) {
-                                            BlocProvider.of<SendTicketCubit>(context).setTargetAndSenderAddress(
-                                              senderAddress: senderAddress,
-                                              targetAddress: state.wallets[index].addresses?[0].address ?? '',
-                                            );
-                                            navigationService.push(
-                                              const SendTicketRoute(),
-                                            );
-                                          } else {
-                                            toastHelper.showError('Could not transfer to same address');
-                                          }
-                                        }
-                                      },
+                                        },
+                                      ),
                                     );
                                   },
                                 )),

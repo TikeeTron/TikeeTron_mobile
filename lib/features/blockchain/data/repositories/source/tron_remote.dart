@@ -190,7 +190,7 @@ class TronRemote {
         'Content-Type': 'multipart/form-data',
       }),
     );
-    final contractAddress = TronAddress("TMogKdMHLtPbmQRb9WckmbveGqZhyrqCyw");
+    final contractAddress = TronAddress("TVPysSf43yPBiQNZ7Fq8Fhwx3E4Fqj6kRv");
     final ownerAddress = TronAddress(walletAddress);
     final transferparams = [
       BigInt.from(eventId),
@@ -290,7 +290,7 @@ class TronRemote {
     required bool isTicketUsed,
   }) async {
     Logger.info('Buy Ticket Params: wallet address: $walletAddress');
-    final contractAddress = TronAddress("TMogKdMHLtPbmQRb9WckmbveGqZhyrqCyw");
+    final contractAddress = TronAddress("TVPysSf43yPBiQNZ7Fq8Fhwx3E4Fqj6kRv");
     final ownerAddress = TronAddress(walletAddress);
     final toAddress = TronAddress(targetAddress);
 
