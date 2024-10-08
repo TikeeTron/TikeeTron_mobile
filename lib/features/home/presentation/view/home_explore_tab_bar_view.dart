@@ -344,7 +344,7 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                                         },
                                         estimatePrice: lowestPrice.toString().amountInWeiToToken(
                                               decimals: 6,
-                                              fractionDigits: (lowestPrice ?? 0) > 1 ? 1 : 4,
+                                              fractionDigits: (lowestPrice ?? 0) > 1 ? 0 : 4,
                                             ),
                                         desc: event.location ?? '',
                                       );
