@@ -350,12 +350,14 @@ class _ChatBubbleItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _chatBody(context),
-                if (chat.response?.events != null && chat.response!.events.isNotEmpty)
+                if (chat.response?.events != null &&
+                    chat.response!.events.isNotEmpty)
                   _eventList(
                     context,
                     chat.response!.events,
                   ),
-                if (chat.response?.tickets != null && chat.response!.tickets.isNotEmpty)
+                if (chat.response?.tickets != null &&
+                    chat.response!.tickets.isNotEmpty)
                   _ticketList(
                     context,
                     chat.response!.tickets,
@@ -487,7 +489,9 @@ class _ChatBubbleItem extends StatelessWidget {
                   image: e.banner ?? '',
                   title: e.name ?? '',
                   desc: e.description ?? '',
-                  estimatePrice: (e.ticketTypes?.first.price ?? 0).toString().amountInWeiToToken(
+                  estimatePrice: (e.ticketTypes?.first.price ?? 0)
+                      .toString()
+                      .amountInWeiToToken(
                         decimals: 6,
                         fractionDigits: 0,
                       ),
@@ -508,7 +512,8 @@ class _ChatBubbleItem extends StatelessWidget {
     );
   }
 
-  Widget _ticketList(BuildContext context, List<GetDetailTicketResponse> tickets) {
+  Widget _ticketList(
+      BuildContext context, List<GetDetailTicketResponse> tickets) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -523,10 +528,13 @@ class _ChatBubbleItem extends StatelessWidget {
                   image: e.event?.banner ?? '',
                   title: e.event?.name ?? '',
                   desc: e.event?.description ?? '',
-                  estimatePrice: (e.event?.ticketTypes?.first.price ?? 0).toString().amountInWeiToToken(
+                  estimatePrice: (e.event?.ticketTypes?.first.price ?? 0)
+                      .toString()
+                      .amountInWeiToToken(
                         decimals: 6,
                         fractionDigits: 0,
                       ),
+                  haveTicket: true,
                   onTapDetail: () {
                     navigationService.push(
                       DetailEventRoute(
@@ -536,7 +544,7 @@ class _ChatBubbleItem extends StatelessWidget {
                       ),
                     );
                   },
-                  isTicketUsed: true,
+                  isTicketUsed: e.isUsed ?? true,
                   onTapMyTicket: () async {
                     await ModalHelper.showModalBottomSheet(
                       context,
