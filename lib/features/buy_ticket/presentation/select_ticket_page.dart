@@ -1,13 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/common.dart';
 import '../../../common/components/app_bar/scaffold_app_bar.dart';
 import '../../../common/components/button/bounce_tap.dart';
 import '../../../common/config/padding_config.dart';
+import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../core/core.dart';
+import '../../shared/presentation/loading_page.dart';
+import 'cubit/get_list_event_ticket_cubit.dart';
 import 'widget/detail_ticket_card_widget.dart';
 
 @RoutePage()
@@ -55,21 +59,40 @@ class _SelectTicketPageState extends State<SelectTicketPage> {
         child: SafeArea(
           child: Padding(
             padding: Paddings.defaultPaddingH,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 20.h),
-              child: Column(
-                children: <Widget>[
-                  DetailTicketCardWidget(
-                    title: 'Day 1 - VIP',
-                    subtitle: 'Valid for one day (Nov 2, 2024) Price excludes tax and admin fees',
-                    onTap: () {
-                      context.pushRoute(const ConfirmBuyTicketRoute());
+            child: BlocBuilder<GetListEventTicketCubit, GetListEventTicketState>(builder: (context, state) {
+              if (state is! GetListEventTicketLoadedState) {
+                return const LoadingPage(opacity: 1);
+              }
+              final listTicket = state.listEvent?.data?.ticketTypes;
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: Column(
+                  children: List.generate(
+                    listTicket?.length ?? 0,
+                    (index) {
+                      return DetailTicketCardWidget(
+                        title: listTicket?[index].name ?? '',
+                        capacity: listTicket?[index].capacity ?? 0,
+                        subtitle: listTicket?[index].description ?? '',
+                        onTap: () {
+                          navigationService.push(
+                            ConfirmBuyTicketRoute(
+                              selectedTicket: listTicket![index],
+                              eventId: state.listEvent?.data?.eventId ?? 0,
+                            ),
+                          );
+                        },
+                        price: listTicket?[index].price?.toString().amountInWeiToToken(
+                                  decimals: 6,
+                                  fractionDigits: 2,
+                                ) ??
+                            '',
+                      );
                     },
-                    price: '200',
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            }),
           ),
         ),
       ),

@@ -47,7 +47,7 @@ class _ReceivePageState extends State<ReceivePage> {
       navigationBar: ScaffoldAppBar.cupertino(
         context,
         middle: Text(
-          'My Wallet',
+          'Receive',
           style: UITypographies.h4(
             context,
             color: UIColors.white50,

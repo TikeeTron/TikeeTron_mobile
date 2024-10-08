@@ -52,13 +52,13 @@ class GetListTicketRequestParams {
       );
 
   Map<String, dynamic> toJson() => {
-        "order": order,
+        if (order != null) "order": order,
         "page": page,
         "buyerAddress": buyerAddress,
-        "type": type,
-        "take": take,
-        "eventId": eventId,
-        "periodBegin": periodBegin,
-        "periodEnd": periodEnd,
+        if (type != null) "type": type,
+        if (take != null) "take": take,
+        if (eventId != null) "eventId": eventId,
+        if (periodBegin != null) "periodBegin": periodBegin,
+        if (periodEnd != null) "periodEnd": periodEnd,
       };
 }

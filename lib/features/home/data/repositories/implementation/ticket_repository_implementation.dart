@@ -34,7 +34,7 @@ class TicketRepositoryImplementation implements TicketRepository {
   }
 
   @override
-  Future<GetListTIcketResponse?> getListTicket({GetListTicketRequestParams? params}) async {
+  Future<GetListTicketResponse?> getListTicket({GetListTicketRequestParams? params}) async {
     try {
       final accessToken = _accountLocalRepository.getToken() ?? '';
       if (accessToken.isNotEmpty) {

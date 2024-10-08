@@ -15,6 +15,7 @@ import '../../../common/components/container/rounded_container.dart';
 import '../../../common/components/svg/svg_ui.dart';
 import '../../../common/utils/extensions/context_parsing.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
+import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../common/utils/helpers/debouncer_helper.dart';
 import '../../../core/core.dart';
 import '../../../core/injector/injector.dart';
@@ -225,7 +226,11 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                                       800,
                                                       () {
                                                         if (_amountController.text.isNotEmpty && _amountController.text != '0') {
-                                                          BlocProvider.of<SendTokenQuotingCubit>(context).quotingSend(amount: double.tryParse(_amountController.text) ?? 0);
+                                                          BlocProvider.of<SendTokenQuotingCubit>(context).quotingSend(
+                                                            amount: double.tryParse(_amountController.text) ?? 0,
+                                                            targetAddress: sendTokenState.targetAddress ?? '',
+                                                            walletAddress: sendTokenState.senderAddress ?? '',
+                                                          );
                                                           BlocProvider.of<SendTokenCubit>(context).setCryptoAmount(amount: _amountController.text);
                                                         } else {
                                                           BlocProvider.of<SendTokenQuotingCubit>(context).resetQuoting();
@@ -288,7 +293,11 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                         800,
                                         () {
                                           if (_amountController.text.isNotEmpty && _amountController.text != '0') {
-                                            BlocProvider.of<SendTokenQuotingCubit>(context).quotingSend(amount: double.tryParse(_amountController.text) ?? 0);
+                                            BlocProvider.of<SendTokenQuotingCubit>(context).quotingSend(
+                                              amount: double.tryParse(_amountController.text) ?? 0,
+                                              targetAddress: sendTokenState.targetAddress ?? '',
+                                              walletAddress: sendTokenState.senderAddress ?? '',
+                                            );
                                             BlocProvider.of<SendTokenCubit>(context).setCryptoAmount(amount: _amountController.text);
                                           } else {
                                             BlocProvider.of<SendTokenQuotingCubit>(context).resetQuoting();
@@ -364,7 +373,10 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                                     ),
                                                     UIGap.h4,
                                                     Text(
-                                                      '200.006 TRX',
+                                                      '${(double.tryParse(_amountController.text) ?? 0) + (double.tryParse(quotingState.networkFee?.toString().amountInWeiToToken(
+                                                            decimals: 3,
+                                                            fractionDigits: 3,
+                                                          ) ?? '0') ?? 0)} TRX',
                                                       style: UITypographies.subtitleLarge(
                                                         context,
                                                         color: UIColors.primary500,
@@ -402,7 +414,7 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                                                           ),
                                                                           UIGap.size(w: 6.w),
                                                                           Text(
-                                                                            'Resources',
+                                                                            'Network Fee',
                                                                             style: UITypographies.bodyLarge(
                                                                               context,
                                                                               color: UIColors.white50,
@@ -411,7 +423,10 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                                                         ],
                                                                       ),
                                                                       Text(
-                                                                        '${state.freeNetUsage ?? 0} Bandwidth',
+                                                                        '${quotingState.networkFee?.toString().amountInWeiToToken(
+                                                                              decimals: 3,
+                                                                              fractionDigits: 3,
+                                                                            )} TRX',
                                                                         style: UITypographies.subtitleLarge(
                                                                           context,
                                                                           color: UIColors.white50,

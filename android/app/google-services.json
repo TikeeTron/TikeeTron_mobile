@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "408381207045",
+    "project_id": "tikeetron-b545a",
+    "storage_bucket": "tikeetron-b545a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408381207045:android:3cec4149c0d89230d1626c",
+        "android_client_info": {
+          "package_name": "com.tikeetron.apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuwoJYcUeMe1uSF1OLQegAN9TkZIXZ0b0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

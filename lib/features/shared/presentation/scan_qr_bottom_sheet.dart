@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../common/utils/extensions/size_extension.dart';
+import '../../../core/routes/app_route.dart';
 
 class ScanQrBottomSheet extends StatefulWidget {
   const ScanQrBottomSheet({super.key});
@@ -33,9 +34,7 @@ class _ScanQrBottomSheetState extends State<ScanQrBottomSheet> with SingleTicker
       try {
         readyScan = false;
 
-        // navigationService.popUntil(
-        //    barcode?.rawValue,
-        // );
+        Navigator.of(context).pop(barcode?.rawValue);
       } catch (e) {
         readyScan = true;
       }

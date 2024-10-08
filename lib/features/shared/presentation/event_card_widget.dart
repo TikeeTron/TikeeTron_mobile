@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/common.dart';
 import '../../../common/components/button/bounce_tap.dart';
-import '../../../common/components/image/asset_image_ui.dart';
 import '../../../common/components/svg/svg_ui.dart';
 
 class EventCardWidget extends StatelessWidget {
@@ -11,18 +10,25 @@ class EventCardWidget extends StatelessWidget {
   final String title;
   final String? estimatePrice;
   final String desc;
+  final bool isTicketUsed;
+  final String? ticketType;
   final bool haveTicket;
   final void Function()? onTapDetail;
   final void Function()? onTapMyTicket;
+  final double? width;
+
   const EventCardWidget({
     super.key,
     required this.image,
     required this.title,
     required this.desc,
-    this.haveTicket = false,
+    this.isTicketUsed = true,
     this.estimatePrice,
     this.onTapDetail,
     this.onTapMyTicket,
+    this.width,
+    this.ticketType,
+    this.haveTicket = false,
   });
 
   @override
@@ -30,7 +36,7 @@ class EventCardWidget extends StatelessWidget {
     return BounceTap(
       onTap: onTapDetail,
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: width ?? MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(bottom: 20.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
@@ -42,22 +48,35 @@ class EventCardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                AssetImageUI(
-                  path: IllustrationsConst.onBoarding2,
-                  height: 140.h,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(18.r),
-                    topLeft: Radius.circular(18.r),
-                  ),
-                  boxFit: BoxFit.cover,
+                Stack(
+                  children: [
+                    UINetworkImage(
+                      url: image,
+                      width: double.infinity,
+                      height: 140.h,
+                      fit: BoxFit.cover,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    Visibility(
+                      visible: haveTicket,
+                      child: Positioned(
+                        left: 12,
+                        top: 12,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          decoration: BoxDecoration(
+                            color: UIColors.primary600,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            ticketType ?? '',
+                            style: UITypographies.subtitleLarge(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                // UINetworkImage(
-                //   url: '',
-                //   width: double.infinity,
-                //   height: 140.h,
-                //   borderRadius: BorderRadius.circular(10.r),
-                // ),
-
                 Padding(
                   padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 8.h),
                   child: Column(
@@ -94,17 +113,19 @@ class EventCardWidget extends StatelessWidget {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: UIPrimaryButton(
-                            text: 'My Ticket',
+                            text: isTicketUsed ? 'Already Used' : 'My Ticket',
                             textStyle: UITypographies.bodyLarge(context),
                             size: UIButtonSize.medium,
-                            leftIcon: SvgUI(
-                              IconsConst.qrCode,
-                              color: UIColors.white50,
-                              width: 32.w,
-                              height: 32.w,
-                            ),
+                            leftIcon: isTicketUsed
+                                ? null
+                                : SvgUI(
+                                    IconsConst.qrCode,
+                                    color: UIColors.white50,
+                                    width: 32.w,
+                                    height: 32.w,
+                                  ),
                             borderRadius: BorderRadius.circular(12.r),
-                            onPressed: onTapMyTicket,
+                            onPressed: isTicketUsed ? null : onTapMyTicket,
                           ),
                         ),
                       )
@@ -116,7 +137,7 @@ class EventCardWidget extends StatelessWidget {
                           12.h,
                         ),
                         child: Text(
-                          'From 1,200 TRX',
+                          'From $estimatePrice TRX',
                           style: UITypographies.subtitleMedium(
                             context,
                             fontSize: 15.sp,

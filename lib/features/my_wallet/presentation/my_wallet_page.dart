@@ -14,6 +14,11 @@ import '../../../common/components/svg/svg_ui.dart';
 import '../../../common/utils/extensions/dynamic_parsing.dart';
 import '../../../core/core.dart';
 import '../../../core/injector/locator.dart';
+import '../../buy_ticket/data/model/entity/event_detail_entity.dart';
+import '../../home/presentation/cubit/get_list_user_ticket_cubit.dart';
+import '../../shared/presentation/event_card_widget.dart';
+import '../../shared/presentation/loading_page.dart';
+import '../../shared/presentation/my_ticket_qr_bottom_sheet.dart';
 import '../../wallet/data/model/wallet_model.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
@@ -189,7 +194,7 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                             icon: SvgConst.icReceive,
                             title: 'Receive',
                             onTap: () {
-                              context.pushRoute(ReceiveRoute(walletAddress: walletAddress));
+                              navigationService.push(ReceiveRoute(walletAddress: walletAddress));
                             },
                           ),
                         ),
@@ -199,7 +204,7 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                             icon: SvgConst.icSend,
                             title: 'Send',
                             onTap: () {
-                              context.pushRoute(const SendRoute());
+                              navigationService.push(const SendRoute());
                             },
                           ),
                         ),
@@ -335,15 +340,87 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
                         ),
                       ],
                     ),
+                    UIGap.h20,
+                    Padding(
+                      padding: EdgeInsets.only(right: 16.w),
+                      child: UIDivider(
+                        color: UIColors.white50.withOpacity(0.15),
+                      ),
+                    ),
+                    UIGap.h20,
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          const EmptyDataWidget(
-                            image: IconsConst.icEmptyEvent,
-                            title: 'No upcoming events',
-                            desc: 'You haven’t purchased any tickets yet. Browse events and book your spot!',
-                          ),
+                          BlocBuilder<GetListUserTicketCubit, GetListUserTicketState>(builder: (context, ticketState) {
+                            if (ticketState is! GetListUserTicketLoadedState) {
+                              return const LoadingPage(opacity: 1);
+                            }
+                            return RefreshIndicator(
+                              color: UIColors.primary500,
+                              onRefresh: () async {
+                                await BlocProvider.of<GetListUserTicketCubit>(context).getListUserTicket(walletAddress: widget.wallet.addresses?[0].address ?? '');
+                              },
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                padding: EdgeInsets.fromLTRB(
+                                  8.w,
+                                  8.h,
+                                  8.w,
+                                  200.h,
+                                ),
+                                child: Column(
+                                  children: ticketState.listTicket?.data == null || ticketState.listTicket?.data?.length == 0
+                                      ? [
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 20.h),
+                                            child: const EmptyDataWidget(
+                                              image: IconsConst.icEmptyEvent,
+                                              title: 'No upcoming events',
+                                              desc: 'You haven’t purchased any tickets yet. Browse events and book your spot!',
+                                            ),
+                                          ),
+                                        ]
+                                      : List.generate(
+                                          ticketState.listTicket?.data?.length ?? 0,
+                                          (index) {
+                                            final eventData = ticketState.listTicket?.data?[index].event;
+                                            final ticketId = ticketState.listTicket?.data?[index].ticketId;
+                                            final isTicketUsed = ticketState.listTicket?.data?[index].isUsed;
+                                            final ticketType = ticketState.listTicket?.data?[index].type;
+                                            return EventCardWidget(
+                                              image: eventData?.banner ?? '',
+                                              isTicketUsed: isTicketUsed ?? false,
+                                              ticketType: ticketType,
+                                              haveTicket: true,
+                                              onTapDetail: () {
+                                                navigationService.push(
+                                                  DetailEventRoute(
+                                                    eventData: EventDetailEntity.fromJson(
+                                                      eventData!.toJson(),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              onTapMyTicket: () async {
+                                                await ModalHelper.showModalBottomSheet(
+                                                  context,
+                                                  child: MyTicketQrBottomSheet(
+                                                    ticketId: ticketId.toString(),
+                                                  ),
+                                                  isHasCloseButton: false,
+                                                  padding: EdgeInsets.zero,
+                                                );
+                                              },
+                                              title: eventData?.name ?? '',
+                                              desc: eventData?.location ?? '',
+                                            );
+                                          },
+                                        ),
+                                ),
+                              ),
+                            );
+                          }),
                           const WalletActivityTabBarView(),
                         ],
                       ),

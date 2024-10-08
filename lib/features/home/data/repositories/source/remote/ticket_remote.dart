@@ -12,10 +12,9 @@ import '../../../model/response/sync_ticket_response.dart';
 
 @LazySingleton()
 class TicketRemote {
-  Future<GetListTIcketResponse?> getListTickets({required String accessToken, GetListTicketRequestParams? params}) async {
+  Future<GetListTicketResponse?> getListTickets({required String accessToken, GetListTicketRequestParams? params}) async {
     try {
       final result = await AppApi(
-        baseUrl: env.baseUrl,
         version: 1,
       ).get(
         '/tickets',
@@ -28,7 +27,7 @@ class TicketRemote {
       if (result == null) {
         throw const ServerException();
       }
-      final response = GetListTIcketResponse.fromJson(result);
+      final response = GetListTicketResponse.fromJson(result);
       if (response.statusCode != 200) {
         throw Exception('Failed get list event');
       } else {
@@ -42,7 +41,6 @@ class TicketRemote {
   Future<GetDetailTicketResponse?> getDetailTicket({required String accessToken, required int ticketId}) async {
     try {
       final result = await AppApi(
-        baseUrl: env.baseUrl,
         version: 1,
       ).get(
         '/tickets/$ticketId',

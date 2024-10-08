@@ -1,148 +1,110 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common.dart';
-import '../../config/padding_config.dart';
-import '../button/button_rounded_ui.dart';
-import '../cliprrect/smooth_cliprrect.dart';
-import '../container/rounded_container.dart';
-import '../image/asset_image_ui.dart';
-import '../svg/svg_ui.dart';
-import '../text/text_ui.dart';
+import '../container/grabber_container.dart';
 
 class ConfirmationAlertWidget extends StatelessWidget {
-  final String? title;
-  final String? description;
-  final String? closeText;
-  final String? confirmText;
-  final String? imageName;
   final void Function()? onClose;
   final void Function()? onConfirm;
-  final bool? useCloseButton;
 
-  const ConfirmationAlertWidget(
-      {super.key, this.title, this.description, this.closeText, this.confirmText, this.onClose, this.onConfirm, this.imageName, this.useCloseButton = true});
+  const ConfirmationAlertWidget({
+    super.key,
+    this.onClose,
+    this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        RoundedContainer(
-          color: UIColors.black400,
-          child: Padding(
-            padding: Paddings.h24,
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Stack(
-                    children: [
-                      const SvgUI(
-                        SvgConst.icAlert,
-                        height: 180,
-                        disabledSetColor: true,
-                      ),
-                      Positioned(
-                        left: -20,
-                        bottom: 8,
-                        top: 8,
-                        child: SmoothClipRRect(
-                          radius: 130,
-                          child: SizedBox(
-                            height: 150,
-                            child: Opacity(
-                              opacity: .1,
-                              child: AssetImageUI(
-                                path: imageName ?? IllustrationsConst.warning,
-                                height: 300,
-                                width: 300,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 20,
-                        top: 20,
-                        right: 20,
-                        child: Image.asset(imageName ?? IllustrationsConst.warning, height: 150, width: 150),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  if (title != null) ...[
-                    TextUI(
-                      title!,
-                      fontSize: 24,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      weight: FontWeight.w600,
-                      color: UIColors.white50,
-                    ),
-                  ],
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  if (description != null) ...[
-                    TextUI(
-                      description!,
-                      color: UIColors.white50,
-                      maxLines: 4,
-                      weight: FontWeight.w300,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    children: [
-                      if (useCloseButton ?? true)
-                        Expanded(
-                          child: ButtonRoundedUI(
-                            text: closeText ?? 'Close',
-                            color: UIColors.primary500,
-                            type: ButtonType.outline,
-                            textColor: UIColors.white50,
-                            onPress: () {
-                              if (onClose != null) {
-                                onClose!();
-                              } else {
-                                Navigator.of(context).pop(false);
-                              }
-                            },
-                          ),
-                        ),
-                      if (useCloseButton ?? true)
-                        const SizedBox(
-                          width: 16,
-                        ),
-                      Expanded(
-                        child: ButtonRoundedUI(
-                          text: confirmText ?? 'Confirm',
-                          onPress: () {
-                            if (onConfirm != null) {
-                              onConfirm!();
-                            } else {
-                              Navigator.of(context).pop(true);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        color: UIColors.black400,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 10.h),
+            child: const GrabberContainer(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 37.h),
+            child: Text(
+              'Remove Account',
+              textAlign: TextAlign.center,
+              style: UITypographies.h5(context, fontSize: 22.sp),
             ),
           ),
-        )
-      ],
+          UIGap.h16,
+          UIDivider(
+            color: UIColors.white50.withOpacity(0.15),
+            thickness: 1.r,
+          ),
+          UIGap.h20,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
+            child: Column(
+              children: [
+                Icon(
+                  CupertinoIcons.trash,
+                  color: UIColors.red600,
+                  size: 56.w,
+                ),
+                UIGap.h20,
+                Text(
+                  'Removing this account.',
+                  style: UITypographies.subtitleLarge(
+                    context,
+                    fontSize: 20.sp,
+                  ),
+                ),
+                UIGap.h4,
+                Text(
+                  'You can still recover it later using your secret recovery phrase with this app or another wallet.',
+                  textAlign: TextAlign.center,
+                  style: UITypographies.bodyLarge(
+                    context,
+                    color: UIColors.grey500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: UIPrimaryButton(
+                    text: 'Cancel',
+                    textStyle: UITypographies.bodyLarge(context),
+                    size: UIButtonSize.large,
+                    borderRadius: BorderRadius.circular(12.r),
+                    onPressed: onClose,
+                    backgroundColor: UIColors.grey200.withOpacity(0.24),
+                  ),
+                ),
+                UIGap.w12,
+                Expanded(
+                  child: UIPrimaryButton(
+                    text: 'Remove',
+                    textStyle: UITypographies.bodyLarge(context),
+                    size: UIButtonSize.large,
+                    borderRadius: BorderRadius.circular(12.r),
+                    onPressed: onConfirm,
+                    backgroundColor: UIColors.red500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

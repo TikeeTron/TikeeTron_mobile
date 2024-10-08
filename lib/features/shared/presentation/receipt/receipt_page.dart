@@ -11,6 +11,7 @@ import '../../../../common/enum/asset_type_enum.dart';
 import '../../../../common/enum/transaction_state_enum.dart';
 import '../../../../common/enum/transaction_type_enum.dart';
 import '../../../../common/utils/extensions/dynamic_parsing.dart';
+import '../../../../common/utils/extensions/string_parsing.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../data/model/transaction_model.dart';
 import 'widget/receipt_detail_widget.dart';
@@ -77,6 +78,19 @@ class ReceiptPage extends StatelessWidget {
     }
   }
 
+  String get title {
+    switch (data.transactionType) {
+      case TransactionTypeEnum.receive:
+        return data.assetType == AssetTypeEnum.nft ? 'Received Ticket' : 'Received TRX';
+      case TransactionTypeEnum.send:
+        return data.assetType == AssetTypeEnum.nft ? 'Sending Ticket' : 'Sending TRX';
+      case TransactionTypeEnum.purchased:
+        return 'Purchased Ticket';
+      default:
+        return '';
+    }
+  }
+
   IconData get transactionStatusIcon {
     switch (data.transactionStatus) {
       case TransactionStateEnum.failed:
@@ -133,11 +147,13 @@ class ReceiptPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          navigationService.pushAndPopUntil(
-            const DashboardRoute(),
-            predicate: (p0) => true,
-          );
+        if (!navigationService.canPop) {
+          if (didPop) {
+            navigationService.pushAndPopUntil(
+              const DashboardRoute(),
+              predicate: (p0) => true,
+            );
+          }
         }
       },
       child: CupertinoPageScaffold(
@@ -145,7 +161,7 @@ class ReceiptPage extends StatelessWidget {
         navigationBar: ScaffoldAppBar.cupertino(
           context,
           middle: Text(
-            'Sending TRX',
+            title,
             style: UITypographies.h4(
               context,
               color: UIColors.white50,
@@ -153,10 +169,14 @@ class ReceiptPage extends StatelessWidget {
           ),
           leading: BounceTap(
             onTap: () {
-              navigationService.pushAndPopUntil(
-                const DashboardRoute(),
-                predicate: (p0) => true,
-              );
+              if (!navigationService.canPop) {
+                navigationService.pushAndPopUntil(
+                  const DashboardRoute(),
+                  predicate: (p0) => true,
+                );
+              } else {
+                navigationService.maybePop();
+              }
             },
             child: Container(
               padding: EdgeInsets.all(12.w),
@@ -183,11 +203,7 @@ class ReceiptPage extends StatelessWidget {
                     color: UIColors.grey200.withOpacity(0.24),
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: Icon(
-                    data.transactionType == TransactionTypeEnum.send ? CupertinoIcons.arrow_up : CupertinoIcons.arrow_down,
-                    size: 20.w,
-                    color: UIColors.white50,
-                  ),
+                  child: iconTransaction,
                 ),
                 UIGap.h12,
                 Text(
@@ -274,8 +290,11 @@ class ReceiptPage extends StatelessWidget {
                 ),
                 UIGap.h20,
                 ReceiptDetailWidget(
-                  title: 'Resources Consumed',
-                  value: '${data.resourcesConsumed} bandwith',
+                  title: 'Network Fee',
+                  value: '${data.resourcesConsumed.toString().amountInWeiToToken(
+                        decimals: 3,
+                        fractionDigits: 3,
+                      )} TRX',
                 ),
               ],
             ),

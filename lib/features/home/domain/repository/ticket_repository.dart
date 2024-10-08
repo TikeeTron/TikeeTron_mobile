@@ -5,7 +5,7 @@ import '../../data/model/response/get_list_ticket_response.dart';
 import '../../data/model/response/sync_ticket_response.dart';
 
 abstract class TicketRepository {
-  Future<GetListTIcketResponse?> getListTicket({GetListTicketRequestParams? params});
+  Future<GetListTicketResponse?> getListTicket({GetListTicketRequestParams? params});
   Future<GetDetailTicketResponse?> getDetailTicket({required int ticketId});
   Future<SnycTicketResponse?> syncTicketData({required SyncTicketRequest syncData});
 }

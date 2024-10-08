@@ -34,7 +34,7 @@ class GetListEventCubit extends Cubit<GetListEventState> {
       } else {
         safeEmit(
           const GetListEventErrorState(
-            message: 'Failed get list event',
+            message: 'Failed get list user ticket',
           ),
         );
       }

@@ -9,14 +9,17 @@ import '../../../common/common.dart';
 import '../../../common/components/app_bar/scaffold_app_bar.dart';
 import '../../../common/components/button/bounce_tap.dart';
 import '../../../common/components/container/rounded_container.dart';
+import '../../../core/core.dart';
 import '../../../core/injector/injector.dart';
-import '../../shared/presentation/cubit/cubit.dart';
 import '../../shared/presentation/loading_page.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
+import '../../wallet/presentation/cubit/wallets/wallets_cubit.dart';
 import 'cubit/get_list_event_cubit.dart';
+import 'cubit/get_list_user_ticket_cubit.dart';
 import 'view/home_chat_tab_bar_view.dart';
 import 'view/home_explore_tab_bar_view.dart';
+import 'widget/account_modal.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -29,11 +32,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _appBarTabController;
   late GetListEventCubit getListEventCubit;
+  late GetListUserTicketCubit getListTicketCubit;
 
   @override
   void initState() {
     _appBarTabController = TabController(vsync: this, length: 2);
     getListEventCubit = BlocProvider.of<GetListEventCubit>(context);
+    getListTicketCubit = BlocProvider.of<GetListUserTicketCubit>(context);
     final activeWalletCubit = BlocProvider.of<ActiveWalletCubit>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final activeWallet = activeWalletCubit.getActiveWallet();
@@ -45,8 +50,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           walletAddress: walletAddress,
           walletIndex: activeWalletCubit.state.walletIndex ?? 0,
         );
+        await getListEventCubit.getListEvent();
+        await getListTicketCubit.getListUserTicket(walletAddress: walletAddress);
       }
-      await getListEventCubit.getListEvent();
     });
 
     super.initState();
@@ -108,14 +114,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            trailing: Icon(
-              CupertinoIcons.bell_solid,
-              color: UIColors.white50,
-              size: 22.w,
+            trailing: BounceTap(
+              onTap: () => navigationService.push(const NotificationRoute()),
+              child: Icon(
+                CupertinoIcons.bell_solid,
+                color: UIColors.white50,
+                size: 22.w,
+              ),
             ),
             leading: BounceTap(
               onTap: () {
-                context.read<DashboardCubit>().showDrawer();
+                final walletsCubit = BlocProvider.of<WalletsCubit>(context);
+                final listWallet = walletsCubit.getWallets();
+                ModalHelper.showModalBottomSheet(
+                  context,
+                  child: AccountModal(
+                    onAddWallet: () {
+                      navigationService.push(const AddMoreWalletRoute());
+                    },
+                    listWallet: listWallet,
+                    activeWallet: state.wallet!,
+                  ),
+                  isHasCloseButton: false,
+                  padding: EdgeInsets.zero,
+                );
               },
               child: Container(
                 padding: EdgeInsets.all(4.w),

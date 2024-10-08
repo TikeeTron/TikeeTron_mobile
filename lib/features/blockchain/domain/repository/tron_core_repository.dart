@@ -19,4 +19,25 @@ abstract class TronCoreRepository {
   });
   Future<double?> getTokenInFiat({required double tokenBalance});
   Future<double?> getTokenPrice();
+  Future<int?> getNetworkFee({
+    required String walletAddress,
+    required String targetAddress,
+  });
+
+  Future<String?> buyTicket({
+    required String ticketType,
+    required String walletAddress,
+    required int ticketPrice,
+    required int eventId,
+    required WalletModel wallet,
+  });
+
+  Future<String?> sendTicket({
+    required String targetAddress,
+    required String walletAddress,
+    required int ticketId,
+    required WalletModel wallet,
+    required int ticketPrice,
+    required bool isTicketUsed,
+  });
 }

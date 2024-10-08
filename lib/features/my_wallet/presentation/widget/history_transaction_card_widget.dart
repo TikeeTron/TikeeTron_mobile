@@ -92,11 +92,11 @@ class HistoryTransactionCardWidget extends StatelessWidget {
   String get amountTransaction {
     switch (data.transactionType) {
       case TransactionTypeEnum.receive:
-        return '+${data.amount}';
+        return '+${data.amount} TRX';
       case TransactionTypeEnum.send:
-        return '-${data.amount}';
+        return '-${data.amount} TRX';
       default:
-        return '';
+        return '-${data.amount} TRX';
     }
   }
 
@@ -107,7 +107,7 @@ class HistoryTransactionCardWidget extends StatelessWidget {
       case TransactionTypeEnum.send:
         return UIColors.red500;
       default:
-        return UIColors.white50;
+        return UIColors.red500;
     }
   }
 

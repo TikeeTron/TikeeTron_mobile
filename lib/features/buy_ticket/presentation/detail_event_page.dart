@@ -1,18 +1,23 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 import '../../../common/common.dart';
 import '../../../common/components/button/bounce_tap.dart';
-import '../../../common/components/image/asset_image_ui.dart';
 import '../../../common/components/svg/svg_ui.dart';
 import '../../../common/config/padding_config.dart';
 import '../../../core/routes/app_route.dart';
+import '../data/model/entity/event_detail_entity.dart';
+import 'cubit/get_list_event_ticket_cubit.dart';
 
 @RoutePage()
 class DetailEventPage extends StatefulWidget {
-  const DetailEventPage({super.key});
+  final EventDetailEntity eventData;
+  const DetailEventPage({super.key, required this.eventData});
 
   @override
   State<DetailEventPage> createState() => _DetailEventPageState();
@@ -29,10 +34,11 @@ class _DetailEventPageState extends State<DetailEventPage> {
           children: <Widget>[
             Stack(
               children: [
-                AssetImageUI(
-                  path: IllustrationsConst.onBoarding2,
+                UINetworkImage(
+                  url: widget.eventData.banner ?? '',
                   width: MediaQuery.of(context).size.width,
                   height: 225.h,
+                  fit: BoxFit.cover,
                 ),
                 Positioned(
                   bottom: 0,
@@ -92,12 +98,21 @@ class _DetailEventPageState extends State<DetailEventPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Ed Sheeran Live at Madison Square Garden',
+                                widget.eventData.name ?? '',
                                 style: UITypographies.h4(context),
                               ),
                               UIGap.h4,
                               Text(
-                                'Madison Square Garden, New York 24 Sep 2024 - 26 Sep 2024',
+                                widget.eventData.location ?? '',
+                                style: UITypographies.bodyLarge(
+                                  context,
+                                  fontSize: 17.sp,
+                                  color: UIColors.grey500,
+                                ),
+                              ),
+                              UIGap.h2,
+                              Text(
+                                '${DateFormat('dd MMM yyyy').format(widget.eventData.startDate ?? DateTime.now())} - ${DateFormat('dd MMM yyyy').format(widget.eventData.endDate ?? DateTime.now())}',
                                 style: UITypographies.bodyLarge(
                                   context,
                                   fontSize: 17.sp,
@@ -132,7 +147,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                     color: UIColors.white50.withOpacity(0.15),
                   ),
                   UIGap.h16,
-
+                  // Markdown(data: widget.eventData.description ?? ''),
                   Text(
                     "Event Description",
                     style: UITypographies.bodyLarge(
@@ -196,7 +211,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                   ),
                   UIGap.h16,
                   Text(
-                    "Organizer Name",
+                    'Organizer Name',
                     style: UITypographies.bodyLarge(
                       context,
                       fontSize: 17.sp,
@@ -205,7 +220,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                   ),
                   UIGap.h4,
                   Text(
-                    "Live Nation Entertainment",
+                    widget.eventData.organizer?.name ?? '',
                     style: UITypographies.bodyLarge(
                       context,
                       fontSize: 17.sp,
@@ -214,15 +229,26 @@ class _DetailEventPageState extends State<DetailEventPage> {
                   UIGap.h28,
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: UIPrimaryButton(
-                      text: 'Buy Ticket',
-                      textStyle: UITypographies.bodyLarge(context),
-                      size: UIButtonSize.large,
-                      borderRadius: BorderRadius.circular(12.r),
-                      onPressed: () {
-                        context.pushRoute(const SelectTicketRoute());
-                      },
-                    ),
+                    child: BlocBuilder<GetListEventTicketCubit, GetListEventTicketState>(builder: (context, state) {
+                      return UIPrimaryButton(
+                        text: 'Buy Ticket',
+                        textStyle: UITypographies.bodyLarge(context),
+                        size: UIButtonSize.large,
+                        isLoading: state is GetListEventTicketLoadingState,
+                        borderRadius: BorderRadius.circular(12.r),
+                        onPressed: () async {
+                          await BlocProvider.of<GetListEventTicketCubit>(context)
+                              .getEventDetail(
+                            eventId: widget.eventData.eventId ?? 0,
+                          )
+                              .whenComplete(() {
+                            navigationService.push(
+                              const SelectTicketRoute(),
+                            );
+                          });
+                        },
+                      );
+                    }),
                   ),
                   UIGap.h48,
                 ],

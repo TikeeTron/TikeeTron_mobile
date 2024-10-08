@@ -8,12 +8,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/themes/cubit/theme_cubit.dart';
 import '../../common/utils/extensions/object_parsing.dart';
 import '../../common/utils/helpers/logger_helper.dart';
+import '../../features/buy_ticket/presentation/cubit/buy_ticket_quoting_cubit.dart';
+import '../../features/buy_ticket/presentation/cubit/confirm_buy_ticket_cubit.dart';
+import '../../features/buy_ticket/presentation/cubit/get_list_event_ticket_cubit.dart';
+import '../../features/home/presentation/cubit/ask_ai_cubit.dart';
 import '../../features/home/presentation/cubit/get_list_event_cubit.dart';
+import '../../features/home/presentation/cubit/get_list_user_ticket_cubit.dart';
 import '../../features/send/presentation/cubit/send_token_cubit.dart';
 import '../../features/send/presentation/cubit/send_token_quoting_cubit.dart';
+import '../../features/send/presentation/cubit/ticket/send_ticket_cubit.dart';
+import '../../features/send/presentation/cubit/ticket/send_ticket_quoting_cubit.dart';
 import '../../features/shared/presentation/cubit/dashboard_cubit.dart';
 import '../../features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart';
+import '../../features/shared/presentation/cubit/pin/pin_cubit.dart';
 import '../../features/shared/presentation/loading_page.dart';
+import '../../features/shared/presentation/pin_page.dart';
 import '../../features/wallet/data/repositories/source/local/wallet_local_repository.dart';
 import '../../features/wallet/presentation/create_wallet/cubit/create_wallet_cubit.dart';
 import '../../features/wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
@@ -68,6 +77,30 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => locator<GetListEventCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<AskAiCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<GetListUserTicketCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<GetListEventTicketCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<ConfirmBuyTicketCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<BuyTicketQuotingCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<SendTicketCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<SendTicketQuotingCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => locator<PinCubit>(),
         ),
       ],
       child: _AppView(
@@ -202,6 +235,20 @@ class __AppViewState extends State<_AppView> {
                           return const LoadingPage(
                             opacity: 0,
                           );
+                        },
+                      ),
+                      BlocBuilder<PinCubit, PinState>(
+                        builder: (context, state) {
+                          if (state is ShowPin) {
+                            return PinPage(
+                              passedData: state.passedData,
+                              noCancel: state.noCancel,
+                              isSetBiometric: state.isSetBiometric,
+                              initShowBiometric: state.initShowBiometric,
+                            );
+                          }
+
+                          return const SizedBox.shrink();
                         },
                       ),
                     ],

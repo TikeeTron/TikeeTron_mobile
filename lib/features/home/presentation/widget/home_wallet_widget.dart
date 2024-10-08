@@ -64,7 +64,7 @@ class HomeWalletWidget extends StatelessWidget {
                       color: UIColors.grey200.withOpacity(0.24),
                     ),
                     child: SvgUI(
-                      SvgConst.icSend,
+                      SvgConst.icReceive,
                       width: 20.w,
                       height: 20.w,
                       color: UIColors.white50,
@@ -73,7 +73,7 @@ class HomeWalletWidget extends StatelessWidget {
                 ),
                 UIGap.w12,
                 BounceTap(
-                  onTap: onReceive,
+                  onTap: onSend,
                   child: Container(
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(

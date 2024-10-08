@@ -10,11 +10,39 @@
 part of 'app_route.dart';
 
 /// generated route for
-/// [ConfirmBuyTicketPage]
-class ConfirmBuyTicketRoute extends PageRouteInfo<void> {
-  const ConfirmBuyTicketRoute({List<PageRouteInfo>? children})
+/// [AddMoreWalletPage]
+class AddMoreWalletRoute extends PageRouteInfo<void> {
+  const AddMoreWalletRoute({List<PageRouteInfo>? children})
       : super(
+          AddMoreWalletRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AddMoreWalletRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AddMoreWalletPage();
+    },
+  );
+}
+
+/// generated route for
+/// [ConfirmBuyTicketPage]
+class ConfirmBuyTicketRoute extends PageRouteInfo<ConfirmBuyTicketRouteArgs> {
+  ConfirmBuyTicketRoute({
+    Key? key,
+    required TicketType selectedTicket,
+    required int eventId,
+    List<PageRouteInfo>? children,
+  }) : super(
           ConfirmBuyTicketRoute.name,
+          args: ConfirmBuyTicketRouteArgs(
+            key: key,
+            selectedTicket: selectedTicket,
+            eventId: eventId,
+          ),
           initialChildren: children,
         );
 
@@ -23,9 +51,33 @@ class ConfirmBuyTicketRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const ConfirmBuyTicketPage();
+      final args = data.argsAs<ConfirmBuyTicketRouteArgs>();
+      return ConfirmBuyTicketPage(
+        key: args.key,
+        selectedTicket: args.selectedTicket,
+        eventId: args.eventId,
+      );
     },
   );
+}
+
+class ConfirmBuyTicketRouteArgs {
+  const ConfirmBuyTicketRouteArgs({
+    this.key,
+    required this.selectedTicket,
+    required this.eventId,
+  });
+
+  final Key? key;
+
+  final TicketType selectedTicket;
+
+  final int eventId;
+
+  @override
+  String toString() {
+    return 'ConfirmBuyTicketRouteArgs{key: $key, selectedTicket: $selectedTicket, eventId: $eventId}';
+  }
 }
 
 /// generated route for
@@ -68,10 +120,17 @@ class DashboardRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [DetailEventPage]
-class DetailEventRoute extends PageRouteInfo<void> {
-  const DetailEventRoute({List<PageRouteInfo>? children})
-      : super(
+class DetailEventRoute extends PageRouteInfo<DetailEventRouteArgs> {
+  DetailEventRoute({
+    Key? key,
+    required EventDetailEntity eventData,
+    List<PageRouteInfo>? children,
+  }) : super(
           DetailEventRoute.name,
+          args: DetailEventRouteArgs(
+            key: key,
+            eventData: eventData,
+          ),
           initialChildren: children,
         );
 
@@ -80,9 +139,29 @@ class DetailEventRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DetailEventPage();
+      final args = data.argsAs<DetailEventRouteArgs>();
+      return DetailEventPage(
+        key: args.key,
+        eventData: args.eventData,
+      );
     },
   );
+}
+
+class DetailEventRouteArgs {
+  const DetailEventRouteArgs({
+    this.key,
+    required this.eventData,
+  });
+
+  final Key? key;
+
+  final EventDetailEntity eventData;
+
+  @override
+  String toString() {
+    return 'DetailEventRouteArgs{key: $key, eventData: $eventData}';
+  }
 }
 
 /// generated route for
@@ -167,6 +246,25 @@ class MyWalletRouteArgs {
   String toString() {
     return 'MyWalletRouteArgs{key: $key, wallet: $wallet}';
   }
+}
+
+/// generated route for
+/// [NotificationPage]
+class NotificationRoute extends PageRouteInfo<void> {
+  const NotificationRoute({List<PageRouteInfo>? children})
+      : super(
+          NotificationRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotificationRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const NotificationPage();
+    },
+  );
 }
 
 /// generated route for
@@ -366,17 +464,10 @@ class SendRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SendTicketPage]
-class SendTicketRoute extends PageRouteInfo<SendTicketRouteArgs> {
-  SendTicketRoute({
-    Key? key,
-    required String walletAddress,
-    List<PageRouteInfo>? children,
-  }) : super(
+class SendTicketRoute extends PageRouteInfo<void> {
+  const SendTicketRoute({List<PageRouteInfo>? children})
+      : super(
           SendTicketRoute.name,
-          args: SendTicketRouteArgs(
-            key: key,
-            walletAddress: walletAddress,
-          ),
           initialChildren: children,
         );
 
@@ -385,29 +476,9 @@ class SendTicketRoute extends PageRouteInfo<SendTicketRouteArgs> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<SendTicketRouteArgs>();
-      return SendTicketPage(
-        key: args.key,
-        walletAddress: args.walletAddress,
-      );
+      return const SendTicketPage();
     },
   );
-}
-
-class SendTicketRouteArgs {
-  const SendTicketRouteArgs({
-    this.key,
-    required this.walletAddress,
-  });
-
-  final Key? key;
-
-  final String walletAddress;
-
-  @override
-  String toString() {
-    return 'SendTicketRouteArgs{key: $key, walletAddress: $walletAddress}';
-  }
 }
 
 /// generated route for
@@ -431,8 +502,7 @@ class SendTokenRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SuccessCreateWalletPage]
-class SuccessCreateWalletRoute
-    extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
+class SuccessCreateWalletRoute extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
   SuccessCreateWalletRoute({
     Key? key,
     required SuccessCreateWalletPageParams params,

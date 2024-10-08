@@ -1,33 +1,33 @@
-class GetListTIcketResponse {
+class GetListTicketResponse {
   final bool? status;
   final int? statusCode;
-  final List<Datum>? data;
+  final List<TicketDetails>? data;
   final Meta? meta;
 
-  GetListTIcketResponse({
+  GetListTicketResponse({
     this.status,
     this.statusCode,
     this.data,
     this.meta,
   });
 
-  GetListTIcketResponse copyWith({
+  GetListTicketResponse copyWith({
     bool? status,
     int? statusCode,
-    List<Datum>? data,
+    List<TicketDetails>? data,
     Meta? meta,
   }) =>
-      GetListTIcketResponse(
+      GetListTicketResponse(
         status: status ?? this.status,
         statusCode: statusCode ?? this.statusCode,
         data: data ?? this.data,
         meta: meta ?? this.meta,
       );
 
-  factory GetListTIcketResponse.fromJson(Map<String, dynamic> json) => GetListTIcketResponse(
+  factory GetListTicketResponse.fromJson(Map<String, dynamic> json) => GetListTicketResponse(
         status: json["status"],
         statusCode: json["statusCode"],
-        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+        data: json["data"] == null ? [] : List<TicketDetails>.from(json["data"]!.map((x) => TicketDetails.fromJson(x))),
         meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
       );
 
@@ -39,7 +39,7 @@ class GetListTIcketResponse {
       };
 }
 
-class Datum {
+class TicketDetails {
   final String? id;
   final int? ticketId;
   final int? eventId;
@@ -54,7 +54,7 @@ class Datum {
   final Event? event;
   final String? datumId;
 
-  Datum({
+  TicketDetails({
     this.id,
     this.ticketId,
     this.eventId,
@@ -70,7 +70,7 @@ class Datum {
     this.datumId,
   });
 
-  Datum copyWith({
+  TicketDetails copyWith({
     String? id,
     int? ticketId,
     int? eventId,
@@ -85,7 +85,7 @@ class Datum {
     Event? event,
     String? datumId,
   }) =>
-      Datum(
+      TicketDetails(
         id: id ?? this.id,
         ticketId: ticketId ?? this.ticketId,
         eventId: eventId ?? this.eventId,
@@ -101,7 +101,7 @@ class Datum {
         datumId: datumId ?? this.datumId,
       );
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory TicketDetails.fromJson(Map<String, dynamic> json) => TicketDetails(
         id: json["_id"],
         ticketId: json["ticketId"],
         eventId: json["eventId"],
