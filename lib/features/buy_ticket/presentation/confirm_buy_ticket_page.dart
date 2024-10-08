@@ -18,7 +18,9 @@ import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../core/injector/injector.dart';
 import '../../../core/routes/app_route.dart';
 import '../../home/data/model/response/get_detail_event_response.dart';
+import '../../shared/presentation/cubit/pin/pin_cubit.dart';
 import '../../shared/presentation/loading_page.dart';
+import '../../wallet/data/model/wallet_model.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import 'cubit/buy_ticket_quoting_cubit.dart';
@@ -69,6 +71,27 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
     super.dispose();
   }
 
+  void confirmBuy({required WalletModel wallet, required int networkFee, required String errorMessage}) async {
+    context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
+    final resultBuyTicket = await BlocProvider.of<ConfirmBuyTicketCubit>(context).confirmBuyTicket(
+      ticketPrice: widget.selectedTicket.price ?? 0,
+      ticketType: widget.selectedTicket.name ?? '',
+      buyerAddress: walletAddress,
+      wallet: wallet,
+      eventId: widget.eventId,
+      networkFee: networkFee,
+    );
+    context.hideFullScreenLoading;
+    if (resultBuyTicket != null) {
+      navigationService.pushAndPopUntil(
+        ReceiptRoute(data: resultBuyTicket),
+        predicate: (p0) => false,
+      );
+    } else {
+      toastHelper.showError(errorMessage);
+    }
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -86,7 +109,7 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
         );
         quotingCubit.quotingBuyTicket(
           walletAddress: walletAddress,
-          targetAddress: 'TJBhWTLc8fKLJz5PdsQSQAaB2Hs93koXBJ',
+          targetAddress: 'TVPysSf43yPBiQNZ7Fq8Fhwx3E4Fqj6kRv',
         );
       }
     });
@@ -378,44 +401,51 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
                     BlocBuilder<ConfirmBuyTicketCubit, ConfirmBuyTicketState>(builder: (context, buyTicketState) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 20.h),
-                        child: SlideAction(
-                          height: 50.h,
-                          borderRadius: 16.r,
-                          enabled: true,
-                          onSubmit: () async {
-                            context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
-                            final resultBuyTicket = await BlocProvider.of<ConfirmBuyTicketCubit>(context).confirmBuyTicket(
-                              ticketPrice: widget.selectedTicket.price ?? 0,
-                              ticketType: widget.selectedTicket.name ?? '',
-                              buyerAddress: walletAddress,
-                              wallet: activeWalletState.wallet!,
-                              eventId: widget.eventId,
-                              networkFee: quotingState.networkFee ?? 0,
-                            );
-                            context.hideFullScreenLoading;
-                            if (resultBuyTicket != null) {
-                              navigationService.push(ReceiptRoute(data: resultBuyTicket));
-                            } else {
-                              if (buyTicketState is ConfirmBuyTicketErrorState) {
-                                toastHelper.showError(buyTicketState.message ?? '');
+                        child: BlocListener<PinCubit, PinState>(
+                          listener: (BuildContext context, PinState pinState) {
+                            if (pinState is CorrectPin) {
+                              // on sending transaction
+                              if (pinState.passedData != 'confirm-buy') {
+                                return;
                               }
+                              confirmBuy(
+                                errorMessage: 'Failed Payment State',
+                                networkFee: quotingState.networkFee ?? 0,
+                                wallet: activeWalletState.wallet!,
+                              );
+                              return;
+                            } else if (pinState is PinCreated) {
+                              // on sending transaction
+                              confirmBuy(
+                                errorMessage: 'Failed Payment State',
+                                networkFee: quotingState.networkFee ?? 0,
+                                wallet: activeWalletState.wallet!,
+                              );
                             }
                           },
-                          outerColor: UIColors.grey200.withOpacity(0.24),
-                          text: 'Confirm and Pay',
-                          textColor: UIColors.primary500,
-                          sliderRotate: false,
-                          textStyle: UITypographies.bodyLarge(
-                            context,
-                            fontSize: 17.sp,
-                            color: UIColors.primary500,
-                          ),
-                          innerColor: UIColors.primary500,
-                          animationDuration: const Duration(milliseconds: 300),
-                          sliderButtonIcon: Icon(
-                            CupertinoIcons.chevron_right_2,
-                            size: 28.w,
-                            color: UIColors.white50,
+                          child: SlideAction(
+                            height: 50.h,
+                            borderRadius: 16.r,
+                            enabled: true,
+                            onSubmit: () async {
+                              BlocProvider.of<PinCubit>(context).showPin(passedData: 'confirm-buy');
+                            },
+                            outerColor: UIColors.grey200.withOpacity(0.24),
+                            text: 'Confirm and Pay',
+                            textColor: UIColors.primary500,
+                            sliderRotate: false,
+                            textStyle: UITypographies.bodyLarge(
+                              context,
+                              fontSize: 17.sp,
+                              color: UIColors.primary500,
+                            ),
+                            innerColor: UIColors.primary500,
+                            animationDuration: const Duration(milliseconds: 300),
+                            sliderButtonIcon: Icon(
+                              CupertinoIcons.chevron_right_2,
+                              size: 28.w,
+                              color: UIColors.white50,
+                            ),
                           ),
                         ),
                       );

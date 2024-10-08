@@ -19,6 +19,8 @@ import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../common/utils/helpers/debouncer_helper.dart';
 import '../../../core/core.dart';
 import '../../../core/injector/injector.dart';
+import '../../shared/presentation/cubit/pin/pin_cubit.dart';
+import '../../wallet/data/model/wallet_model.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import 'cubit/send_token_cubit.dart';
@@ -40,6 +42,7 @@ class _SendTokenPageState extends State<SendTokenPage> {
   double turns = 0.0;
 
   int _countdown = 5;
+  int networkFee = 0;
   late Timer _timer;
 
   void toggleShowTransactionDetails() {
@@ -59,6 +62,28 @@ class _SendTokenPageState extends State<SendTokenPage> {
         }
       });
     });
+  }
+
+  void confirmSendToken({WalletModel? walletData, int? networkFee}) async {
+    if (walletData != null) {
+      context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
+      final transactionResult = await BlocProvider.of<SendTokenCubit>(context).sendToken(
+        wallet: walletData,
+        resourcesConsumed: networkFee ?? 0,
+      );
+      if (transactionResult != null) {
+        context.hideFullScreenLoading;
+        navigationService.pushAndPopUntil(
+          ReceiptRoute(
+            data: transactionResult,
+          ),
+          predicate: (p0) => false,
+        );
+      } else {
+        context.hideFullScreenLoading;
+        toastHelper.showError('Transaction reverted, please try again');
+      }
+    }
   }
 
   @override
@@ -232,6 +257,9 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                                             walletAddress: sendTokenState.senderAddress ?? '',
                                                           );
                                                           BlocProvider.of<SendTokenCubit>(context).setCryptoAmount(amount: _amountController.text);
+                                                          if (quotingState is SendTokenQuotingSuccessState) {
+                                                            networkFee = quotingState.networkFee ?? 0;
+                                                          }
                                                         } else {
                                                           BlocProvider.of<SendTokenQuotingCubit>(context).resetQuoting();
                                                         }
@@ -299,6 +327,9 @@ class _SendTokenPageState extends State<SendTokenPage> {
                                               walletAddress: sendTokenState.senderAddress ?? '',
                                             );
                                             BlocProvider.of<SendTokenCubit>(context).setCryptoAmount(amount: _amountController.text);
+                                            if (quotingState is SendTokenQuotingSuccessState) {
+                                              networkFee = quotingState.networkFee ?? 0;
+                                            }
                                           } else {
                                             BlocProvider.of<SendTokenQuotingCubit>(context).resetQuoting();
                                           }
@@ -548,47 +579,49 @@ class _SendTokenPageState extends State<SendTokenPage> {
                             }),
                           ],
                         ),
-                        SlideAction(
-                          height: 50.h,
-                          borderRadius: 16.r,
-                          enabled: _amountController.text.isNotEmpty,
-                          onSubmit: () async {
-                            if (state.wallet != null) {
-                              context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
-                              final transactionResult = await BlocProvider.of<SendTokenCubit>(context).sendToken(
-                                wallet: state.wallet!,
-                                resourcesConsumed: state.freeNetUsage ?? 0,
-                              );
-                              if (transactionResult != null) {
-                                context.hideFullScreenLoading;
-                                navigationService.push(
-                                  ReceiptRoute(
-                                    data: transactionResult,
-                                  ),
-                                );
-                              } else {
-                                context.hideFullScreenLoading;
-                                toastHelper.showError('Transaction reverted, please try again');
+                        BlocListener<PinCubit, PinState>(
+                          listener: (context, pinState) {
+                            if (pinState is CorrectPin) {
+                              // on sending transaction
+                              if (pinState.passedData != 'send-token') {
+                                return;
                               }
+                              confirmSendToken(
+                                networkFee: networkFee,
+                                walletData: state.wallet!,
+                              );
+                              return;
+                            } else if (pinState is PinCreated) {
+                              // on sending transaction
+                              confirmSendToken(
+                                networkFee: networkFee,
+                                walletData: state.wallet!,
+                              );
                             }
-
-                            return null;
                           },
-                          outerColor: UIColors.grey200.withOpacity(0.24),
-                          text: 'Slide to Send',
-                          textColor: UIColors.primary500,
-                          sliderRotate: false,
-                          textStyle: UITypographies.bodyLarge(
-                            context,
-                            fontSize: 17.sp,
-                            color: UIColors.primary500,
-                          ),
-                          innerColor: UIColors.primary500,
-                          animationDuration: const Duration(milliseconds: 300),
-                          sliderButtonIcon: Icon(
-                            CupertinoIcons.chevron_right_2,
-                            size: 28.w,
-                            color: UIColors.white50,
+                          child: SlideAction(
+                            height: 50.h,
+                            borderRadius: 16.r,
+                            enabled: _amountController.text.isNotEmpty,
+                            onSubmit: () async {
+                              BlocProvider.of<PinCubit>(context).showPin(passedData: 'send-token');
+                            },
+                            outerColor: UIColors.grey200.withOpacity(0.24),
+                            text: 'Slide to Send',
+                            textColor: UIColors.primary500,
+                            sliderRotate: false,
+                            textStyle: UITypographies.bodyLarge(
+                              context,
+                              fontSize: 17.sp,
+                              color: UIColors.primary500,
+                            ),
+                            innerColor: UIColors.primary500,
+                            animationDuration: const Duration(milliseconds: 300),
+                            sliderButtonIcon: Icon(
+                              CupertinoIcons.chevron_right_2,
+                              size: 28.w,
+                              color: UIColors.white50,
+                            ),
                           ),
                         ),
                       ],
