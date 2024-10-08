@@ -86,7 +86,7 @@ class ActiveWalletCubit extends Cubit<ActiveWalletState> {
 
     final totalBalance = tronAccount?.balance.toString().amountInWeiToToken(
           decimals: 6,
-          fractionDigits: (int.tryParse(tronAccount.balance.toString()) ?? 0) > 1 ? 1 : 4,
+          fractionDigits: (int.tryParse(tronAccount.balance.toString()) ?? 0) > 10 ? 2 : 4,
         );
     final tronPriceInFiat = await tronCoreRepository.getTokenInFiat(tokenBalance: double.tryParse(totalBalance ?? '0') ?? 0);
 
@@ -123,7 +123,7 @@ class ActiveWalletCubit extends Cubit<ActiveWalletState> {
 
     final totalBalance = tronAccount?.balance.toString().amountInWeiToToken(
           decimals: 6,
-          fractionDigits: (int.tryParse(tronAccount.balance.toString()) ?? 0) > 1 ? 1 : 4,
+          fractionDigits: (int.tryParse(tronAccount.balance.toString()) ?? 0) > 10 ? 2 : 4,
         );
     final tronPriceInFiat = await tronCoreRepository.getTokenInFiat(tokenBalance: double.tryParse(totalBalance ?? '0') ?? 0);
     walletCore.updateWalletData(

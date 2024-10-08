@@ -10,6 +10,7 @@ import '../../features/buy_ticket/presentation/select_ticket_page.dart';
 import '../../features/home/data/model/response/get_detail_event_response.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/my_wallet/presentation/my_wallet_page.dart';
+import '../../features/notification/presentation/notification_page.dart';
 import '../../features/on_boarding/on_boarding_page.dart';
 import '../../features/receive/presentation/receive_page.dart';
 import '../../features/send/presentation/select_recipient_page.dart';
@@ -17,6 +18,7 @@ import '../../features/send/presentation/send_page.dart';
 import '../../features/send/presentation/send_ticket_page.dart';
 import '../../features/send/presentation/send_token_page.dart';
 import '../../features/shared/data/model/transaction_model.dart';
+import '../../features/shared/presentation/add_more_wallet_page.dart';
 import '../../features/shared/presentation/dashboard_page.dart';
 import '../../features/shared/presentation/receipt/receipt_page.dart';
 import '../../features/wallet/data/model/wallet_model.dart';
@@ -80,6 +82,12 @@ class AppRouter extends RootStackRouter {
         ),
         CupertinoRoute(
           page: ConfirmBuyTicketRoute.page,
+        ),
+        CupertinoRoute(
+          page: AddMoreWalletRoute.page,
+        ),
+        CupertinoRoute(
+          page: NotificationRoute.page,
         ),
         CupertinoRoute(
           page: DashboardRoute.page,

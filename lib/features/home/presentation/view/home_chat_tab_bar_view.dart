@@ -489,7 +489,7 @@ class _ChatBubbleItem extends StatelessWidget {
                   desc: e.description ?? '',
                   estimatePrice: (e.ticketTypes?.first.price ?? 0).toString().amountInWeiToToken(
                         decimals: 6,
-                        fractionDigits: 0,
+                        fractionDigits: 2,
                       ),
                   onTapDetail: () {
                     navigationService.push(
@@ -525,7 +525,7 @@ class _ChatBubbleItem extends StatelessWidget {
                   desc: e.event?.description ?? '',
                   estimatePrice: (e.event?.ticketTypes?.first.price ?? 0).toString().amountInWeiToToken(
                         decimals: 6,
-                        fractionDigits: 0,
+                        fractionDigits: 2,
                       ),
                   onTapDetail: () {
                     navigationService.push(

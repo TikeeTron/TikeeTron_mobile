@@ -84,7 +84,7 @@ class _SelectTicketPageState extends State<SelectTicketPage> {
                         },
                         price: listTicket?[index].price?.toString().amountInWeiToToken(
                                   decimals: 6,
-                                  fractionDigits: 0,
+                                  fractionDigits: 2,
                                 ) ??
                             '',
                       );

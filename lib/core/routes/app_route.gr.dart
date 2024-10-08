@@ -10,6 +10,25 @@
 part of 'app_route.dart';
 
 /// generated route for
+/// [AddMoreWalletPage]
+class AddMoreWalletRoute extends PageRouteInfo<void> {
+  const AddMoreWalletRoute({List<PageRouteInfo>? children})
+      : super(
+          AddMoreWalletRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AddMoreWalletRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AddMoreWalletPage();
+    },
+  );
+}
+
+/// generated route for
 /// [ConfirmBuyTicketPage]
 class ConfirmBuyTicketRoute extends PageRouteInfo<ConfirmBuyTicketRouteArgs> {
   ConfirmBuyTicketRoute({
@@ -227,6 +246,25 @@ class MyWalletRouteArgs {
   String toString() {
     return 'MyWalletRouteArgs{key: $key, wallet: $wallet}';
   }
+}
+
+/// generated route for
+/// [NotificationPage]
+class NotificationRoute extends PageRouteInfo<void> {
+  const NotificationRoute({List<PageRouteInfo>? children})
+      : super(
+          NotificationRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotificationRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const NotificationPage();
+    },
+  );
 }
 
 /// generated route for
@@ -464,8 +502,7 @@ class SendTokenRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SuccessCreateWalletPage]
-class SuccessCreateWalletRoute
-    extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
+class SuccessCreateWalletRoute extends PageRouteInfo<SuccessCreateWalletRouteArgs> {
   SuccessCreateWalletRoute({
     Key? key,
     required SuccessCreateWalletPageParams params,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../common/common.dart';
 import '../../../../common/components/empty_data/empty_data_widget.dart';
 import '../../../../common/constants/constants.dart';
 import '../../../../common/enum/transaction_type_enum.dart';
@@ -119,34 +121,31 @@ class _WalletActivityTabBarViewState extends State<WalletActivityTabBarView> {
         HapticFeedback.mediumImpact();
         await handleTxHistory();
       },
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        child: ListView.builder(
-          itemCount: txHistory.length,
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          primary: false,
-          itemBuilder: (context, index) {
-            final transaction = txHistory[index];
+      color: UIColors.primary500,
+      child: ListView.builder(
+        itemCount: txHistory.length,
+        padding: EdgeInsets.only(bottom: 100.h),
+        shrinkWrap: true,
+        physics: const RangeMaintainingScrollPhysics(),
+        primary: false,
+        itemBuilder: (context, index) {
+          final transaction = txHistory[index];
 
-            return Padding(
-              padding: EdgeInsets.only(
-                top: 16,
-                bottom: index == txHistory.length - 1 ? 100 : 0,
-              ),
-              child: HistoryTransactionCardWidget(
-                data: transaction,
-                onTap: () {
-                  _onTransaction(
-                    transaction: transaction,
-                  );
-                },
-              ),
-            );
-          },
-        ),
+          return Padding(
+            padding: EdgeInsets.only(
+              top: 16.h,
+              bottom: 0,
+            ),
+            child: HistoryTransactionCardWidget(
+              data: transaction,
+              onTap: () {
+                _onTransaction(
+                  transaction: transaction,
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

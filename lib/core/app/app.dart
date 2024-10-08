@@ -20,7 +20,9 @@ import '../../features/send/presentation/cubit/ticket/send_ticket_cubit.dart';
 import '../../features/send/presentation/cubit/ticket/send_ticket_quoting_cubit.dart';
 import '../../features/shared/presentation/cubit/dashboard_cubit.dart';
 import '../../features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart';
+import '../../features/shared/presentation/cubit/pin/pin_cubit.dart';
 import '../../features/shared/presentation/loading_page.dart';
+import '../../features/shared/presentation/pin_page.dart';
 import '../../features/wallet/data/repositories/source/local/wallet_local_repository.dart';
 import '../../features/wallet/presentation/create_wallet/cubit/create_wallet_cubit.dart';
 import '../../features/wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
@@ -96,6 +98,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => locator<SendTicketQuotingCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => locator<PinCubit>(),
         ),
       ],
       child: _AppView(
@@ -230,6 +235,20 @@ class __AppViewState extends State<_AppView> {
                           return const LoadingPage(
                             opacity: 0,
                           );
+                        },
+                      ),
+                      BlocBuilder<PinCubit, PinState>(
+                        builder: (context, state) {
+                          if (state is ShowPin) {
+                            return PinPage(
+                              passedData: state.passedData,
+                              noCancel: state.noCancel,
+                              isSetBiometric: state.isSetBiometric,
+                              initShowBiometric: state.initShowBiometric,
+                            );
+                          }
+
+                          return const SizedBox.shrink();
                         },
                       ),
                     ],

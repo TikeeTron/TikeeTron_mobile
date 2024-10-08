@@ -147,11 +147,13 @@ class ReceiptPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          navigationService.pushAndPopUntil(
-            const DashboardRoute(),
-            predicate: (p0) => true,
-          );
+        if (!navigationService.canPop) {
+          if (didPop) {
+            navigationService.pushAndPopUntil(
+              const DashboardRoute(),
+              predicate: (p0) => true,
+            );
+          }
         }
       },
       child: CupertinoPageScaffold(
@@ -167,10 +169,14 @@ class ReceiptPage extends StatelessWidget {
           ),
           leading: BounceTap(
             onTap: () {
-              navigationService.pushAndPopUntil(
-                const DashboardRoute(),
-                predicate: (p0) => true,
-              );
+              if (!navigationService.canPop) {
+                navigationService.pushAndPopUntil(
+                  const DashboardRoute(),
+                  predicate: (p0) => true,
+                );
+              } else {
+                navigationService.maybePop();
+              }
             },
             child: Container(
               padding: EdgeInsets.all(12.w),

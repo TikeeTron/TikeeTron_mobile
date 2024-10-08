@@ -53,7 +53,7 @@ class ConfirmBuyTicketCubit extends Cubit<ConfirmBuyTicketState> {
           date: formatDateTime(DateTime.now()),
           amount: ticketPrice.toString().amountInWeiToToken(
                 decimals: 6,
-                fractionDigits: 0,
+                fractionDigits: 2,
               ),
           txId: sendTransactionResult,
           transactionStatus: TransactionStateEnum.success,

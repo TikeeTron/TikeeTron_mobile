@@ -62,7 +62,7 @@ class SendTicketCubit extends Cubit<SendTicketState> {
           date: formatDateTime(DateTime.now()),
           amount: ticketDetails?.price.toString().amountInWeiToToken(
                 decimals: 6,
-                fractionDigits: 0,
+                fractionDigits: 2,
               ),
           txId: sendTransactionResult,
           transactionStatus: TransactionStateEnum.success,

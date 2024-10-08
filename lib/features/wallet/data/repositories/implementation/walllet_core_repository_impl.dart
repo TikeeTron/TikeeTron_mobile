@@ -1,4 +1,5 @@
 import 'package:blockchain_utils/blockchain_utils.dart' as block;
+import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -81,7 +82,7 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
     try {
       // generate mnemonic
       final mnemonic = await generateMnemonic(
-        length: 24,
+        length: 12,
       );
 
       // encrypt mnemonic
@@ -520,26 +521,26 @@ class WallletCoreRepositoryImpl implements WalletCoreRepository {
     BlockchainNetwork? blockchain,
   }) {
     final wallets = getWallets();
-    if (wallets.isNullOrEmpty) {
+    if (wallets.isEmpty) {
       return null;
     }
     Logger.info('_getWalletDetailByAddress params: $address');
-    final result = wallets.firstWhere((element) {
-      // check if address is in token list
-      for (final wallet in element.addresses!) {
-        if (wallet.address!.toLowerCase() == address?.toLowerCase()) {
-          if (wallet.blockchain != null) {
-            if (wallet.blockchain == blockchain) {
-              return true;
-            }
-          } else {
+    final result = wallets.firstWhereOrNull(
+      (element) {
+        Logger.info('_getWalletDetailByAddress Element: ${element.addresses}');
+        if (element.addresses.isNullOrEmpty) {
+          return false;
+        }
+        // check if address is in token list
+        for (final wallet in element.addresses!) {
+          if (wallet.address!.toLowerCase() == address?.toLowerCase()) {
             return true;
           }
         }
-      }
 
-      return false;
-    });
+        return false;
+      },
+    );
     return result;
   }
 

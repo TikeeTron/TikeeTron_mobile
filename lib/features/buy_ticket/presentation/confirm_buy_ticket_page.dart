@@ -179,7 +179,7 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
                           onTap: () {},
                           price: widget.selectedTicket.price?.toString().amountInWeiToToken(
                                     decimals: 6,
-                                    fractionDigits: 1,
+                                    fractionDigits: 2,
                                   ) ??
                               '',
                         ),

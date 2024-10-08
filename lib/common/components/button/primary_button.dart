@@ -18,6 +18,7 @@ class UIPrimaryButton extends StatelessWidget {
     this.borderRadius,
     this.padding,
     this.textStyle,
+    this.backgroundColor,
   })  : variant = UIButtonVariant.main,
         icon = null;
 
@@ -30,6 +31,7 @@ class UIPrimaryButton extends StatelessWidget {
     this.borderRadius,
     this.padding,
     this.textStyle,
+    this.backgroundColor,
   })  : variant = UIButtonVariant.iconOnly,
         text = null,
         leftIcon = null,
@@ -45,7 +47,7 @@ class UIPrimaryButton extends StatelessWidget {
   final BorderRadius? borderRadius;
   final EdgeInsets? padding;
   final TextStyle? textStyle;
-
+  final Color? backgroundColor;
   final bool isLoading;
 
   bool get isIconOnly => variant == UIButtonVariant.iconOnly;
@@ -66,6 +68,7 @@ class UIPrimaryButton extends StatelessWidget {
             borderRadius: borderRadius ?? size.radius,
           ),
         ),
+        backgroundColor: backgroundColor != null ? WidgetStatePropertyAll(backgroundColor) : null,
         textStyle: WidgetStateProperty.resolveWith((states) {
           final baseStyle = textStyle ?? size.textStyle(context);
           if (states.contains(WidgetState.disabled)) {

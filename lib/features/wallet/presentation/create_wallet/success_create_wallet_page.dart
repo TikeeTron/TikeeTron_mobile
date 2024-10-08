@@ -12,7 +12,9 @@ import '../../../../common/utils/extensions/object_parsing.dart';
 import '../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../core/injector/locator.dart';
 import '../../../../core/routes/app_route.dart';
+import '../../../shared/presentation/cubit/pin/pin_cubit.dart';
 import '../../data/model/wallet_model.dart';
+import '../../data/repositories/source/local/account_local_repository.dart';
 import '../../domain/repository/wallet_core_repository.dart';
 import '../cubit/active_wallet/active_wallet_cubit.dart';
 import '../cubit/wallets/wallets_cubit.dart';
@@ -43,12 +45,11 @@ class _SuccessCreateWalletPageState extends State<SuccessCreateWalletPage> {
 
   @override
   void initState() {
-    // final watchlistBloc = BlocProvider.of<WatchlistBloc>(context);
-    // final Map<String, dynamic> defaultParam = {
-    //   "limit": ConstantConfig.tokenWatchlistLimitPerPage,
-    //   "sortBy": "-usd_market_cap",
-    // };
-    // watchlistBloc.add(GetWatchlists(params: defaultParam));
+    final accountRepository = locator<AccountLocalRepository>();
+    final haveAppLock = accountRepository.getUserPin();
+    if (haveAppLock.isNotEmpty) {
+      _onGetStarted();
+    }
     super.initState();
   }
 
@@ -78,7 +79,11 @@ class _SuccessCreateWalletPageState extends State<SuccessCreateWalletPage> {
               const Spacer(),
               UIPrimaryButton(
                 text: 'Use Pin Code',
-                onPressed: () {},
+                size: UIButtonSize.large,
+                onPressed: () async {
+                  BlocProvider.of<PinCubit>(context).checkLocalAuth();
+                  await _onGetStarted();
+                },
               ),
               SizedBox(height: 10.h),
               UIFadeButton(
@@ -106,7 +111,7 @@ class _SuccessCreateWalletPageState extends State<SuccessCreateWalletPage> {
 
   Future<void> _onGetStarted() async {
     try {
-      context.showFullScreenLoadingWithMessage('Creating Your Wallet', 'please wait a second');
+      context.showFullScreenLoadingWithMessage('Creating Your Wallet', '');
       // if wallet type not cold, save wallet to local
       await _onSaveWallets();
 

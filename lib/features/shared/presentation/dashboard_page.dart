@@ -129,10 +129,7 @@ class _SideMenuWidget extends StatelessWidget {
                     final confirm = await ModalHelper.showModalBottomSheet(
                       context,
                       padding: EdgeInsets.zero,
-                      child: const ConfirmationAlertWidget(
-                        title: "Are you sure?",
-                        description: "Your current Wallet will be deleted from this device.",
-                      ),
+                      child: const ConfirmationAlertWidget(),
                     );
                     if (confirm) {
                       // get wallet address

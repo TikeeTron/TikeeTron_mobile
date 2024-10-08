@@ -9,11 +9,12 @@ import '../../../common/common.dart';
 import '../../../common/components/app_bar/scaffold_app_bar.dart';
 import '../../../common/components/button/bounce_tap.dart';
 import '../../../common/components/container/rounded_container.dart';
+import '../../../core/core.dart';
 import '../../../core/injector/injector.dart';
-import '../../shared/presentation/cubit/cubit.dart';
 import '../../shared/presentation/loading_page.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
+import '../../wallet/presentation/cubit/wallets/wallets_cubit.dart';
 import 'cubit/get_list_event_cubit.dart';
 import 'cubit/get_list_user_ticket_cubit.dart';
 import 'view/home_chat_tab_bar_view.dart';
@@ -113,17 +114,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            trailing: Icon(
-              CupertinoIcons.bell_solid,
-              color: UIColors.white50,
-              size: 22.w,
+            trailing: BounceTap(
+              onTap: () => navigationService.push(const NotificationRoute()),
+              child: Icon(
+                CupertinoIcons.bell_solid,
+                color: UIColors.white50,
+                size: 22.w,
+              ),
             ),
             leading: BounceTap(
               onTap: () {
+                final walletsCubit = BlocProvider.of<WalletsCubit>(context);
+                final listWallet = walletsCubit.getWallets();
                 ModalHelper.showModalBottomSheet(
                   context,
                   child: AccountModal(
-                    onAddWallet: () {},
+                    onAddWallet: () {
+                      navigationService.push(const AddMoreWalletRoute());
+                    },
+                    listWallet: listWallet,
+                    activeWallet: state.wallet!,
                   ),
                   isHasCloseButton: false,
                   padding: EdgeInsets.zero,

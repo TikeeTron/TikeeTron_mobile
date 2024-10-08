@@ -76,6 +76,9 @@ dependencies:
   cupertino_calendar_picker: ^2.0.0+1
   carousel_slider: ^5.0.0
   encrypt: ^5.0.1
+  vibration: ^2.0.0
+  collection: ^1.18.0
+  local_auth: ^2.3.0
   package_info_plus: ^8.0.2
   blockies: ^0.1.2
   url_launcher: ^6.3.0

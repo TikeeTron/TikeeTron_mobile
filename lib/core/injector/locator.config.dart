@@ -72,6 +72,8 @@ import 'package:tikeetron_app/features/shared/presentation/cubit/dashboard_cubit
     as _i542;
 import 'package:tikeetron_app/features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart'
     as _i80;
+import 'package:tikeetron_app/features/shared/presentation/cubit/pin/pin_cubit.dart'
+    as _i862;
 import 'package:tikeetron_app/features/shared/presentation/cubit/theme_cubit.dart'
     as _i714;
 import 'package:tikeetron_app/features/wallet/data/repositories/implementation/token_core_repository_impl.dart'
@@ -119,6 +121,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i470.TicketRemote>(() => _i470.TicketRemote());
     gh.lazySingleton<_i720.TransactionLocalRepository>(
         () => _i720.TransactionLocalRepository());
+    gh.lazySingleton<_i862.PinCubit>(() => _i862.PinCubit());
     gh.lazySingleton<_i80.FullScreenLoadingCubit>(
         () => _i80.FullScreenLoadingCubit());
     gh.lazySingleton<_i446.TronRemote>(() => _i446.TronRemote());
