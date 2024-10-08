@@ -18,6 +18,7 @@ import 'cubit/get_list_event_cubit.dart';
 import 'cubit/get_list_user_ticket_cubit.dart';
 import 'view/home_chat_tab_bar_view.dart';
 import 'view/home_explore_tab_bar_view.dart';
+import 'widget/account_modal.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -119,7 +120,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             leading: BounceTap(
               onTap: () {
-                context.read<DashboardCubit>().showDrawer();
+                ModalHelper.showModalBottomSheet(
+                  context,
+                  child: AccountModal(
+                    onAddWallet: () {},
+                  ),
+                  isHasCloseButton: false,
+                  padding: EdgeInsets.zero,
+                );
               },
               child: Container(
                 padding: EdgeInsets.all(4.w),

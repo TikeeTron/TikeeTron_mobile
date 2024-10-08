@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/components/button/bounce_tap.dart';
+import '../../../../common/components/empty_data/empty_data_widget.dart';
 import '../../../../common/components/svg/svg_ui.dart';
 import '../../../../common/utils/extensions/string_parsing.dart';
 import '../../../../core/routes/app_route.dart';
@@ -70,20 +71,17 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocBuilder<GetListEventCubit, GetListEventState>(builder: (context, state) {
-        if (state is! GetListEventLoadedState) {
-          return const LoadingPage(opacity: 1);
-        }
-        final listEvent = state.listEvent?.data;
-        return SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: <Widget>[
-                UIGap.size(h: 20.h),
-                HomeWalletWidget(
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: <Widget>[
+              UIGap.size(h: 20.h),
+              Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: HomeWalletWidget(
                   walletBalance: widget.walletData.totalBalance ?? '0',
                   onGoToDetailWallet: () {
                     navigationService.push(
@@ -103,50 +101,53 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                     );
                   },
                 ),
-                UIGap.size(h: 20.h),
-                TabBar(
-                  tabAlignment: TabAlignment.start,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: UIColors.grey500,
-                  controller: _listEventTabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(99),
-                    color: Colors.white,
-                  ),
-                  isScrollable: true,
-                  indicatorWeight: 1,
-                  labelPadding: EdgeInsets.only(right: 10.w),
-                  dividerColor: Colors.transparent,
-                  labelStyle: UITypographies.subtitleLarge(
-                    context,
-                    color: UIColors.black500,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  unselectedLabelStyle: UITypographies.bodyLarge(
-                    context,
-                    color: UIColors.grey500,
-                  ),
-                  tabs: _listHomeTabs
-                      .map(
-                        (e) => Tab(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(99),
-                              border: Border.all(
-                                color: UIColors.white50.withOpacity(0.15),
-                              ),
-                            ),
-                            child: Center(child: Text(e)),
-                          ),
-                        ),
-                      )
-                      .toList(),
+              ),
+              UIGap.size(h: 20.h),
+              TabBar(
+                tabAlignment: TabAlignment.start,
+                labelColor: Colors.black,
+                unselectedLabelColor: UIColors.grey500,
+                controller: _listEventTabController,
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(99),
+                  color: Colors.white,
                 ),
-                UIGap.h20,
-                Row(
+                isScrollable: true,
+                indicatorWeight: 1,
+                labelPadding: EdgeInsets.only(right: 10.w),
+                dividerColor: Colors.transparent,
+                labelStyle: UITypographies.subtitleLarge(
+                  context,
+                  color: UIColors.black500,
+                  fontWeight: FontWeight.w600,
+                ),
+                unselectedLabelStyle: UITypographies.bodyLarge(
+                  context,
+                  color: UIColors.grey500,
+                ),
+                tabs: _listHomeTabs
+                    .map(
+                      (e) => Tab(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(99),
+                            border: Border.all(
+                              color: UIColors.white50.withOpacity(0.15),
+                            ),
+                          ),
+                          child: Center(child: Text(e)),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              UIGap.h20,
+              Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: Row(
                   children: <Widget>[
                     Expanded(
                       child: UITextField(
@@ -211,56 +212,92 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                     ),
                   ],
                 ),
-                UIGap.h20,
-                UIDivider(
+              ),
+              UIGap.h20,
+              Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: UIDivider(
                   color: UIColors.white50.withOpacity(0.15),
                 ),
-                UIGap.h20,
-                Expanded(
-                  child: TabBarView(
+              ),
+              UIGap.h20,
+              Expanded(
+                child: BlocBuilder<GetListEventCubit, GetListEventState>(builder: (context, eventState) {
+                  if (eventState is! GetListEventLoadedState) {
+                    return const LoadingPage(opacity: 1);
+                  }
+                  final listEvent = eventState.listEvent?.data;
+
+                  return TabBarView(
                     controller: _listEventTabController,
+                    physics: const BouncingScrollPhysics(),
                     children: [
                       // My Event View
                       BlocBuilder<GetListUserTicketCubit, GetListUserTicketState>(builder: (context, ticketState) {
                         if (ticketState is! GetListUserTicketLoadedState) {
                           return const LoadingPage(opacity: 1);
                         }
-                        return SingleChildScrollView(
-                          child: Padding(
+                        return RefreshIndicator(
+                          color: UIColors.primary500,
+                          onRefresh: () async {
+                            await BlocProvider.of<GetListUserTicketCubit>(context).getListUserTicket(walletAddress: widget.walletData.addresses?[0].address ?? '');
+                          },
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             padding: EdgeInsets.fromLTRB(
-                              0.w,
+                              8.w,
                               8.h,
-                              0,
+                              8.w,
                               50.h,
                             ),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: List.generate(
-                                  ticketState.listTicket?.data?.length ?? 0,
-                                  (index) {
-                                    final eventData = ticketState.listTicket?.data?[index].event;
-                                    final ticketId = ticketState.listTicket?.data?[index].ticketId;
-                                    final isTicketUsed = ticketState.listTicket?.data?[index].isUsed;
-                                    return EventCardWidget(
-                                      image: eventData?.banner ?? '',
-                                      isTicketUsed: isTicketUsed ?? true,
-                                      onTapDetail: () {},
-                                      onTapMyTicket: () async {
-                                        await ModalHelper.showModalBottomSheet(
-                                          context,
-                                          child: MyTicketQrBottomSheet(
-                                            ticketId: ticketId.toString(),
-                                          ),
-                                          isHasCloseButton: false,
-                                          padding: EdgeInsets.zero,
+                            child: Column(
+                              children: ticketState.listTicket?.data == null || ticketState.listTicket?.data?.length == 0
+                                  ? [
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 20.h),
+                                        child: const EmptyDataWidget(
+                                          image: IconsConst.icEmptyEvent,
+                                          title: 'No upcoming events',
+                                          desc: 'You haven’t purchased any tickets yet. Browse events and book your spot!',
+                                        ),
+                                      ),
+                                    ]
+                                  : List.generate(
+                                      ticketState.listTicket?.data?.length ?? 0,
+                                      (index) {
+                                        final eventData = ticketState.listTicket?.data?[index].event;
+                                        final ticketId = ticketState.listTicket?.data?[index].ticketId;
+                                        final isTicketUsed = ticketState.listTicket?.data?[index].isUsed;
+                                        final ticketType = ticketState.listTicket?.data?[index].type;
+                                        return EventCardWidget(
+                                          image: eventData?.banner ?? '',
+                                          isTicketUsed: isTicketUsed ?? false,
+                                          ticketType: ticketType,
+                                          haveTicket: true,
+                                          onTapDetail: () {
+                                            navigationService.push(
+                                              DetailEventRoute(
+                                                eventData: EventDetailEntity.fromJson(
+                                                  eventData!.toJson(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          onTapMyTicket: () async {
+                                            await ModalHelper.showModalBottomSheet(
+                                              context,
+                                              child: MyTicketQrBottomSheet(
+                                                ticketId: ticketId.toString(),
+                                              ),
+                                              isHasCloseButton: false,
+                                              padding: EdgeInsets.zero,
+                                            );
+                                          },
+                                          title: eventData?.name ?? '',
+                                          desc: eventData?.location ?? '',
                                         );
                                       },
-                                      title: eventData?.name ?? '',
-                                      desc: eventData?.location ?? '',
-                                    );
-                                  },
-                                ),
-                              ),
+                                    ),
                             ),
                           ),
                         );
@@ -272,40 +309,47 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
 
                           final filteredEvents = listEvent?.where((event) => event.category == currentCategory).toList() ?? [];
 
-                          return SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                0.w,
-                                8.h,
-                                0,
-                                50.h,
-                              ),
-                              child: Column(
-                                children: List.generate(
-                                  filteredEvents.length,
-                                  (eventIndex) {
-                                    final event = filteredEvents[eventIndex];
-                                    final lowestPrice = event.ticketTypes?.map((e) => e.price).reduce((value, element) => (element ?? 0) < (value ?? 0) ? element : value);
+                          return RefreshIndicator(
+                            color: UIColors.primary500,
+                            onRefresh: () async {
+                              await BlocProvider.of<GetListEventCubit>(context).getListEvent();
+                            },
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  8.w,
+                                  8.h,
+                                  8.w,
+                                  50.h,
+                                ),
+                                child: Column(
+                                  children: List.generate(
+                                    filteredEvents.length,
+                                    (eventIndex) {
+                                      final event = filteredEvents[eventIndex];
+                                      final lowestPrice = event.ticketTypes?.map((e) => e.price).reduce((value, element) => (element ?? 0) < (value ?? 0) ? element : value);
 
-                                    return EventCardWidget(
-                                      image: event.banner ?? '',
-                                      title: event.name ?? '',
-                                      onTapDetail: () {
-                                        navigationService.push(
-                                          DetailEventRoute(
-                                            eventData: EventDetailEntity.fromJson(
-                                              event.toJson(),
+                                      return EventCardWidget(
+                                        image: event.banner ?? '',
+                                        title: event.name ?? '',
+                                        onTapDetail: () {
+                                          navigationService.push(
+                                            DetailEventRoute(
+                                              eventData: EventDetailEntity.fromJson(
+                                                event.toJson(),
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      estimatePrice: lowestPrice.toString().amountInWeiToToken(
-                                            decimals: 6,
-                                            fractionDigits: (lowestPrice ?? 0) > 1 ? 1 : 4,
-                                          ),
-                                      desc: event.location ?? '',
-                                    );
-                                  },
+                                          );
+                                        },
+                                        estimatePrice: lowestPrice.toString().amountInWeiToToken(
+                                              decimals: 6,
+                                              fractionDigits: (lowestPrice ?? 0) > 1 ? 1 : 4,
+                                            ),
+                                        desc: event.location ?? '',
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
@@ -313,14 +357,14 @@ class _HomeExploreTabBarViewState extends State<HomeExploreTabBarView> with Tick
                         },
                       ),
                     ],
-                  ),
-                ),
-                UIGap.size(h: 100.h),
-              ],
-            ),
+                  );
+                }),
+              ),
+              UIGap.size(h: 100.h),
+            ],
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }

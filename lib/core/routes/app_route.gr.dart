@@ -426,17 +426,10 @@ class SendRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SendTicketPage]
-class SendTicketRoute extends PageRouteInfo<SendTicketRouteArgs> {
-  SendTicketRoute({
-    Key? key,
-    required String walletAddress,
-    List<PageRouteInfo>? children,
-  }) : super(
+class SendTicketRoute extends PageRouteInfo<void> {
+  const SendTicketRoute({List<PageRouteInfo>? children})
+      : super(
           SendTicketRoute.name,
-          args: SendTicketRouteArgs(
-            key: key,
-            walletAddress: walletAddress,
-          ),
           initialChildren: children,
         );
 
@@ -445,29 +438,9 @@ class SendTicketRoute extends PageRouteInfo<SendTicketRouteArgs> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<SendTicketRouteArgs>();
-      return SendTicketPage(
-        key: args.key,
-        walletAddress: args.walletAddress,
-      );
+      return const SendTicketPage();
     },
   );
-}
-
-class SendTicketRouteArgs {
-  const SendTicketRouteArgs({
-    this.key,
-    required this.walletAddress,
-  });
-
-  final Key? key;
-
-  final String walletAddress;
-
-  @override
-  String toString() {
-    return 'SendTicketRouteArgs{key: $key, walletAddress: $walletAddress}';
-  }
 }
 
 /// generated route for

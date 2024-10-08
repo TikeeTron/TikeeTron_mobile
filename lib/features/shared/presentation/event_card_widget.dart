@@ -11,6 +11,8 @@ class EventCardWidget extends StatelessWidget {
   final String? estimatePrice;
   final String desc;
   final bool isTicketUsed;
+  final String? ticketType;
+  final bool haveTicket;
   final void Function()? onTapDetail;
   final void Function()? onTapMyTicket;
   final double? width;
@@ -25,6 +27,8 @@ class EventCardWidget extends StatelessWidget {
     this.onTapDetail,
     this.onTapMyTicket,
     this.width,
+    this.ticketType,
+    this.haveTicket = false,
   });
 
   @override
@@ -44,12 +48,34 @@ class EventCardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                UINetworkImage(
-                  url: image,
-                  width: double.infinity,
-                  height: 140.h,
-                  fit: BoxFit.cover,
-                  borderRadius: BorderRadius.circular(10.r),
+                Stack(
+                  children: [
+                    UINetworkImage(
+                      url: image,
+                      width: double.infinity,
+                      height: 140.h,
+                      fit: BoxFit.cover,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    Visibility(
+                      visible: haveTicket,
+                      child: Positioned(
+                        left: 12,
+                        top: 12,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          decoration: BoxDecoration(
+                            color: UIColors.primary600,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            ticketType ?? '',
+                            style: UITypographies.subtitleLarge(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 8.h),
@@ -76,7 +102,7 @@ class EventCardWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                !isTicketUsed
+                haveTicket
                     ? Padding(
                         padding: EdgeInsets.fromLTRB(
                           12.w,
@@ -87,17 +113,19 @@ class EventCardWidget extends StatelessWidget {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: UIPrimaryButton(
-                            text: 'My Ticket',
+                            text: isTicketUsed ? 'Already Used' : 'My Ticket',
                             textStyle: UITypographies.bodyLarge(context),
                             size: UIButtonSize.medium,
-                            leftIcon: SvgUI(
-                              IconsConst.qrCode,
-                              color: UIColors.white50,
-                              width: 32.w,
-                              height: 32.w,
-                            ),
+                            leftIcon: isTicketUsed
+                                ? null
+                                : SvgUI(
+                                    IconsConst.qrCode,
+                                    color: UIColors.white50,
+                                    width: 32.w,
+                                    height: 32.w,
+                                  ),
                             borderRadius: BorderRadius.circular(12.r),
-                            onPressed: onTapMyTicket,
+                            onPressed: isTicketUsed ? null : onTapMyTicket,
                           ),
                         ),
                       )

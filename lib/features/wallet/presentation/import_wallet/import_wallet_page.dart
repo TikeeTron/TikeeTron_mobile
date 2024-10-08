@@ -65,7 +65,7 @@ class _ImportWalletPageState extends State<ImportWalletPage> {
                           style: UITypographies.h4(context),
                         ),
                       ),
-                      ScanQrBottomSheet(),
+                      const ScanQrBottomSheet(),
                     ],
                   ),
                 ),

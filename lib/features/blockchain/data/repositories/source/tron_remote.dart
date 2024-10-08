@@ -1,17 +1,20 @@
 import 'package:blockchain_utils/blockchain_utils.dart' as blockUtils;
 import 'package:blockchain_utils/hex/hex.dart' as hex;
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:on_chain/on_chain.dart';
 
 import '../../../../../common/config/contract_config.dart';
 import '../../../../../common/dio/api.config.dart';
+import '../../../../../common/dio/rpc_service.dart';
 import '../../../../../common/dio/tron_provider.dart';
 import '../../../../../common/utils/extensions/dynamic_parsing.dart';
 import '../../../../../common/utils/helpers/logger_helper.dart';
 import '../../../../../common/utils/wallet_util.dart';
 import '../../../../../core/adapters/blockchain_network_adapter.dart';
 import '../../../../../core/injector/injector.dart';
+import '../../../../home/data/model/request/snyc_ticket_request.dart';
 import '../../../../wallet/data/model/wallet_model.dart';
 import '../../models/tron_transaction_info_model.dart';
 
@@ -87,25 +90,25 @@ class TronRemote {
       ),
     );
 
-    /// An error has occurred with the request, and we need to investigate the issue to determine what is happening.
+    // An error has occurred with the request, and we need to investigate the issue to determine what is happening.
     if (!request.isSuccess) {
       Logger.error('${request.error ?? request.respose}');
       return null;
     }
 
-    /// get transactionRaw from response and make sure sed fee limit
+    // get transactionRaw from response and make sure sed fee limit
     final rawTr = request.transactionRaw!.copyWith(feeLimit: BigInt.from(10000000));
 
-    /// get transaaction digest and sign with private key
+    // get transaaction digest and sign with private key
     final sign = privateKey.tronPrivateKey?.sign(rawTr.toBuffer());
 
-    /// create transaction object and add raw data and signature to this
+    // create transaction object and add raw data and signature to this
     final transaction = Transaction(rawData: rawTr, signature: [sign!]);
 
-    /// get raw data buffer
+    // get raw data buffer
     final raw = blockUtils.BytesUtils.toHexString(transaction.toBuffer());
 
-    /// send transaction to network
+    // send transaction to network
     final tx = await rpc.request(TronRequestBroadcastHex(transaction: raw));
     Logger.info('Send transaction success result: ${tx.respose}, txid: ${tx.txId}');
 
@@ -116,7 +119,7 @@ class TronRemote {
     required String walletAddress,
     required String targetAddress,
   }) async {
-    Logger.info('calculate transaction params: sender address: $walletAddress, wallet address: $targetAddress');
+    Logger.info('calculate transaction params: sender address: $walletAddress, target address: $targetAddress');
     // Define the receiving Tron address for the transaction.
     final receiverAddress = TronAddress(targetAddress);
     final ownerAddress = TronAddress(walletAddress);
@@ -134,7 +137,7 @@ class TronRemote {
       ),
     );
 
-    /// An error has occurred with the request, and we need to investigate the issue to determine what is happening.
+    // An error has occurred with the request, and we need to investigate the issue to determine what is happening.
     if (!request.isSuccess) {
       Logger.error('${request.error ?? request.respose}');
       return null;
@@ -166,13 +169,32 @@ class TronRemote {
     required String walletAddress,
     required int eventId,
     required WalletModel wallet,
+    required String accessToken,
   }) async {
-    Logger.info('Buy Ticket Params: ticket type: $ticketType, ticket price $ticketPrice, wallet address: $walletAddress');
-    final contractAddress = TronAddress("TWzCBP5F8eJhivp5Utb8cGPFjV31BQaVyd");
+    Logger.info('Buy Ticket Params: ticket type: $ticketType, ticket price $ticketPrice, wallet address: $walletAddress, eventID: $eventId');
+
+    final formData = FormData.fromMap({
+      'ticketType': ticketType,
+      'price': ticketPrice,
+      'eventId': eventId,
+      'type': 'ticket',
+    });
+
+    final ipfsUrl = await AppApi(
+      version: 1,
+    ).post(
+      '/ipfs',
+      body: formData,
+      options: Options(headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'multipart/form-data',
+      }),
+    );
+    final contractAddress = TronAddress("TMogKdMHLtPbmQRb9WckmbveGqZhyrqCyw");
     final ownerAddress = TronAddress(walletAddress);
     final transferparams = [
       BigInt.from(eventId),
-      'https://ipfs.io/ipfs/QmepnwHTw8Kd2ApijfeBDvFzXQBnBoFetz6i5Mrof2S3bH/0',
+      ipfsUrl['data'] ?? '',
       ticketType,
     ];
 
@@ -189,7 +211,7 @@ class TronRemote {
       orElse: () => throw Exception('Function not found in ABI'),
     );
     Logger.info('Abi Config $abiFunctionJson');
-    final trc20Transfer = AbiFunctionFragment.fromJson(
+    final nftPayment = AbiFunctionFragment.fromJson(
       abiFunctionJson,
     );
 
@@ -198,7 +220,7 @@ class TronRemote {
         ownerAddress: ownerAddress,
         callValue: BigInt.tryParse(ticketPrice.toString()) ?? BigInt.zero,
         contractAddress: contractAddress,
-        data: trc20Transfer.encodeHex(transferparams),
+        data: nftPayment.encodeHex(transferparams),
       ),
     );
     if (!request.isSuccess) {
@@ -206,37 +228,140 @@ class TronRemote {
       return null;
     }
 
-    final contract = TriggerSmartContract(
-      ownerAddress: ownerAddress,
-      contractAddress: contractAddress,
-      callValue: BigInt.tryParse(ticketPrice.toString()) ?? BigInt.zero,
-      data: trc20Transfer.encode(transferparams),
-    );
-    final expireTime = DateTime.now().toUtc().add(const Duration(hours: 24));
-
-    final parameter = Any(typeUrl: contract.typeURL, value: contract);
-    final transactionContract = TransactionContract(type: contract.contractType, parameter: parameter);
-    TransactionRaw rawTr = TransactionRaw(
+    final rawTrReq = request.transactionRaw!.copyWith(
+      feeLimit: TronHelper.toSun("275"),
       refBlockBytes: block.blockHeader.rawData.refBlockBytes,
       refBlockHash: block.blockHeader.rawData.refBlockHash,
-      expiration: BigInt.from(expireTime.millisecondsSinceEpoch),
-      feeLimit: BigInt.from(200000000),
-      contract: [transactionContract],
-      timestamp: block.blockHeader.rawData.timestamp,
     );
 
-    /// get transaaction digest and sign with private key
-    final sign = privateKey.tronPrivateKey?.sign(rawTr.toBuffer());
+    // get transaaction digest and sign with private key
+    final sign = privateKey.tronPrivateKey?.sign(rawTrReq.toBuffer());
 
-    /// create transaction object and add raw data and signature to this
-    final transaction = Transaction(rawData: rawTr, signature: [sign!]);
+    // create transaction object and add raw data and signature to this
+    final transaction = Transaction(rawData: rawTrReq, signature: [sign!]);
 
-    /// get raw data buffer
+    // get raw data buffer
     final raw = blockUtils.BytesUtils.toHexString(transaction.toBuffer());
 
-    /// send transaction to network
+    // send transaction to network
     final tx = await rpc.request(TronRequestBroadcastHex(transaction: raw));
+
+    final contract = ContractABI.fromJson(ContractConfig.abi);
+    final rpcHttp = EVMRPC(RPCHttpService("https://api.shasta.trongrid.io/jsonrpc"));
+    final callGetTicketId = await rpcHttp.request(
+      RPCCall.fromMethod(
+        contractAddress: contractAddress.toAddress(false),
+        function: contract.functionFromName("_ticketId"),
+        params: [],
+      ),
+    );
+
+    Logger.info('CALL GET TICKET ID ${callGetTicketId[0]}');
+
+    // snyc ticket data to backend
+    await AppApi(
+      version: 1,
+    ).post(
+      '/tickets',
+      body: SyncTicketRequest(
+        buyerAddress: walletAddress,
+        eventId: eventId,
+        metadataUrl: ipfsUrl['data'],
+        price: ticketPrice,
+        ticketId: int.tryParse(callGetTicketId[0].toString()) ?? 0,
+        type: ticketType,
+      ).toJson(),
+      options: Options(headers: {
+        'Authorization': 'Bearer $accessToken',
+      }),
+    );
     Logger.info('buy ticket success result: ${tx.respose}, txid: ${tx.txId}');
+
+    return tx.txId;
+  }
+
+  Future<String?> sendTicket({
+    required String walletAddress,
+    required String targetAddress,
+    required String accessToken,
+    required int ticketId,
+    required int ticketPrice,
+    required WalletModel wallet,
+    required bool isTicketUsed,
+  }) async {
+    Logger.info('Buy Ticket Params: wallet address: $walletAddress');
+    final contractAddress = TronAddress("TMogKdMHLtPbmQRb9WckmbveGqZhyrqCyw");
+    final ownerAddress = TronAddress(walletAddress);
+    final toAddress = TronAddress(targetAddress);
+
+    final transferparams = [
+      ownerAddress,
+      toAddress,
+      BigInt.from(ticketId),
+    ];
+
+    final seed = DynamicParsing(wallet.seed).privateKeyDecrypt;
+    final privateKey = await locator<WalletUtils>().extractPrivateKeyFromSeed(
+      mnemonic: blockUtils.Mnemonic.fromString(seed ?? ''),
+      blockchain: BlockchainNetwork.tron,
+    );
+
+    final block = await rpc.request(TronRequestGetNowBlock());
+
+    final abiFunctionJson = ContractConfig.abi.firstWhere(
+      (element) => element['name'] == 'safeTransferFrom',
+      orElse: () => throw Exception('Function not found in ABI'),
+    );
+    Logger.info('Abi Config $abiFunctionJson');
+    final sendNftContract = AbiFunctionFragment.fromJson(
+      abiFunctionJson,
+    );
+
+    final request = await rpc.request(
+      TronRequestTriggerConstantContract(
+        ownerAddress: ownerAddress,
+        contractAddress: contractAddress,
+        data: sendNftContract.encodeHex(transferparams),
+      ),
+    );
+    if (!request.isSuccess) {
+      Logger.error("${request.error} \n ${request.respose}");
+      return null;
+    }
+
+    final rawTrReq = request.transactionRaw!.copyWith(
+      feeLimit: TronHelper.toSun("275"),
+      refBlockBytes: block.blockHeader.rawData.refBlockBytes,
+      refBlockHash: block.blockHeader.rawData.refBlockHash,
+    );
+
+    // get transaaction digest and sign with private key
+    final sign = privateKey.tronPrivateKey?.sign(rawTrReq.toBuffer());
+
+    // create transaction object and add raw data and signature to this
+    final transaction = Transaction(rawData: rawTrReq, signature: [sign!]);
+
+    // get raw data buffer
+    final raw = blockUtils.BytesUtils.toHexString(transaction.toBuffer());
+
+    // send transaction to network
+    final tx = await rpc.request(TronRequestBroadcastHex(transaction: raw));
+
+    // Snyc data with backend
+    await AppApi(
+      version: 1,
+    ).patch(
+      '/tickets/$ticketId',
+      body: {
+        'buyerAddress': targetAddress,
+        'price': ticketPrice,
+        'isUsed': isTicketUsed,
+      },
+      options: Options(headers: {
+        'Authorization': 'Bearer $accessToken',
+      }),
+    );
+    Logger.info('send ticket success result: ${tx.respose}, txid: ${tx.txId}');
 
     return tx.txId;
   }

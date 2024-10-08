@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/common.dart';
@@ -9,6 +10,9 @@ import '../../../common/components/button/bounce_tap.dart';
 import '../../../common/config/padding_config.dart';
 import '../../../common/enum/send_type_enum.dart';
 import '../../../core/core.dart';
+import '../../home/presentation/cubit/get_list_user_ticket_cubit.dart';
+import '../../shared/presentation/loading_page.dart';
+import 'cubit/ticket/send_ticket_cubit.dart';
 import 'widget/send_item_widget.dart';
 
 @RoutePage()
@@ -77,47 +81,36 @@ class SendPage extends StatelessWidget {
                 style: UITypographies.subtitleLarge(context),
               ),
               UIGap.h16,
-              SendItemWidget(
-                icon: SvgConst.icTicket,
-                title: '2 Ticket Available',
-                subtitle: 'Ed Sheeran Live at Madison Square Garden',
-                onTap: () {
-                  navigationService.push(
-                    SelectRecipientRoute(
-                      sendType: SendTypeEnum.ticket,
-                    ),
-                  );
-                },
-                iconSize: 20,
-              ),
-              UIGap.h12,
-              SendItemWidget(
-                icon: SvgConst.icTicket,
-                title: '2 Ticket Available',
-                subtitle: 'Ed Sheeran Live at Madison Square Garden',
-                onTap: () {
-                  navigationService.push(
-                    SelectRecipientRoute(
-                      sendType: SendTypeEnum.ticket,
-                    ),
-                  );
-                },
-                iconSize: 20,
-              ),
-              UIGap.h12,
-              SendItemWidget(
-                icon: SvgConst.icTicket,
-                title: '2 Ticket Available',
-                subtitle: 'Ed Sheeran Live at Madison Square Garden',
-                onTap: () {
-                  navigationService.push(
-                    SelectRecipientRoute(
-                      sendType: SendTypeEnum.ticket,
-                    ),
-                  );
-                },
-                iconSize: 20,
-              ),
+              BlocBuilder<GetListUserTicketCubit, GetListUserTicketState>(builder: (context, ticketState) {
+                if (ticketState is! GetListUserTicketLoadedState) {
+                  return const LoadingPage(opacity: 1);
+                }
+                return Column(
+                  children: List.generate(
+                    ticketState.listTicket?.data?.length ?? 0,
+                    (index) {
+                      final ticketData = ticketState.listTicket?.data?[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 16.h),
+                        child: SendItemWidget(
+                          icon: SvgConst.icTicket,
+                          title: ticketData?.type ?? '',
+                          subtitle: ticketData?.event?.name ?? '',
+                          onTap: () {
+                            BlocProvider.of<SendTicketCubit>(context).setSelectedTicket(ticket: ticketData!);
+                            navigationService.push(
+                              SelectRecipientRoute(
+                                sendType: SendTypeEnum.ticket,
+                              ),
+                            );
+                          },
+                          iconSize: 20,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }),
             ],
           ),
         ),

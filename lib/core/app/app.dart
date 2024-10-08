@@ -16,6 +16,8 @@ import '../../features/home/presentation/cubit/get_list_event_cubit.dart';
 import '../../features/home/presentation/cubit/get_list_user_ticket_cubit.dart';
 import '../../features/send/presentation/cubit/send_token_cubit.dart';
 import '../../features/send/presentation/cubit/send_token_quoting_cubit.dart';
+import '../../features/send/presentation/cubit/ticket/send_ticket_cubit.dart';
+import '../../features/send/presentation/cubit/ticket/send_ticket_quoting_cubit.dart';
 import '../../features/shared/presentation/cubit/dashboard_cubit.dart';
 import '../../features/shared/presentation/cubit/loading/fullscreen_loading_cubit.dart';
 import '../../features/shared/presentation/loading_page.dart';
@@ -88,6 +90,12 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => locator<BuyTicketQuotingCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<SendTicketCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => locator<SendTicketQuotingCubit>(),
         ),
       ],
       child: _AppView(

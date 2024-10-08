@@ -146,7 +146,7 @@ class _SideMenuWidget extends StatelessWidget {
                         walletIndex: state.walletIndex ?? 0,
                         walletAddress: walletAddress,
                       );
-
+                      context.read<DashboardCubit>().hideDrawer();
                       navigationService.pushAndPopUntil(
                         const OnBoardingRoute(),
                         predicate: (p0) => false,

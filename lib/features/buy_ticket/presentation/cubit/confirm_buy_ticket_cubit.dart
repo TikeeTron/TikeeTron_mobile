@@ -6,6 +6,7 @@ import '../../../../common/enum/asset_type_enum.dart';
 import '../../../../common/enum/transaction_state_enum.dart';
 import '../../../../common/enum/transaction_type_enum.dart';
 import '../../../../common/utils/extensions/object_parsing.dart';
+import '../../../../common/utils/extensions/string_parsing.dart';
 import '../../../../common/utils/helpers/format_date_helper.dart';
 import '../../../../common/utils/helpers/safe_emit_helper.dart';
 import '../../../blockchain/domain/repository/tron_core_repository.dart';
@@ -43,14 +44,17 @@ class ConfirmBuyTicketCubit extends Cubit<ConfirmBuyTicketState> {
       // insert transaction history
       if (sendTransactionResult != null) {
         final transaction = TransactionModel(
-          title: 'Buy Ticket',
-          transactionType: TransactionTypeEnum.send,
+          title: ticketType,
+          transactionType: TransactionTypeEnum.purchased,
           assetType: AssetTypeEnum.nft,
           resourcesConsumed: networkFee,
-          toAddress: '',
+          toAddress: 'TMogKdMHLtPbmQRb9WckmbveGqZhyrqCyw',
           fromAddress: buyerAddress,
           date: formatDateTime(DateTime.now()),
-          amount: ticketPrice.toString(),
+          amount: ticketPrice.toString().amountInWeiToToken(
+                decimals: 6,
+                fractionDigits: 0,
+              ),
           txId: sendTransactionResult,
           transactionStatus: TransactionStateEnum.success,
         );

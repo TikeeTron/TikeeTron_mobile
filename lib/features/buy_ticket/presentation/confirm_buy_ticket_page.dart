@@ -13,6 +13,7 @@ import '../../../common/components/button/bounce_tap.dart';
 import '../../../common/components/svg/svg_ui.dart';
 
 import '../../../common/config/padding_config.dart';
+import '../../../common/utils/extensions/context_parsing.dart';
 import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../core/injector/injector.dart';
 import '../../../core/routes/app_route.dart';
@@ -295,7 +296,7 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
                                                   ],
                                                 ),
                                                 Text(
-                                                  '1 TRX = ${quotingState.exchangeRate} USD',
+                                                  '1 TRX = ${quotingState.exchangeRate?.toStringAsFixed(3)} USD',
                                                   style: UITypographies.subtitleLarge(
                                                     context,
                                                     color: UIColors.white50,
@@ -382,6 +383,7 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
                           borderRadius: 16.r,
                           enabled: true,
                           onSubmit: () async {
+                            context.showFullScreenLoadingWithMessage('Loading...', 'please wait, your transaction is in progress');
                             final resultBuyTicket = await BlocProvider.of<ConfirmBuyTicketCubit>(context).confirmBuyTicket(
                               ticketPrice: widget.selectedTicket.price ?? 0,
                               ticketType: widget.selectedTicket.name ?? '',
@@ -390,6 +392,7 @@ class _ConfirmBuyTicketPageState extends State<ConfirmBuyTicketPage> {
                               eventId: widget.eventId,
                               networkFee: quotingState.networkFee ?? 0,
                             );
+                            context.hideFullScreenLoading;
                             if (resultBuyTicket != null) {
                               navigationService.push(ReceiptRoute(data: resultBuyTicket));
                             } else {

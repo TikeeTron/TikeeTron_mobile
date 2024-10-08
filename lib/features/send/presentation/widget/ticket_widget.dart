@@ -4,10 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../common/common.dart';
 
 class TicketWidget extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String name;
+  final String location;
+  final String eventDate;
   final String image;
-  const TicketWidget({super.key, required this.title, required this.subtitle, required this.image});
+  const TicketWidget({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.location,
+    required this.eventDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,32 +36,14 @@ class TicketWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Container(
+            UINetworkImage(
+              url: image,
               width: double.infinity,
               height: 130.h,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.blue[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'General Pass',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+              fit: BoxFit.cover,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
             ),
             Expanded(
@@ -63,29 +52,25 @@ class TicketWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Ed Sheeran Live at Madison Square Garden',
+                    Text(
+                      name,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      style: UITypographies.h4(context),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Sunday, 24th Sept 2024, 8:00 PM',
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 14,
+                      eventDate,
+                      style: UITypographies.bodyLarge(
+                        context,
+                        color: UIColors.grey500,
                       ),
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Madison Square Garden, New York',
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 14,
+                      location,
+                      style: UITypographies.bodyLarge(
+                        context,
+                        color: UIColors.grey500,
                       ),
                     ),
                   ],

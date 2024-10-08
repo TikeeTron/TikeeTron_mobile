@@ -7,7 +7,10 @@ import 'package:typewritertext/typewritertext.dart';
 import '../../../../common/common.dart';
 import '../../../../common/components/svg/svg_ui.dart';
 import '../../../../common/config/padding_config.dart';
+import '../../../../common/utils/extensions/string_parsing.dart';
 import '../../../../core/injector/locator.dart';
+import '../../../../core/routes/app_route.dart';
+import '../../../buy_ticket/data/model/entity/event_detail_entity.dart';
 import '../../../shared/presentation/event_card_widget.dart';
 import '../../../shared/presentation/my_ticket_qr_bottom_sheet.dart';
 import '../../../wallet/domain/repository/wallet_core_repository.dart';
@@ -153,7 +156,7 @@ class _HomeChatTabBarViewState extends State<HomeChatTabBarView> {
             ),
             UIGap.size(h: 30.h),
             Text(
-              'Welcome, Dani',
+              'Welcome 👋',
               style: UITypographies.h2(
                 context,
                 fontSize: 28.sp,
@@ -162,6 +165,7 @@ class _HomeChatTabBarViewState extends State<HomeChatTabBarView> {
             UIGap.size(h: 4.h),
             Text(
               'Ask anything about events, tickets, or more.',
+              textAlign: TextAlign.center,
               style: UITypographies.bodyLarge(
                 context,
                 color: UIColors.grey500,
@@ -346,14 +350,12 @@ class _ChatBubbleItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _chatBody(context),
-                if (chat.response?.events != null &&
-                    chat.response!.events.isNotEmpty)
+                if (chat.response?.events != null && chat.response!.events.isNotEmpty)
                   _eventList(
                     context,
                     chat.response!.events,
                   ),
-                if (chat.response?.tickets != null &&
-                    chat.response!.tickets.isNotEmpty)
+                if (chat.response?.tickets != null && chat.response!.tickets.isNotEmpty)
                   _ticketList(
                     context,
                     chat.response!.tickets,
@@ -476,15 +478,29 @@ class _ChatBubbleItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
-        spacing: 16.w,
         children: events
             .map(
-              (e) => EventCardWidget(
-                width: 240,
-                image: e.banner ?? '',
-                title: e.name ?? '',
-                desc: e.description ?? '',
-                estimatePrice: (e.ticketTypes?.first.price ?? 0).toString(),
+              (e) => Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: EventCardWidget(
+                  width: 240,
+                  image: e.banner ?? '',
+                  title: e.name ?? '',
+                  desc: e.description ?? '',
+                  estimatePrice: (e.ticketTypes?.first.price ?? 0).toString().amountInWeiToToken(
+                        decimals: 6,
+                        fractionDigits: 0,
+                      ),
+                  onTapDetail: () {
+                    navigationService.push(
+                      DetailEventRoute(
+                        eventData: EventDetailEntity.fromJson(
+                          e.toJson(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             )
             .toList(),
@@ -492,34 +508,46 @@ class _ChatBubbleItem extends StatelessWidget {
     );
   }
 
-  Widget _ticketList(
-      BuildContext context, List<GetDetailTicketResponse> tickets) {
+  Widget _ticketList(BuildContext context, List<GetDetailTicketResponse> tickets) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
-        spacing: 16.w,
         children: tickets
             .map(
-              (e) => EventCardWidget(
-                width: 240,
-                image: e.event?.banner ?? '',
-                title: e.event?.name ?? '',
-                desc: e.event?.description ?? '',
-                estimatePrice:
-                    (e.event?.ticketTypes?.first.price ?? 0).toString(),
-                haveTicket: true,
-                onTapMyTicket: () async {
-                  await ModalHelper.showModalBottomSheet(
-                    context,
-                    child: MyTicketQrBottomSheet(
-                      ticketId: e.ticketId?.toString() ?? '',
-                    ),
-                    isHasCloseButton: false,
-                    padding: EdgeInsets.zero,
-                  );
-                },
+              (e) => Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: EventCardWidget(
+                  width: 240,
+                  image: e.event?.banner ?? '',
+                  title: e.event?.name ?? '',
+                  desc: e.event?.description ?? '',
+                  estimatePrice: (e.event?.ticketTypes?.first.price ?? 0).toString().amountInWeiToToken(
+                        decimals: 6,
+                        fractionDigits: 0,
+                      ),
+                  onTapDetail: () {
+                    navigationService.push(
+                      DetailEventRoute(
+                        eventData: EventDetailEntity.fromJson(
+                          e.toJson(),
+                        ),
+                      ),
+                    );
+                  },
+                  isTicketUsed: true,
+                  onTapMyTicket: () async {
+                    await ModalHelper.showModalBottomSheet(
+                      context,
+                      child: MyTicketQrBottomSheet(
+                        ticketId: e.ticketId?.toString() ?? '',
+                      ),
+                      isHasCloseButton: false,
+                      padding: EdgeInsets.zero,
+                    );
+                  },
+                ),
               ),
             )
             .toList(),

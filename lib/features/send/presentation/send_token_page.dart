@@ -19,7 +19,6 @@ import '../../../common/utils/extensions/string_parsing.dart';
 import '../../../common/utils/helpers/debouncer_helper.dart';
 import '../../../core/core.dart';
 import '../../../core/injector/injector.dart';
-import '../../buy_ticket/presentation/confirm_buy_ticket_page.dart';
 import '../../wallet/domain/repository/wallet_core_repository.dart';
 import '../../wallet/presentation/cubit/active_wallet/active_wallet_cubit.dart';
 import 'cubit/send_token_cubit.dart';

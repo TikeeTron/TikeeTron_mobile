@@ -130,6 +130,15 @@ class ContractConfig {
     },
     {
       "type": "function",
+      "name": "_ticketId",
+      "inputs": [],
+      "outputs": [
+        {"name": "", "type": "uint256", "internalType": "uint256"}
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "isApprovedForAll",
       "inputs": [
         {"name": "owner", "type": "address", "internalType": "address"},

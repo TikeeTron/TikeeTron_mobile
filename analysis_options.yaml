@@ -6,6 +6,7 @@ analyzer:
     exhaustive_cases: error
     argument_type_not_assignable: error
     avoid_escaping_inner_quotes: info
+    use_build_context_synchronously: ignore
 
 linter:
   rules:

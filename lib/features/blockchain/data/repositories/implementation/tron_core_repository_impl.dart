@@ -8,6 +8,7 @@ import '../../../../../common/utils/wallet_util.dart';
 import '../../../../../core/adapters/blockchain_network_adapter.dart';
 import '../../../../../core/injector/locator.dart';
 import '../../../../wallet/data/model/wallet_model.dart';
+import '../../../../wallet/data/repositories/source/local/account_local_repository.dart';
 import '../../../domain/repository/tron_core_repository.dart';
 import '../../models/result_create_wallet_model.dart';
 import '../source/tron_remote.dart';
@@ -15,7 +16,10 @@ import '../source/tron_remote.dart';
 @LazySingleton(as: TronCoreRepository)
 class TronCoreRepositoryImpl implements TronCoreRepository {
   final TronRemote _tronRemote;
-  TronCoreRepositoryImpl(this._tronRemote);
+  final AccountLocalRepository _accountLocalRepository;
+
+  TronCoreRepositoryImpl(this._tronRemote, this._accountLocalRepository);
+
   @override
   Future<ResultCreateWalletModel> createWallet({required block.Mnemonic mnemonic, required String seed}) async {
     try {
@@ -137,12 +141,43 @@ class TronCoreRepositoryImpl implements TronCoreRepository {
     required WalletModel wallet,
   }) async {
     try {
+      final accessToken = _accountLocalRepository.getToken() ?? '';
+
       final txId = await _tronRemote.buyTicket(
         walletAddress: walletAddress,
         ticketType: ticketType,
         ticketPrice: ticketPrice,
         wallet: wallet,
         eventId: eventId,
+        accessToken: accessToken,
+      );
+      return txId;
+    } catch (e) {
+      Logger.error('Failed Buy Ticket ${e.errorMessage}');
+      return null;
+    }
+  }
+
+  @override
+  Future<String?> sendTicket({
+    required String targetAddress,
+    required String walletAddress,
+    required int ticketId,
+    required WalletModel wallet,
+    required int ticketPrice,
+    required bool isTicketUsed,
+  }) async {
+    try {
+      final accessToken = _accountLocalRepository.getToken() ?? '';
+
+      final txId = await _tronRemote.sendTicket(
+        walletAddress: walletAddress,
+        wallet: wallet,
+        targetAddress: targetAddress,
+        ticketId: ticketId,
+        accessToken: accessToken,
+        isTicketUsed: isTicketUsed,
+        ticketPrice: ticketPrice,
       );
       return txId;
     } catch (e) {
