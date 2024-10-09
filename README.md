@@ -1,20 +1,22 @@
 # tikeetron_app
 
-A new Flutter project.
+Experience the future of event ticketing with Blockchain AI Ticketing, a cutting-edge platform that combines the power of blockchain technology and artificial intelligence to revolutionize how you buy and manage event tickets. Whether you're attending concerts, conferences, or sports events, our app ensures secure, transparent, and seamless transactions with unmatched convenience.
 
-## Getting Started
+With blockchain integration, every ticket is minted as a unique NFT, providing proof of authenticity, eliminating counterfeiting, and offering full ownership. Through AI-driven personalization, the app suggests events tailored to your interests, helping you discover the best experiences effortlessly.
 
-This project is a starting point for a Flutter application.
+Key Features:
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+Secure Blockchain Transactions: Every ticket is minted on a blockchain, guaranteeing transparency, traceability, and security.
+AI-Powered Recommendations: Get personalized event suggestions based on your preferences and past purchases.
+NFT Ticketing: Own your ticket as a non-fungible token (NFT) that can be resold or transferred on secondary markets with complete trust.
+Smart Contracts: Instant, automated, and secure ticket purchases and refunds through smart contracts.
+Event Insights: AI-driven analytics to help event organizers optimize pricing, capacity, and marketing strategies.
+Embrace the future of event ticketing with a platform that prioritizes security, authenticity, and innovation. Download Blockchain AI Ticketing today and step into the next generation of events!
 
 ## build generator code
-dart run build_runner build --delete-conflicting-outputs
+
+```bash
+dart run build_runner build --define secure_dotenv_generator:secure_dotenv=OUTPUT_FILE=encryption_key.json
+```
+
+
