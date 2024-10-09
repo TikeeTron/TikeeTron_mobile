@@ -7,7 +7,7 @@ import 'core/env/env.dart';
 import 'core/injector/locator.dart';
 import 'hive_initialization.dart';
 
-const env = Env('PwW1lzbBH/Jc6ThwJnVJWcAWqfkUwyuHSRutrdeUK4M=', 'UG1VmN48K7vgenQ4DVpcFw==');
+const env = Env('4CN6zRuapCetHaoAHQaZw/Axfpbbaeia9BJSa9FPb/4=', '23sqhgd9buup6IjUSjhGWA==');
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
