@@ -19,6 +19,8 @@ With blockchain integration, every ticket serves as an immutable digital asset, 
 ### Conclusion
 
 Blockchain AI Ticketing is more than just a platform—it's the future of event ticketing. Download today and step into the next generation of secure, innovative, and personalized event management.
+
+
 ## build generator code
 
 ```bash
